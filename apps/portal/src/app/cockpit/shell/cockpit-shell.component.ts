@@ -1,6 +1,8 @@
-import { Component, OnInit } from "@angular/core";
-import { Router, RouterModule, RouterOutlet } from "@angular/router";
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { NavigationEnd, Router, RouterModule, RouterOutlet } from "@angular/router";
 import { FormsModule } from "@angular/forms";
+import { Subscription } from "rxjs";
+import { filter } from "rxjs/operators";
 import { SessionStore } from "../../core/session.store";
 import { PortalApiService } from "../../core/portal-api.service";
 import { CockpitStore } from "../cockpit-store.service";
@@ -11,15 +13,73 @@ import { CockpitStore } from "../cockpit-store.service";
   imports: [RouterOutlet, RouterModule, FormsModule],
   template: `
     <div class="ck-surface--cockpit ck-shell">
-      <!-- SIDEBAR -->
-      <aside class="ck-sidebar">
-        <!-- Brand -->
+
+      <!-- ======================================================= -->
+      <!-- TOPBAR — row 1, spans all 3 columns                      -->
+      <!-- ======================================================= -->
+      <header class="ck-appbar">
         <a class="ck-brand" routerLink="/app/dashboard">
           <span class="ck-brand__mark">T</span>
           <span class="ck-brand__name">Talkaris</span>
         </a>
 
-        <!-- Workspace selector -->
+        <nav class="ck-topnav">
+          <a class="ck-topnav__item"
+             routerLink="/app/dashboard"
+             [class.is-active]="activeSection === 'dashboard'">
+            <span class="ck-topnav__icon">⬡</span> Dashboard
+          </a>
+          <a class="ck-topnav__item"
+             routerLink="/app/bots"
+             [class.is-active]="activeSection === 'bots'">
+            <span class="ck-topnav__icon">◈</span> Bots
+          </a>
+          <a class="ck-topnav__item"
+             routerLink="/app/conversations"
+             [class.is-active]="activeSection === 'conversations'">
+            <span class="ck-topnav__icon">◎</span> Conversations
+          </a>
+          <a class="ck-topnav__item"
+             routerLink="/app/knowledge"
+             [class.is-active]="activeSection === 'knowledge'">
+            <span class="ck-topnav__icon">◫</span> Knowledge
+          </a>
+          <a class="ck-topnav__item"
+             routerLink="/app/analytics"
+             [class.is-active]="activeSection === 'analytics'">
+            <span class="ck-topnav__icon">▣</span> Analytics
+          </a>
+          <a class="ck-topnav__item"
+             routerLink="/app/channels"
+             [class.is-active]="activeSection === 'channels'">
+            <span class="ck-topnav__icon">⇄</span> Channels
+          </a>
+          <a class="ck-topnav__item"
+             routerLink="/app/settings"
+             [class.is-active]="activeSection === 'settings'">
+            <span class="ck-topnav__icon">⊙</span> Settings
+          </a>
+        </nav>
+
+        <div class="ck-appbar__actions">
+          @if (store.activeTenant()?.name) {
+            <span class="ck-badge ck-badge--default">{{ store.activeTenant()?.name }}</span>
+          }
+          <div class="ck-user-pill">
+            <span class="ck-user-pill__avatar">{{ userInitial }}</span>
+            <div class="ck-user-pill__info">
+              <div class="ck-user-pill__email">{{ session.user()?.email }}</div>
+              <div class="ck-user-pill__role">{{ session.user()?.platformRole }}</div>
+            </div>
+            <button class="ck-user-pill__btn" (click)="logout()" title="Sign out">⎋</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ======================================================= -->
+      <!-- SIDEBAR LEFT — row 2 col 1 — dynamic sub-navigation      -->
+      <!-- ======================================================= -->
+      <aside class="ck-sidebar">
         <div class="ck-workspace">
           <div class="ck-workspace__label">Workspace</div>
           <select
@@ -33,152 +93,184 @@ import { CockpitStore } from "../cockpit-store.service";
           </select>
         </div>
 
-        <!-- Navigation -->
         <nav class="ck-nav">
-          <!-- Overview -->
-          <div class="ck-nav__group">
-            <a class="ck-nav__item" routerLink="/app/dashboard" routerLinkActive="is-active">
-              <span class="ck-nav__icon">⬡</span> Dashboard
-            </a>
-          </div>
+          @switch (activeSection) {
 
-          <!-- Bots -->
-          <div class="ck-nav__group">
-            <div class="ck-nav__group-label">Bots</div>
-            <a class="ck-nav__item" routerLink="/app/bots" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
-              <span class="ck-nav__icon">◈</span> All Bots
-            </a>
-            <a class="ck-nav__item" routerLink="/app/bots/new" routerLinkActive="is-active">
-              <span class="ck-nav__icon">+</span> Create Bot
-            </a>
-            <a class="ck-nav__item" routerLink="/app/deployments" routerLinkActive="is-active">
-              <span class="ck-nav__icon">▲</span> Deployments
-            </a>
-          </div>
+            @case ('bots') {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Bots</div>
+                <a class="ck-nav__item" routerLink="/app/bots" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+                  <span class="ck-nav__icon">◈</span> All Bots
+                </a>
+                <a class="ck-nav__item" routerLink="/app/bots/new" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">+</span> Create Bot
+                </a>
+                <a class="ck-nav__item" routerLink="/app/deployments" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">▲</span> Deployments
+                </a>
+              </div>
+            }
 
-          <!-- Conversations -->
-          <div class="ck-nav__group">
-            <div class="ck-nav__group-label">Conversations</div>
-            <a class="ck-nav__item" routerLink="/app/conversations" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
-              <span class="ck-nav__icon">◎</span> History
-            </a>
-            <a class="ck-nav__item" routerLink="/app/conversations/live" routerLinkActive="is-active">
-              <span class="ck-nav__icon">●</span> Live
-            </a>
-          </div>
+            @case ('conversations') {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Conversations</div>
+                <a class="ck-nav__item" routerLink="/app/conversations" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+                  <span class="ck-nav__icon">◎</span> History
+                </a>
+                <a class="ck-nav__item" routerLink="/app/conversations/live" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">●</span> Live Queue
+                </a>
+              </div>
+            }
 
-          <!-- Knowledge -->
-          <div class="ck-nav__group">
-            <div class="ck-nav__group-label">Knowledge</div>
-            <a class="ck-nav__item" routerLink="/app/knowledge" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
-              <span class="ck-nav__icon">◫</span> Sources
-            </a>
-            <a class="ck-nav__item" routerLink="/app/knowledge/documents" routerLinkActive="is-active">
-              <span class="ck-nav__icon">≡</span> Documents
-            </a>
-            <a class="ck-nav__item" routerLink="/app/knowledge/ingestions" routerLinkActive="is-active">
-              <span class="ck-nav__icon">↻</span> Ingestion Jobs
-            </a>
-            <a class="ck-nav__item" routerLink="/app/knowledge/schedules" routerLinkActive="is-active">
-              <span class="ck-nav__icon">⏱</span> Schedules
-            </a>
-          </div>
+            @case ('knowledge') {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Knowledge Base</div>
+                <a class="ck-nav__item" routerLink="/app/knowledge" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+                  <span class="ck-nav__icon">◫</span> Sources
+                </a>
+                <a class="ck-nav__item" routerLink="/app/knowledge/documents" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">≡</span> Documents
+                </a>
+                <a class="ck-nav__item" routerLink="/app/knowledge/ingestions" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">↻</span> Ingestion Jobs
+                </a>
+                <a class="ck-nav__item" routerLink="/app/knowledge/schedules" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">⏱</span> Schedules
+                </a>
+              </div>
+            }
 
-          <!-- Analytics & Leads -->
-          <div class="ck-nav__group">
-            <div class="ck-nav__group-label">Data</div>
-            <a class="ck-nav__item" routerLink="/app/analytics" routerLinkActive="is-active">
-              <span class="ck-nav__icon">▣</span> Analytics
-            </a>
-            <a class="ck-nav__item" routerLink="/app/leads" routerLinkActive="is-active">
-              <span class="ck-nav__icon">◉</span> Leads
-            </a>
-            <a class="ck-nav__item" routerLink="/app/channels" routerLinkActive="is-active">
-              <span class="ck-nav__icon">⇄</span> Channels
-            </a>
-          </div>
+            @case ('analytics') {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Analytics & Data</div>
+                <a class="ck-nav__item" routerLink="/app/analytics" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">▣</span> Overview
+                </a>
+                <a class="ck-nav__item" routerLink="/app/leads" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">◉</span> Leads
+                </a>
+              </div>
+            }
 
-          <!-- Developers -->
-          <div class="ck-nav__group">
-            <div class="ck-nav__group-label">Developers</div>
-            <a class="ck-nav__item" routerLink="/app/developers" routerLinkActive="is-active">
-              <span class="ck-nav__icon">⌗</span> API & Embed
-            </a>
-            <a class="ck-nav__item" routerLink="/app/settings/api-keys" routerLinkActive="is-active">
-              <span class="ck-nav__icon">⚿</span> API Keys
-            </a>
-            <a class="ck-nav__item" routerLink="/app/settings/webhooks" routerLinkActive="is-active">
-              <span class="ck-nav__icon">↗</span> Webhooks
-            </a>
-          </div>
+            @case ('channels') {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Channels</div>
+                <a class="ck-nav__item" routerLink="/app/channels" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">⇄</span> All Channels
+                </a>
+              </div>
+            }
 
-          <!-- Settings -->
-          <div class="ck-nav__group">
-            <div class="ck-nav__group-label">Settings</div>
-            <a class="ck-nav__item" routerLink="/app/settings" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
-              <span class="ck-nav__icon">⊙</span> Workspace
-            </a>
-            <a class="ck-nav__item" routerLink="/app/settings/members" routerLinkActive="is-active">
-              <span class="ck-nav__icon">◎</span> Members
-            </a>
-            <a class="ck-nav__item" routerLink="/app/settings/notifications" routerLinkActive="is-active">
-              <span class="ck-nav__icon">◈</span> Notifications
-            </a>
-            @if (session.user()?.platformRole === 'superadmin') {
-              <a class="ck-nav__item" routerLink="/admin/overview" routerLinkActive="is-active">
+            @case ('settings') {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Settings</div>
+                <a class="ck-nav__item" routerLink="/app/settings" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+                  <span class="ck-nav__icon">⊙</span> Workspace
+                </a>
+                <a class="ck-nav__item" routerLink="/app/settings/members" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">◎</span> Members
+                </a>
+                <a class="ck-nav__item" routerLink="/app/settings/notifications" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">◈</span> Notifications
+                </a>
+              </div>
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Developer</div>
+                <a class="ck-nav__item" routerLink="/app/developers" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">⌗</span> API & Embed
+                </a>
+                <a class="ck-nav__item" routerLink="/app/settings/api-keys" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">⚿</span> API Keys
+                </a>
+                <a class="ck-nav__item" routerLink="/app/settings/webhooks" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">↗</span> Webhooks
+                </a>
+              </div>
+            }
+
+            @default {
+              <div class="ck-nav__group">
+                <div class="ck-nav__group-label">Overview</div>
+                <a class="ck-nav__item" routerLink="/app/dashboard" routerLinkActive="is-active">
+                  <span class="ck-nav__icon">⬡</span> Dashboard
+                </a>
+              </div>
+            }
+
+          }
+
+          @if (session.user()?.platformRole === 'superadmin') {
+            <div class="ck-nav__group">
+              <div class="ck-nav__group-label">Admin</div>
+              <a class="ck-nav__item" routerLink="/admin/overview">
                 <span class="ck-nav__icon">⬡</span> Superadmin
               </a>
-            }
-          </div>
-        </nav>
-
-        <!-- User footer -->
-        <div class="ck-sidebar-footer">
-          <div class="ck-user-pill">
-            <span class="ck-user-pill__avatar">
-              {{ userInitial }}
-            </span>
-            <div class="ck-user-pill__info">
-              <div class="ck-user-pill__email">{{ session.user()?.email }}</div>
-              <div class="ck-user-pill__role">{{ session.user()?.platformRole }}</div>
             </div>
-            <button class="ck-user-pill__btn" (click)="logout()" title="Sign out">⎋</button>
+          }
+        </nav>
+      </aside>
+
+      <!-- ======================================================= -->
+      <!-- CENTER CONTENT — row 2 col 2                             -->
+      <!-- ======================================================= -->
+      <main class="ck-main">
+        <div class="ck-workbench">
+          <div class="ck-route-host">
+            <router-outlet />
+          </div>
+        </div>
+      </main>
+
+      <!-- ======================================================= -->
+      <!-- SIDEBAR RIGHT — row 2 col 3 — contextual panel           -->
+      <!-- ======================================================= -->
+      <aside class="ck-panel-right">
+        <div class="ck-panel-section">
+          <p class="ck-panel-section__label">Workspace</p>
+          <p class="ck-panel-section__value">{{ store.activeTenant()?.name ?? '—' }}</p>
+          <p class="ck-panel-section__sub">{{ session.user()?.platformRole }}</p>
+        </div>
+
+        <div class="ck-panel-section">
+          <p class="ck-panel-section__label">Current</p>
+          <p class="ck-panel-section__value">{{ shellTitle }}</p>
+          <p class="ck-panel-section__sub">{{ shellSection }}</p>
+        </div>
+
+        <div class="ck-panel-section">
+          <p class="ck-panel-section__label">Quick Access</p>
+          <div class="ck-panel-quick">
+            <a class="ck-panel-quick__item" routerLink="/app/bots/new">+ New Bot</a>
+            <a class="ck-panel-quick__item" routerLink="/app/conversations">Conversations</a>
+            <a class="ck-panel-quick__item" routerLink="/app/knowledge">Knowledge</a>
+            <a class="ck-panel-quick__item" routerLink="/app/analytics">Analytics</a>
+            <a class="ck-panel-quick__item" routerLink="/app/leads">Leads</a>
           </div>
         </div>
       </aside>
 
-      <!-- MAIN -->
-      <main class="ck-main">
-        <header class="ck-appbar">
-          <div class="ck-appbar__meta">
-            <p class="ck-appbar__eyebrow">{{ shellModeLabel }}</p>
-            <div class="ck-appbar__breadcrumb">
-              <span>{{ shellSection }}</span>
-              <span>›</span>
-              <strong>{{ shellTitle }}</strong>
-            </div>
-          </div>
-          <div class="ck-appbar__actions">
-            @if (store.activeTenant()?.name) {
-              <span class="ck-badge ck-badge--default">{{ store.activeTenant()?.name }}</span>
-            }
-            <span class="ck-badge ck-badge--accent">{{ session.user()?.platformRole }}</span>
-          </div>
-        </header>
-
-        <section class="ck-workbench">
-          <div class="ck-route-host">
-            <router-outlet />
-          </div>
-        </section>
-      </main>
     </div>
   `,
 })
-export class CockpitShellComponent implements OnInit {
+export class CockpitShellComponent implements OnInit, OnDestroy {
+  currentUrl = '';
+  private navSub?: Subscription;
+
   get userInitial(): string {
     const email = this.session.user()?.email ?? "?";
     return email.charAt(0).toUpperCase();
+  }
+
+  get activeSection(): string {
+    const url = this.currentUrl;
+    if (url.includes('/app/bots') || url.includes('/app/deployments')) return 'bots';
+    if (url.includes('/app/conversations')) return 'conversations';
+    if (url.includes('/app/knowledge')) return 'knowledge';
+    if (url.includes('/app/analytics') || url.includes('/app/leads')) return 'analytics';
+    if (url.includes('/app/channels')) return 'channels';
+    if (url.includes('/app/settings') || url.includes('/app/developers')) return 'settings';
+    return 'dashboard';
   }
 
   constructor(
@@ -189,6 +281,13 @@ export class CockpitShellComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.currentUrl = this.router.url;
+    this.navSub = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.currentUrl = this.router.url;
+    });
+
     await this.session.ensureLoaded();
     if (!this.session.user()) {
       await this.router.navigate(["/login"]);
@@ -198,13 +297,13 @@ export class CockpitShellComponent implements OnInit {
     this.store.setTenants(tenants);
   }
 
+  ngOnDestroy(): void {
+    this.navSub?.unsubscribe();
+  }
+
   async logout(): Promise<void> {
     await this.session.logout();
     window.location.href = "/login";
-  }
-
-  get shellModeLabel(): string {
-    return "Workspace";
   }
 
   get shellSection(): string {

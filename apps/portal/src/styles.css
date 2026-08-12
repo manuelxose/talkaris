@@ -1190,9 +1190,10 @@ textarea {
   --ck-gold-soft: rgba(139, 92, 246, 0.16);
 
   /* Sidebar */
-  --ck-sidebar-w: 252px;
-  --ck-topbar-h: 76px;
-  --ck-shell-gutter: clamp(22px, 2.4vw, 34px);
+  --ck-sidebar-w: 220px;
+  --ck-panel-right-w: 220px;
+  --ck-topbar-h: 58px;
+  --ck-shell-gutter: clamp(16px, 2vw, 28px);
 
   /* Spacing */
   --ck-gap: 20px;
@@ -1307,7 +1308,8 @@ body::-webkit-scrollbar-thumb:hover,
 
 .ck-shell {
   display: grid;
-  grid-template-columns: var(--ck-sidebar-w) minmax(0, 1fr);
+  grid-template-rows: var(--ck-topbar-h) 1fr;
+  grid-template-columns: var(--ck-sidebar-w) minmax(0, 1fr) var(--ck-panel-right-w);
   min-height: 100dvh;
   height: 100dvh;
   background:
@@ -1317,31 +1319,30 @@ body::-webkit-scrollbar-thumb:hover,
   color: var(--ck-text);
   font-family: "Manrope", "Segoe UI", sans-serif;
   overflow: hidden;
-  align-items: stretch;
 }
 
 .ck-sidebar {
-  position: sticky;
-  inset-block-start: 0;
-  width: var(--ck-sidebar-w);
-  min-height: 100dvh;
-  height: 100dvh;
+  grid-row: 2;
+  grid-column: 1;
+  min-height: 0;
+  height: 100%;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ck-surface-panel) 96%, black 4%), color-mix(in srgb, var(--ck-surface-dark-soft) 88%, black 12%));
   border-right: 1px solid color-mix(in srgb, var(--ck-text) 8%, transparent);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  z-index: 30;
+  z-index: 20;
   scrollbar-width: thin;
   scrollbar-color: var(--ck-border-strong) transparent;
-  box-shadow: 16px 0 42px rgba(2, 6, 23, 0.22);
 }
 
 .ck-main {
+  grid-row: 2;
   grid-column: 2;
-  min-height: 100dvh;
-  height: 100dvh;
+  min-height: 0;
+  height: 100%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -1354,21 +1355,21 @@ body::-webkit-scrollbar-thumb:hover,
 }
 
 .ck-appbar {
+  grid-row: 1;
+  grid-column: 1 / -1;
   height: var(--ck-topbar-h);
   min-height: var(--ck-topbar-h);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 0 var(--ck-shell-gutter);
+  gap: 0;
+  padding: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--ck-text) 8%, transparent);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--ck-surface-panel) 94%, transparent), color-mix(in srgb, var(--ck-surface-panel) 84%, transparent));
+    linear-gradient(180deg, color-mix(in srgb, var(--ck-surface-panel) 96%, transparent), color-mix(in srgb, var(--ck-surface-panel) 90%, transparent));
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.16);
-  flex-shrink: 0;
-  z-index: 15;
+  box-shadow: 0 4px 24px rgba(2, 6, 23, 0.18);
+  z-index: 35;
 }
 
 .ck-appbar--admin {
@@ -1453,6 +1454,140 @@ body::-webkit-scrollbar-thumb:hover,
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* ---- Topbar brand override (when .ck-brand is inside .ck-appbar) ---- */
+
+.ck-appbar .ck-brand {
+  height: 100%;
+  padding: 0 16px 0 var(--ck-shell-gutter);
+  border-bottom: none;
+  border-right: 1px solid color-mix(in srgb, var(--ck-text) 10%, transparent);
+  flex-shrink: 0;
+}
+
+/* ---- Top Navigation Tabs ---- */
+
+.ck-topnav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  min-width: 0;
+  height: 100%;
+}
+
+.ck-topnav::-webkit-scrollbar {
+  display: none;
+}
+
+.ck-topnav__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: var(--ck-radius-sm);
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: var(--ck-text-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.13s, color 0.13s;
+  letter-spacing: -0.01em;
+}
+
+.ck-topnav__item:hover {
+  background: color-mix(in srgb, var(--ck-text) 8%, transparent);
+  color: var(--ck-text);
+}
+
+.ck-topnav__item.is-active {
+  background: color-mix(in srgb, var(--ck-primary) 18%, transparent);
+  color: var(--ck-primary);
+}
+
+.ck-topnav__icon {
+  font-size: 0.88em;
+  opacity: 0.75;
+}
+
+.ck-topnav__item.is-active .ck-topnav__icon {
+  opacity: 1;
+}
+
+/* ---- Right Context Panel ---- */
+
+.ck-panel-right {
+  grid-row: 2;
+  grid-column: 3;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--ck-surface-panel) 96%, black 4%), color-mix(in srgb, var(--ck-surface-dark-soft) 88%, black 12%));
+  border-left: 1px solid color-mix(in srgb, var(--ck-text) 8%, transparent);
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ck-border-strong) transparent;
+}
+
+.ck-panel-section {
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--ck-text) 6%, transparent);
+  flex-shrink: 0;
+}
+
+.ck-panel-section__label {
+  margin: 0 0 5px;
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ck-text-muted);
+}
+
+.ck-panel-section__value {
+  margin: 0 0 2px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ck-text);
+  letter-spacing: -0.02em;
+}
+
+.ck-panel-section__sub {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--ck-text-muted);
+}
+
+.ck-panel-quick {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.ck-panel-quick__item {
+  display: block;
+  padding: 6px 8px;
+  border-radius: var(--ck-radius-sm);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ck-text-soft);
+  text-decoration: none;
+  transition: background 0.11s, color 0.11s;
+}
+
+.ck-panel-quick__item:hover {
+  background: color-mix(in srgb, var(--ck-primary) 12%, transparent);
+  color: var(--ck-primary);
 }
 
 /* ---- Sidebar Brand ---- */
@@ -1719,11 +1854,13 @@ body::-webkit-scrollbar-thumb:hover,
   flex: 1;
   min-height: 0;
   min-width: 0;
-  padding: 28px var(--ck-shell-gutter) 40px;
+  padding: 24px var(--ck-shell-gutter) 40px;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-gutter: stable both-edges;
   overscroll-behavior: contain;
+  max-width: 1440px;
+  width: 100%;
 }
 
 .ck-page-header {
@@ -2329,8 +2466,21 @@ body::-webkit-scrollbar-thumb:hover,
 
 /* ---- Cockpit responsive ---- */
 
+/* At 1280px: collapse right panel */
+@media (max-width: 1280px) {
+  .ck-shell {
+    grid-template-columns: var(--ck-sidebar-w) minmax(0, 1fr);
+  }
+
+  .ck-panel-right {
+    display: none;
+  }
+}
+
+/* At 1024px: collapse left sidebar too */
 @media (max-width: 1024px) {
   .ck-shell {
+    grid-template-rows: var(--ck-topbar-h) 1fr;
     grid-template-columns: 1fr;
   }
 
@@ -2339,11 +2489,16 @@ body::-webkit-scrollbar-thumb:hover,
   }
 
   .ck-main {
+    grid-row: 2;
     grid-column: 1;
   }
 
   .ck-appbar {
-    padding-inline: 18px;
+    padding: 0 18px;
+  }
+
+  .ck-appbar .ck-brand {
+    padding: 0 14px 0 18px;
   }
 }
 
@@ -2364,16 +2519,29 @@ body::-webkit-scrollbar-thumb:hover,
 
   .ck-appbar {
     height: auto;
-    min-height: 0;
-    padding: 14px 16px;
-    align-items: flex-start;
-    flex-direction: column;
+    min-height: var(--ck-topbar-h);
+    padding: 0 14px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ck-appbar .ck-brand {
+    border-right: none;
+    padding-right: 0;
+    flex: 1;
+  }
+
+  .ck-topnav {
+    order: 3;
+    width: 100%;
+    padding: 0 0 6px;
+    border-top: 1px solid color-mix(in srgb, var(--ck-text) 8%, transparent);
   }
 
   .ck-appbar__actions {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
