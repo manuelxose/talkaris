@@ -1,7 +1,17 @@
 import { PortalSettings } from "../core/models";
 
 export type PublicLocale = "es" | "en";
-export type PublicPageKey = "home" | "features" | "integrations" | "use-cases" | "blog" | "faq" | "pricing" | "customers";
+export type PublicPageKey =
+  | "home"
+  | "features"
+  | "integrations"
+  | "use-cases"
+  | "blog"
+  | "faq"
+  | "pricing"
+  | "customers"
+  | "privacy"
+  | "terms";
 
 export interface PublicPageStat {
   value: string;
@@ -60,6 +70,8 @@ export interface PublicPageDefinition {
   path: string;
   navLabel: string;
   breadcrumbLabel: string;
+  /** When false the page is excluded from the main navigation. */
+  nav?: boolean;
   title: string;
   description: string;
   seoTitle: string;
@@ -182,7 +194,7 @@ const HOME_ES: PublicPageDefinition = {
       detail: "Cambia de modelo sin tocar la integración.",
     },
   ],
-  heroImage: "/assets/talkaris-hero-campaign.png",
+  heroImage: "/assets/talkaris-hero-campaign.webp",
   heroImageAlt: "Visual editorial de Talkaris mostrando una interfaz conversacional y paneles operativos.",
   primaryCtaLabel: "Solicitar demo",
   primaryCtaPath: "/solicitar-demo",
@@ -200,28 +212,32 @@ const HOME_ES: PublicPageDefinition = {
   sections: [
     {
       id: "social-proof",
-      eyebrow: "Prueba real",
-      title: "Organizaciones que ya confían en Talkaris.",
-      intro: "Empresas B2B que activaron IA conversacional en web, producto y soporte sin improvisar.",
+      eyebrow: "Cómo se usa",
+      title: "Tres superficies donde Talkaris ya trabaja.",
+      intro:
+        "Los equipos activan Talkaris en web, producto y portales internos con un mismo núcleo conversacional, sin reinventar la operación en cada sitio.",
       layout: "three-up",
       cards: [
         {
           eyebrow: "SaaS",
-          title: "Onboarding conversacional activo",
-          body: "Activaron el asistente en su producto SaaS para guiar la adopción desde el primer login sin tocar el equipo de soporte.",
-          metric: "−40% tickets",
+          title: "Onboarding conversacional en producto",
+          body:
+            "Guía la adopción desde el primer login con contexto del propio producto: configuración, primeros pasos y derivación a soporte solo cuando hace falta.",
+          metric: "Onboarding",
         },
         {
           eyebrow: "E-commerce B2B",
-          title: "3x más demos cualificadas desde web",
-          body: "Desplegaron el widget en su web pública orientado a captación y calificación de leads de producto.",
-          metric: "3× pipeline",
+          title: "Captación y calificación desde la web",
+          body:
+            "Conversación pública pensada para explicar valor, resolver objeciones y derivar a demo cuando hay encaje con el perfil del visitante.",
+          metric: "Captación",
         },
         {
           eyebrow: "Portal interno",
-          title: "Conocimiento indexado en 2 horas",
-          body: "Un equipo de 50 personas pasó de buscar en docs dispersos a consultar un asistente con el contexto correcto.",
-          metric: "2h → producción",
+          title: "Documentación consultable en segundos",
+          body:
+            "Indexa documentación dispersa (HTML, PDF, markdown) y responde con el contexto del portal, con fuentes auditables y reindexación controlada.",
+          metric: "Conocimiento",
         },
       ],
     },
@@ -952,7 +968,7 @@ const FAQ_ES: PublicPageDefinition = {
       detail: "Tenant console para operación y superadmin para control global.",
     },
   ],
-  heroImage: "/assets/talkaris-editorial-campaign.png",
+  heroImage: "/assets/talkaris-editorial-campaign.webp",
   heroImageAlt: "Visual editorial premium usado como apoyo para la sección de preguntas frecuentes.",
   primaryCtaLabel: "Solicitar demo",
   primaryCtaPath: "/solicitar-demo",
@@ -1170,28 +1186,32 @@ const HOME_EN: PublicPageDefinition = {
   sections: [
     {
       id: "social-proof",
-      eyebrow: "Real proof",
-      title: "Organizations already running on Talkaris.",
-      intro: "B2B companies that activated conversational AI on web, product and support without improvising.",
+      eyebrow: "How it is used",
+      title: "Three surfaces where Talkaris already works.",
+      intro:
+        "Teams activate Talkaris on web, product and internal portals with one conversational core, without reinventing operations on every site.",
       layout: "three-up",
       cards: [
         {
           eyebrow: "SaaS",
-          title: "Conversational onboarding live",
-          body: "Activated the assistant in their SaaS product to guide adoption from the first login without touching the support team.",
-          metric: "−40% tickets",
+          title: "Conversational onboarding in product",
+          body:
+            "Guides adoption from the first login with product context: setup, first steps and handover to support only when actually needed.",
+          metric: "Onboarding",
         },
         {
           eyebrow: "B2B E-commerce",
-          title: "3x more qualified demos from web",
-          body: "Deployed the widget on their public website focused on lead capture and qualification.",
-          metric: "3× pipeline",
+          title: "Lead capture and qualification on web",
+          body:
+            "Public conversation built to explain value, handle objections and route to demo when there is fit with the visitor profile.",
+          metric: "Capture",
         },
         {
           eyebrow: "Internal portal",
-          title: "Knowledge indexed in 2 hours",
-          body: "A 50-person team moved from searching scattered docs to querying an assistant with the right context.",
-          metric: "2h → production",
+          title: "Documentation answerable in seconds",
+          body:
+            "Indexes scattered documentation (HTML, PDF, markdown) and answers with portal context, with auditable sources and controlled re-indexing.",
+          metric: "Knowledge",
         },
       ],
     },
@@ -1972,7 +1992,7 @@ const PRICING_ES: PublicPageDefinition = {
     { value: "399€", label: "Plan Growth desde", detail: "Hasta 5 proyectos, todas las fuentes, handover humano y API." },
     { value: "A medida", label: "Plan Enterprise", detail: "Multi-tenant completo, whitelabeling, SLA y onboarding dedicado." },
   ],
-  heroImage: "/assets/talkaris-hero-campaign.png",
+  heroImage: "/assets/talkaris-hero-campaign.webp",
   heroImageAlt: "Visual de precios transparentes de Talkaris",
   primaryCtaLabel: "Solicitar demo",
   primaryCtaPath: "/solicitar-demo",
@@ -2151,67 +2171,111 @@ const CUSTOMERS_ES: PublicPageDefinition = {
   path: "/clientes",
   navLabel: "Clientes",
   breadcrumbLabel: "Clientes",
-  title: "Clientes y casos de éxito de Talkaris",
-  description: "Equipos B2B que ya operan con Talkaris: SaaS, e-commerce B2B y portales internos que activaron IA conversacional en producción.",
-  seoTitle: "Clientes Talkaris | Casos de uso IA conversacional en producción",
-  seoDescription: "Descubre cómo empresas B2B usan Talkaris para activar asistentes IA en web, producto y soporte. Resultados reales, sin demos vacías.",
-  seoKeywords: ["casos de uso chatbot ia", "clientes plataforma ia conversacional", "resultados chatbot empresa", "ejemplos chatbot b2b", "casos exito asistente ia"],
-  heroEyebrow: "Casos reales",
-  heroTitle: "Equipos que ya operan con Talkaris.",
-  heroCopy: "De la web corporativa al portal interno. Empresas B2B que decidieron activar IA conversacional con criterio y sin improvisar.",
-  heroSummary: "Cada caso de uso refleja una decisión operativa concreta: qué superficie activar, qué conocimiento gobernar y qué resultado medir.",
+  title: "Clientes y patrones de implantación de Talkaris",
+  description:
+    "Patrones reales de implantación de IA conversacional en SaaS, e-commerce B2B y portales internos: qué superficie activar, qué conocimiento gobernar y qué medir.",
+  seoTitle: "Clientes Talkaris | Patrones de implantación de IA conversacional",
+  seoDescription:
+    "Cómo equipos B2B activan asistentes IA en web, producto y soporte con Talkaris: patrones de implantación, superficies y conocimiento gobernado. Sin casos ficticios.",
+  seoKeywords: [
+    "casos de uso chatbot ia",
+    "implantacion chatbot empresa",
+    "ejemplos chatbot b2b",
+    "asistente ia soporte cliente",
+    "plataforma ia conversacional",
+  ],
+  heroEyebrow: "Patrones de implantación",
+  heroTitle: "Cómo los equipos activan Talkaris en producción.",
+  heroCopy:
+    "De la web corporativa al portal interno: patrones de uso documentados para activar IA conversacional con criterio, conocimiento gobernado y un resultado medible por superficie.",
+  heroSummary:
+    "Cada patrón refleja una decisión operativa concreta: qué superficie activar, qué conocimiento gobernar y qué métrica seguir. Sin cifras inventadas ni casos ficticios.",
   heroBadges: ["SaaS", "E-commerce B2B", "Portales internos"],
   heroStats: [
-    { value: "40%", label: "Reducción de tickets de soporte", detail: "SaaS de gestión que activó onboarding conversacional en su producto." },
-    { value: "3×", label: "Más demos cualificadas", detail: "E-commerce B2B que desplegó asistente en su web pública." },
-    { value: "2h", label: "Hasta knowledge base en producción", detail: "Portal interno que indexó su documentación completa en una tarde." },
+    { value: "1 núcleo", label: "Un solo stack conversacional", detail: "Web, producto y portal operados desde la misma plataforma y el mismo gobierno." },
+    { value: "Multi-fuente", label: "Conocimiento gobernado", detail: "Sitemap, HTML, PDF, YouTube, Notion y Gemini File bajo una política auditable." },
+    { value: "Multi-tenant", label: "Aislamiento por tenant", detail: "Branding, conocimiento y analítica separados por proyecto o cliente." },
   ],
-  heroImage: "/assets/talkaris-editorial-campaign.png",
-  heroImageAlt: "Equipos de empresa usando Talkaris para operar asistentes IA",
+  heroImage: "/assets/talkaris-editorial-campaign.webp",
+  heroImageAlt: "Interfaz conversacional de Talkaris operando en una web corporativa",
   primaryCtaLabel: "Solicitar demo",
   primaryCtaPath: "/solicitar-demo",
   secondaryCtaLabel: "Ver funcionalidades",
   secondaryCtaPath: "/funcionalidades",
   indexable: true,
-  leadInTitle: "IA conversacional que resuelve casos de uso reales.",
-  leadInBody: "No hay un único patrón de implantación. Hay equipos que empiezan por captación, otros por soporte y otros por documentación interna. Todos llegan a producción.",
+  leadInTitle: "No hay un único patrón de implantación.",
+  leadInBody:
+    "Hay equipos que empiezan por captación, otros por soporte y otros por documentación interna. Lo común: una misma capa conversacional para todas las superficies.",
   leadInProofs: [
     "Web corporativa: captación y calificación de demanda.",
-    "Producto SaaS: onboarding, ayuda contextual y upsell.",
+    "Producto SaaS: onboarding, ayuda contextual y soporte.",
     "Portal interno: documentación accesible sin búsquedas manuales.",
   ],
   sections: [
     {
-      id: "case-saas",
-      eyebrow: "SaaS de gestión",
-      title: "Onboarding conversacional que redujo tickets un 40%.",
-      intro: "Un SaaS de software de gestión activó Talkaris en su producto para guiar a nuevos usuarios durante el onboarding. El asistente responde dudas de configuración y detecta usuarios bloqueados antes de que escalen a soporte.",
+      id: "pattern-saas",
+      eyebrow: "SaaS",
+      title: "Onboarding y soporte dentro del propio producto.",
+      intro:
+        "Patrón para productos con usuarios que repiten las mismas preguntas de configuración y necesitan ayuda en el momento exacto, sin salir de la aplicación.",
       layout: "two-up",
       cards: [
-        { eyebrow: "Problema", title: "Demasiadas preguntas de configuración básica en soporte", body: "El volumen de tickets bloqueaba al equipo y ralentizaba la adopción de nuevos usuarios." },
-        { eyebrow: "Resultado", title: "−40% tickets en 30 días, NPS de onboarding mejorado", body: "El asistente resuelve el 80% de las preguntas frecuentes. El equipo de soporte se centra en casos complejos.", metric: "−40% tickets" },
+        {
+          eyebrow: "Problema habitual",
+          title: "Preguntas de configuración que saturan soporte",
+          body: "Cada usuario nuevo tropieza con las mismas dudas. El equipo dedica horas a respuestas repetitivas en lugar de casos complejos.",
+        },
+        {
+          eyebrow: "Enfoque Talkaris",
+          title: "Asistente con el contexto del producto",
+          body:
+            "El widget responde configuración y primeros pasos dentro del flujo de usuario, y deriva a soporte solo cuando el caso realmente lo requiere.",
+          metric: "Onboarding + soporte",
+        },
       ],
     },
     {
-      id: "case-ecommerce",
+      id: "pattern-ecommerce",
       eyebrow: "E-commerce B2B",
-      title: "3x más demos cualificadas desde la web pública.",
-      intro: "Un e-commerce B2B desplegó el asistente de Talkaris en su web pública para calificar visitantes y orientarlos hacia la demo correcta según su perfil de compra.",
+      title: "Captación y calificación desde la web pública.",
+      intro:
+        "Patrón para webs con tráfico comercial que reciben preguntas de producto, precios y encaje, y necesitan convertir esa intención en una demo.",
       layout: "two-up",
       cards: [
-        { eyebrow: "Problema", title: "Alta tasa de rebote sin conversión clara", body: "Los visitantes llegaban con preguntas pero no encontraban respuestas rápidas y se iban." },
-        { eyebrow: "Resultado", title: "3x más demos cualificadas por semana", body: "El asistente filtra intención de compra y ofrece CTA contextualizado al perfil del visitante.", metric: "3× pipeline" },
+        {
+          eyebrow: "Problema habitual",
+          title: "Intención de compra que no encuentra respuesta rápida",
+          body: "Los visitantes llegan con preguntas concretas y, si no obtienen respuesta, se van sin dejar rastro ni intención calificada.",
+        },
+        {
+          eyebrow: "Enfoque Talkaris",
+          title: "Conversación pública orientada a la demo",
+          body:
+            "El widget explica valor, resuelve objeciones frecuentes y ofrece el CTA de demo en el momento en que la intención aparece.",
+          metric: "Captación",
+        },
       ],
     },
     {
-      id: "case-internal",
+      id: "pattern-internal",
       eyebrow: "Portal interno",
-      title: "Conocimiento de empresa indexado en 2 horas.",
-      intro: "Un equipo de 50 personas necesitaba acceder a documentación técnica y procesos internos sin depender de búsquedas manuales ni interrumpir a los expertos.",
+      title: "Documentación de empresa consultable sin fricción.",
+      intro:
+        "Patrón para equipos con conocimiento disperso en Notion, PDFs y carpetas compartidas que necesitan respuestas con contexto y fuentes auditables.",
       layout: "two-up",
       cards: [
-        { eyebrow: "Problema", title: "Documentación dispersa en Notion, PDFs y carpetas compartidas", body: "El conocimiento existía pero nadie lo encontraba. Las preguntas las respondían siempre los mismos expertos." },
-        { eyebrow: "Resultado", title: "Knowledge base unificado con respuesta instantánea", body: "Ingestión de fuentes Notion, PDF y sitemap interno en una tarde. El asistente responde en menos de 2 segundos.", metric: "2h → producción" },
+        {
+          eyebrow: "Problema habitual",
+          title: "Documentación dispersa que nadie encuentra",
+          body: "El conocimiento existe, pero las preguntas las responden siempre los mismos expertos y las búsquedas manuales no escalan.",
+        },
+        {
+          eyebrow: "Enfoque Talkaris",
+          title: "Ingesta de fuentes y asistente con contexto del portal",
+          body:
+            "Sitemap, HTML, PDF y markdown se indexan bajo una política de fuentes versionada. Las respuestas citan de dónde salen y se reindexan con control.",
+          metric: "Conocimiento",
+        },
       ],
     },
     {
@@ -2238,13 +2302,17 @@ const CUSTOMERS_ES: PublicPageDefinition = {
     { step: "03", title: "Operación y mejora continua", body: "Conversaciones, leads y analítica desde consola. Mejoras de conocimiento sin tocar código." },
   ],
   faqs: [
-    { question: "¿Los casos de uso son reales?", answer: "Son casos basados en patrones de implantación reales, representados con nombres ficticios para respetar la confidencialidad." },
+    {
+      question: "¿Publicáis casos de éxito con clientes?",
+      answer:
+        "No publicamos casos con cifras ni testimonios que no podamos verificar. Esta página documenta patrones de implantación que la plataforma soporta de forma comprobable. La mejor validación es una demo orientada a tu superficie concreta.",
+    },
     { question: "¿Puedo ver una demo con mi caso de uso concreto?", answer: "Sí. La demo de Talkaris está orientada a tu superficie y objetivo real, no es una presentación genérica." },
-    { question: "¿Cuánto tiempo tarda una implantación real?", answer: "Entre 1 y 5 días dependiendo de la complejidad del conocimiento y la superficie. El widget en web se puede activar en horas." },
+    { question: "¿Cuánto tiempo tarda una implantación real?", answer: "Depende de la complejidad del conocimiento y la superficie. El widget en una web se puede activar el mismo día; la calidad del conocimiento es lo que marca el calendario." },
   ],
   ctaPanel: {
-    eyebrow: "¿Tu empresa es la siguiente?",
-    title: "¿Quieres ser el siguiente caso de éxito?",
+    eyebrow: "Siguiente paso",
+    title: "¿Tu superficie encaja con alguno de estos patrones?",
     body: "Solicita la demo y en 30 minutos evaluamos si Talkaris es el encaje correcto para tu web, producto o portal.",
     primaryLabel: "Solicitar demo",
     primaryPath: "/solicitar-demo",
@@ -2259,61 +2327,103 @@ const CUSTOMERS_EN: PublicPageDefinition = {
   path: "/en/customers",
   navLabel: "Customers",
   breadcrumbLabel: "Customers",
-  title: "Talkaris Customer Stories",
-  description: "B2B teams already running on Talkaris: SaaS, B2B e-commerce and internal portals that activated conversational AI in production.",
-  seoTitle: "Talkaris Customers | Conversational AI Use Cases in Production",
-  seoDescription: "Discover how B2B companies use Talkaris to activate AI assistants on web, product and support. Real results, no empty demos.",
-  seoKeywords: ["ai chatbot use cases", "conversational ai customers", "chatbot results enterprise", "b2b chatbot examples", "ai assistant success stories"],
-  heroEyebrow: "Real cases",
-  heroTitle: "Teams already running on Talkaris.",
-  heroCopy: "From corporate website to internal portal. B2B companies that activated conversational AI with intent and without improvising.",
-  heroSummary: "Each use case reflects a concrete operational decision: which surface to activate, which knowledge to govern and which result to measure.",
+  title: "Talkaris customers and deployment patterns",
+  description:
+    "Real conversational AI deployment patterns in SaaS, B2B e-commerce and internal portals: which surface to activate, which knowledge to govern and what to measure.",
+  seoTitle: "Talkaris Customers | Conversational AI Deployment Patterns",
+  seoDescription:
+    "How B2B teams activate AI assistants on web, product and support with Talkaris: deployment patterns, surfaces and governed knowledge. No fictional case studies.",
+  seoKeywords: ["ai chatbot use cases", "chatbot deployment patterns", "b2b chatbot examples", "ai assistant customer support", "conversational ai platform"],
+  heroEyebrow: "Deployment patterns",
+  heroTitle: "How teams activate Talkaris in production.",
+  heroCopy:
+    "From corporate website to internal portal: documented usage patterns to activate conversational AI with intent, governed knowledge and a measurable result per surface.",
+  heroSummary:
+    "Each pattern reflects a concrete operational decision: which surface to activate, which knowledge to govern and which metric to track. No invented figures, no fictional cases.",
   heroBadges: ["SaaS", "B2B E-commerce", "Internal portals"],
   heroStats: [
-    { value: "40%", label: "Support ticket reduction", detail: "Management SaaS that activated conversational onboarding in their product." },
-    { value: "3×", label: "More qualified demos", detail: "B2B e-commerce that deployed an assistant on their public website." },
-    { value: "2h", label: "To knowledge base in production", detail: "Internal portal that indexed their complete documentation in an afternoon." },
+    { value: "1 core", label: "One conversational stack", detail: "Web, product and portal operated from the same platform and governance." },
+    { value: "Multi-source", label: "Governed knowledge", detail: "Sitemap, HTML, PDF, YouTube, Notion and Gemini File under an auditable policy." },
+    { value: "Multi-tenant", label: "Tenant isolation", detail: "Branding, knowledge and analytics separated per project or client." },
   ],
-  heroImageAlt: "Business teams using Talkaris to operate AI assistants",
+  heroImageAlt: "Talkaris conversational interface operating on a corporate website",
   primaryCtaLabel: "Request demo",
   primaryCtaPath: "/en/request-demo",
   secondaryCtaLabel: "See features",
   secondaryCtaPath: "/en/features",
-  leadInTitle: "Conversational AI that solves real use cases.",
-  leadInBody: "There is no single deployment pattern. Some teams start with lead capture, others with support and others with internal documentation. All reach production.",
-  leadInProofs: ["Corporate website: lead capture and qualification.", "SaaS product: onboarding, contextual help and upsell.", "Internal portal: accessible documentation without manual searches."],
+  leadInTitle: "There is no single deployment pattern.",
+  leadInBody:
+    "Some teams start with lead capture, others with support and others with internal documentation. What they share: one conversational layer across every surface.",
+  leadInProofs: [
+    "Corporate website: lead capture and qualification.",
+    "SaaS product: onboarding, contextual help and support.",
+    "Internal portal: accessible documentation without manual searches.",
+  ],
   sections: [
     {
-      id: "case-saas",
-      eyebrow: "Management SaaS",
-      title: "Conversational onboarding that reduced tickets by 40%.",
-      intro: "A management software SaaS activated Talkaris in their product to guide new users during onboarding. The assistant answers configuration questions and detects blocked users before they escalate to support.",
+      id: "pattern-saas",
+      eyebrow: "SaaS",
+      title: "Onboarding and support inside the product itself.",
+      intro:
+        "Pattern for products whose users repeat the same configuration questions and need help at the exact moment, without leaving the application.",
       layout: "two-up",
       cards: [
-        { eyebrow: "Problem", title: "Too many basic configuration questions in support", body: "The ticket volume blocked the team and slowed adoption of new users." },
-        { eyebrow: "Result", title: "−40% tickets in 30 days, improved onboarding NPS", body: "The assistant resolves 80% of frequent questions. The support team focuses on truly complex cases.", metric: "−40% tickets" },
+        {
+          eyebrow: "Common problem",
+          title: "Configuration questions flooding support",
+          body: "Every new user hits the same doubts. The team spends hours on repetitive answers instead of complex cases.",
+        },
+        {
+          eyebrow: "Talkaris approach",
+          title: "Assistant with product context",
+          body:
+            "The widget answers setup and first steps inside the user flow, and hands over to support only when the case really requires it.",
+          metric: "Onboarding + support",
+        },
       ],
     },
     {
-      id: "case-ecommerce",
+      id: "pattern-ecommerce",
       eyebrow: "B2B E-commerce",
-      title: "3x more qualified demos from the public website.",
-      intro: "A B2B e-commerce deployed the Talkaris assistant on their public website to qualify visitors and guide them to the right demo based on their buying profile.",
+      title: "Lead capture and qualification on the public website.",
+      intro:
+        "Pattern for websites with commercial traffic receiving product, pricing and fit questions that should convert that intent into a demo.",
       layout: "two-up",
       cards: [
-        { eyebrow: "Problem", title: "High bounce rate without clear conversion", body: "Visitors arrived with questions but did not find quick answers and left." },
-        { eyebrow: "Result", title: "3x more qualified demos per week", body: "The assistant filters purchase intent and offers contextualized CTAs to the visitor profile.", metric: "3× pipeline" },
+        {
+          eyebrow: "Common problem",
+          title: "Purchase intent that finds no quick answer",
+          body: "Visitors arrive with concrete questions and, without a fast answer, leave with no trace and no qualified intent.",
+        },
+        {
+          eyebrow: "Talkaris approach",
+          title: "Public conversation oriented to demo",
+          body:
+            "The widget explains value, handles frequent objections and offers the demo CTA exactly when intent appears.",
+          metric: "Capture",
+        },
       ],
     },
     {
-      id: "case-internal",
+      id: "pattern-internal",
       eyebrow: "Internal portal",
-      title: "Company knowledge indexed in 2 hours.",
-      intro: "A 50-person team needed to access technical documentation and internal processes without relying on manual searches or interrupting experts.",
+      title: "Company documentation answerable without friction.",
+      intro:
+        "Pattern for teams with knowledge scattered across Notion, PDFs and shared folders that need answers with context and auditable sources.",
       layout: "two-up",
       cards: [
-        { eyebrow: "Problem", title: "Documentation scattered across Notion, PDFs and shared folders", body: "The knowledge existed but nobody found it. Questions were always answered by the same experts." },
-        { eyebrow: "Result", title: "Unified knowledge base with instant answers", body: "Ingestion of Notion, PDF and internal sitemap sources in an afternoon. The assistant responds in under 2 seconds.", metric: "2h → production" },
+        {
+          eyebrow: "Common problem",
+          title: "Scattered documentation nobody can find",
+          body: "The knowledge exists, but the same experts answer every question and manual searches do not scale.",
+        },
+        {
+          eyebrow: "Talkaris approach",
+          title: "Source ingestion and assistant with portal context",
+          body:
+            "Sitemap, HTML, PDF and markdown are indexed under a versioned source policy. Answers cite their sources and re-indexing is controlled.",
+          metric: "Knowledge",
+        },
       ],
     },
     {
@@ -2340,18 +2450,588 @@ const CUSTOMERS_EN: PublicPageDefinition = {
     { step: "03", title: "Operations and continuous improvement", body: "Conversations, leads and analytics from the console. Knowledge improvements without touching code." },
   ],
   faqs: [
-    { question: "Are the use cases real?", answer: "They are cases based on real deployment patterns, represented with fictitious names to respect customer confidentiality." },
+    {
+      question: "Do you publish customer success cases?",
+      answer:
+        "We do not publish cases with figures or testimonials we cannot verify. This page documents deployment patterns the platform verifiably supports. The best validation is a demo tailored to your concrete surface.",
+    },
     { question: "Can I see a demo with my specific use case?", answer: "Yes. The Talkaris demo is tailored to your surface and real goal, not a generic presentation." },
-    { question: "How long does a real deployment take?", answer: "Between 1 and 5 days depending on the complexity of the knowledge and the surface. The widget on a website can be activated in hours." },
+    { question: "How long does a real deployment take?", answer: "It depends on the complexity of the knowledge and the surface. The widget on a website can be activated the same day; knowledge quality is what drives the calendar." },
   ],
   ctaPanel: {
-    eyebrow: "Is your company next?",
-    title: "Want to be the next success story?",
+    eyebrow: "Next step",
+    title: "Does your surface match one of these patterns?",
     body: "Request the demo and in 30 minutes we evaluate whether Talkaris is the right fit for your web, product or portal.",
     primaryLabel: "Request demo",
     primaryPath: "/en/request-demo",
     secondaryLabel: "See pricing",
     secondaryPath: "/en/pricing",
+  },
+};
+
+const PRIVACY_ES: PublicPageDefinition = {
+  key: "privacy",
+  locale: "es",
+  path: "/privacidad",
+  navLabel: "Privacidad",
+  breadcrumbLabel: "Política de privacidad",
+  nav: false,
+  title: "Política de privacidad de Talkaris",
+  description:
+    "Cómo Talkaris trata los datos personales: datos que recogemos, finalidades, conservación, destinatarios y derechos del usuario.",
+  seoTitle: "Política de privacidad | Talkaris",
+  seoDescription:
+    "Política de privacidad de Talkaris: qué datos tratamos, con qué finalidad, durante cuánto tiempo y qué derechos puedes ejercer. Contacto: hello@talkaris.com.",
+  seoKeywords: ["politica de privacidad", "proteccion de datos", "rgpd", "talkaris"],
+  heroEyebrow: "Legal · Actualizado el 22 de agosto de 2026",
+  heroTitle: "Política de privacidad.",
+  heroCopy:
+    "En esta página explicamos de forma clara qué datos trata la plataforma Talkaris, con qué finalidad, durante cuánto tiempo y qué derechos tienes.",
+  heroSummary: "Si tienes dudas sobre esta política, escribe a hello@talkaris.com.",
+  heroBadges: ["RGPD", "Datos bajo control"],
+  heroStats: [],
+  heroImage: "",
+  heroImageAlt: "",
+  primaryCtaLabel: "Solicitar demo",
+  primaryCtaPath: "/solicitar-demo",
+  secondaryCtaLabel: "Volver al inicio",
+  secondaryCtaPath: "/",
+  indexable: true,
+  leadInTitle: "Nuestro principio: tratar los datos como tratarías los tuyos.",
+  leadInBody:
+    "Talkaris es una plataforma de IA conversacional para empresas. Los datos que tratamos son los necesarios para prestar el servicio, responder a solicitudes y mantener la seguridad.",
+  leadInProofs: [
+    "No vendemos datos personales.",
+    "Los datos de cada tenant permanecen aislados del resto.",
+    "Puedes ejercer tus derechos escribiendo a hello@talkaris.com.",
+  ],
+  sections: [
+    {
+      id: "responsable",
+      eyebrow: "1",
+      title: "Responsable del tratamiento",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        {
+          title: "¿Quién trata tus datos?",
+          body: "Talkaris, plataforma de IA conversacional, es el responsable del tratamiento de los datos personales recogidos a través de este sitio web y de la plataforma.",
+        },
+        {
+          title: "Contacto",
+          body: "Puedes contactar con nosotros en hello@talkaris.com para cualquier cuestión relativa a esta política o al tratamiento de tus datos.",
+        },
+      ],
+    },
+    {
+      id: "datos",
+      eyebrow: "2",
+      title: "Qué datos tratamos",
+      intro: "Según cómo uses Talkaris, tratamos estos datos:",
+      layout: "three-up",
+      cards: [
+        { title: "Solicitudes de demo y contacto", body: "Email corporativo, empresa, teléfono (opcional) y el mensaje que nos envíes al solicitar una demo.", bullets: ["Email y empresa", "Teléfono opcional", "Mensaje de la solicitud"] },
+        { title: "Uso de la plataforma", body: "Datos de acceso (email y credenciales), configuración de tenants y proyectos, fuentes de conocimiento y conversaciones con los asistentes.", bullets: ["Cuenta de acceso", "Proyectos y fuentes", "Conversaciones"] },
+        { title: "Datos técnicos y de sesión", body: "Datos de navegación mínimos y una cookie de sesión necesaria para la autenticación en el área privada.", bullets: ["Cookie de sesión", "Registros técnicos", "Sin cookies publicitarias"] },
+      ],
+    },
+    {
+      id: "finalidad",
+      eyebrow: "3",
+      title: "Finalidad y base jurídica",
+      intro: "Tratamos los datos con estas finalidades y bases:",
+      layout: "three-up",
+      cards: [
+        { title: "Responder y gestionar solicitudes de demo", body: "Base: ejecución de medidas precontractuales a petición tuya e interés legítimo en atender solicitudes comerciales." },
+        { title: "Prestar el servicio contratado", body: "Base: ejecución del contrato. Incluye configurar tenants, proyectos, fuentes, widget y analítica." },
+        { title: "Seguridad, mantenimiento y obligaciones legales", body: "Base: interés legítimo en proteger la plataforma y cumplimiento de obligaciones legales aplicables." },
+      ],
+    },
+    {
+      id: "conservacion",
+      eyebrow: "4",
+      title: "Conservación de los datos",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Cuánto tiempo guardamos los datos", body: "Conservamos los datos mientras se mantenga la relación comercial o la solicitud abierta, y después durante los plazos legales de prescripción de responsabilidades." },
+        { title: "Datos de cuentas inactivas", body: "Las cuentas sin actividad pueden ser depuradas según nuestra política de retención. Los datos de conversaciones se conservan dentro del ciclo de vida del proyecto." },
+      ],
+    },
+    {
+      id: "destinatarios",
+      eyebrow: "5",
+      title: "Destinatarios de los datos",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Proveedores de infraestructura", body: "Usamos proveedores de hosting y de modelos de IA que procesan datos bajo contrato y con garantías adecuadas." },
+        { title: "Aislamiento por tenant", body: "Los datos de cada cliente permanecen aislados por tenant. Ningún otro cliente de la plataforma tiene acceso a ellos." },
+        { title: "No vendemos datos", body: "No vendemos datos personales ni los usamos para publicidad de terceros." },
+      ],
+    },
+    {
+      id: "derechos",
+      eyebrow: "6",
+      title: "Tus derechos",
+      intro: "Puedes ejercer los siguientes derechos escribiendo a hello@talkaris.com:",
+      layout: "three-up",
+      cards: [
+        { title: "Derechos de acceso y rectificación", body: "Acceder a tus datos personales y corregirlos si son inexactos." },
+        { title: "Derechos de supresión, oposición y limitación", body: "Solicitar la supresión, oponerte al tratamiento y pedir la limitación en los casos previstos por la ley." },
+        { title: "Portabilidad y reclamación", body: "Recibir tus datos en formato estructurado y reclamar ante la autoridad de control competente." },
+      ],
+    },
+    {
+      id: "cookies",
+      eyebrow: "7",
+      title: "Cookies",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Cookie de sesión", body: "La plataforma usa una cookie de sesión estrictamente necesaria para la autenticación en el área privada." },
+        { title: "Sin cookies de publicidad", body: "Este sitio no usa cookies publicitarias ni de seguimiento entre sitios." },
+      ],
+    },
+    {
+      id: "cambios",
+      eyebrow: "8",
+      title: "Cambios en esta política",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Actualizaciones", body: "Podemos actualizar esta política para reflejar cambios del servicio o normativos. La fecha de la última actualización figura al inicio de esta página." },
+      ],
+    },
+  ],
+  ctaPanel: {
+    eyebrow: "Contacto",
+    title: "¿Dudas sobre privacidad?",
+    body: "Escríbenos a hello@talkaris.com y respondemos lo antes posible.",
+    primaryLabel: "Enviar email",
+    primaryPath: "mailto:hello@talkaris.com",
+    secondaryLabel: "Solicitar demo",
+    secondaryPath: "/solicitar-demo",
+  },
+};
+
+const PRIVACY_EN: PublicPageDefinition = {
+  ...PRIVACY_ES,
+  locale: "en",
+  path: "/en/privacy",
+  navLabel: "Privacy",
+  breadcrumbLabel: "Privacy policy",
+  title: "Talkaris privacy policy",
+  description:
+    "How Talkaris processes personal data: data we collect, purposes, retention, recipients and user rights.",
+  seoTitle: "Privacy policy | Talkaris",
+  seoDescription:
+    "Talkaris privacy policy: what data we process, why, for how long and which rights you can exercise. Contact: hello@talkaris.com.",
+  seoKeywords: ["privacy policy", "data protection", "gdpr", "talkaris"],
+  heroEyebrow: "Legal · Updated August 22, 2026",
+  heroTitle: "Privacy policy.",
+  heroCopy:
+    "This page explains clearly what data the Talkaris platform processes, for what purpose, for how long and which rights you have.",
+  heroSummary: "Questions about this policy? Write to hello@talkaris.com.",
+  heroBadges: ["GDPR", "Data under control"],
+  primaryCtaLabel: "Request demo",
+  primaryCtaPath: "/en/request-demo",
+  secondaryCtaLabel: "Back to home",
+  secondaryCtaPath: "/en",
+  leadInTitle: "Our principle: treat data the way you would want yours treated.",
+  leadInBody:
+    "Talkaris is a conversational AI platform for companies. The data we process is what is necessary to provide the service, answer requests and keep the platform secure.",
+  leadInProofs: [
+    "We do not sell personal data.",
+    "Each tenant's data stays isolated from the rest.",
+    "Exercise your rights by writing to hello@talkaris.com.",
+  ],
+  sections: [
+    {
+      id: "controller",
+      eyebrow: "1",
+      title: "Data controller",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        {
+          title: "Who processes your data?",
+          body: "Talkaris, a conversational AI platform, is the controller of the personal data collected through this website and platform.",
+        },
+        {
+          title: "Contact",
+          body: "Contact us at hello@talkaris.com for anything related to this policy or the processing of your data.",
+        },
+      ],
+    },
+    {
+      id: "data",
+      eyebrow: "2",
+      title: "What data we process",
+      intro: "Depending on how you use Talkaris, we process:",
+      layout: "three-up",
+      cards: [
+        { title: "Demo and contact requests", body: "Work email, company, phone (optional) and the message you send when requesting a demo.", bullets: ["Email and company", "Optional phone", "Request message"] },
+        { title: "Platform usage", body: "Access data (email and credentials), tenant and project configuration, knowledge sources and assistant conversations.", bullets: ["Access account", "Projects and sources", "Conversations"] },
+        { title: "Technical and session data", body: "Minimal browsing data and one session cookie required for authentication in the private area.", bullets: ["Session cookie", "Technical logs", "No advertising cookies"] },
+      ],
+    },
+    {
+      id: "purposes",
+      eyebrow: "3",
+      title: "Purposes and legal basis",
+      intro: "We process data for these purposes and bases:",
+      layout: "three-up",
+      cards: [
+        { title: "Answer and manage demo requests", body: "Basis: steps at your request before entering a contract and legitimate interest in handling commercial requests." },
+        { title: "Provide the contracted service", body: "Basis: contract performance. Includes configuring tenants, projects, sources, widget and analytics." },
+        { title: "Security, maintenance and legal obligations", body: "Basis: legitimate interest in protecting the platform and compliance with applicable legal obligations." },
+      ],
+    },
+    {
+      id: "retention",
+      eyebrow: "4",
+      title: "Data retention",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "How long we keep data", body: "We keep data while the business relationship or open request lasts, and afterwards for the legal limitation periods of liabilities." },
+        { title: "Inactive accounts", body: "Inactive accounts may be purged according to our retention policy. Conversation data is kept within the project lifecycle." },
+      ],
+    },
+    {
+      id: "recipients",
+      eyebrow: "5",
+      title: "Data recipients",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Infrastructure providers", body: "We use hosting and AI model providers that process data under contract with adequate safeguards." },
+        { title: "Tenant isolation", body: "Each customer's data stays isolated per tenant. No other platform customer can access it." },
+        { title: "We do not sell data", body: "We do not sell personal data or use it for third-party advertising." },
+      ],
+    },
+    {
+      id: "rights",
+      eyebrow: "6",
+      title: "Your rights",
+      intro: "Exercise the following rights by writing to hello@talkaris.com:",
+      layout: "three-up",
+      cards: [
+        { title: "Access and rectification", body: "Access your personal data and correct it when inaccurate." },
+        { title: "Erasure, objection and restriction", body: "Request erasure, object to processing and request restriction in the cases provided by law." },
+        { title: "Portability and complaints", body: "Receive your data in a structured format and complain to the competent supervisory authority." },
+      ],
+    },
+    {
+      id: "cookies",
+      eyebrow: "7",
+      title: "Cookies",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Session cookie", body: "The platform uses one strictly necessary session cookie for authentication in the private area." },
+        { title: "No advertising cookies", body: "This site does not use advertising or cross-site tracking cookies." },
+      ],
+    },
+    {
+      id: "changes",
+      eyebrow: "8",
+      title: "Changes to this policy",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Updates", body: "We may update this policy to reflect service or regulatory changes. The last update date appears at the top of this page." },
+      ],
+    },
+  ],
+  ctaPanel: {
+    eyebrow: "Contact",
+    title: "Privacy questions?",
+    body: "Write to hello@talkaris.com and we will reply as soon as possible.",
+    primaryLabel: "Send email",
+    primaryPath: "mailto:hello@talkaris.com",
+    secondaryLabel: "Request demo",
+    secondaryPath: "/en/request-demo",
+  },
+};
+
+const TERMS_ES: PublicPageDefinition = {
+  key: "terms",
+  locale: "es",
+  path: "/terminos",
+  navLabel: "Términos",
+  breadcrumbLabel: "Términos de uso",
+  nav: false,
+  title: "Términos de uso de Talkaris",
+  description:
+    "Condiciones de uso de la plataforma Talkaris: servicio, cuentas, contratación, uso aceptable, propiedad intelectual y responsabilidad.",
+  seoTitle: "Términos de uso | Talkaris",
+  seoDescription:
+    "Términos de uso de Talkaris: objeto del servicio, cuentas, contratación y precios, uso aceptable, propiedad intelectual y responsabilidad.",
+  seoKeywords: ["terminos de uso", "condiciones del servicio", "talkaris"],
+  heroEyebrow: "Legal · Actualizado el 22 de agosto de 2026",
+  heroTitle: "Términos de uso.",
+  heroCopy:
+    "Estas condiciones regulan el uso de la plataforma Talkaris y de este sitio web. Al contratar o usar el servicio aceptas estos términos.",
+  heroSummary: "Si tienes dudas, escribe a hello@talkaris.com.",
+  heroBadges: ["SaaS", "Sin permanencia"],
+  heroStats: [],
+  heroImage: "",
+  heroImageAlt: "",
+  primaryCtaLabel: "Solicitar demo",
+  primaryCtaPath: "/solicitar-demo",
+  secondaryCtaLabel: "Volver al inicio",
+  secondaryCtaPath: "/",
+  indexable: true,
+  leadInTitle: "Términos claros para un servicio claro.",
+  leadInBody:
+    "Talkaris es una plataforma SaaS de IA conversacional. Estos términos describen qué incluye el servicio, cómo se contrata y qué se espera de cada parte.",
+  leadInProofs: [
+    "Precios por proyecto, sin permanencia.",
+    "Cancelación sin penalización.",
+    "Tus contenidos y datos siguen siendo tuyos.",
+  ],
+  sections: [
+    {
+      id: "objeto",
+      eyebrow: "1",
+      title: "Objeto del servicio",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        {
+          title: "Qué es Talkaris",
+          body: "Talkaris es una plataforma de IA conversacional que incluye widget embebible, base de conocimiento gobernada, analítica conversacional y operación multi-tenant.",
+        },
+        {
+          title: "Qué no es",
+          body: "Talkaris no garantiza resultados de negocio concretos. El rendimiento depende del conocimiento aportado, la configuración y el uso de cada cliente.",
+        },
+      ],
+    },
+    {
+      id: "cuentas",
+      eyebrow: "2",
+      title: "Cuentas y acceso",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Responsabilidad de las credenciales", body: "Eres responsable de mantener la confidencialidad de tus credenciales y de la actividad que ocurra bajo tu cuenta." },
+        { title: "Acceso no autorizado", body: "No debes acceder a datos o funcionalidades ajenas ni intentar comprometer la seguridad de la plataforma o de otros tenants." },
+      ],
+    },
+    {
+      id: "contratacion",
+      eyebrow: "3",
+      title: "Contratación y precios",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Planes", body: "Los planes y sus condiciones se describen en la página de precios. Los cambios de plan se aplican sin fricción." },
+        { title: "Permanencia", body: "No hay permanencia mínima. Puedes cancelar en cualquier momento sin penalización." },
+      ],
+    },
+    {
+      id: "contenido",
+      eyebrow: "4",
+      title: "Contenido y conocimiento",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Titularidad", body: "El contenido y el conocimiento que aportas a la plataforma siguen siendo tuyos. Nos autorizas a tratarlos únicamente para prestarte el servicio." },
+        { title: "Contenido ilícito", body: "No debes introducir contenido que vulnere la ley o derechos de terceros." },
+      ],
+    },
+    {
+      id: "uso-aceptable",
+      eyebrow: "5",
+      title: "Uso aceptable",
+      intro: "Queda prohibido usar la plataforma para:",
+      layout: "three-up",
+      cards: [
+        { title: "Actividades prohibidas", body: "No está permitido usar Talkaris para actividades ilícitas, fraudulentas o que infrinjan derechos de terceros.", bullets: ["Spam o suplantación", "Contenido ilegal", "Intentos de acceso no autorizado", "Ingeniería inversa del servicio"] },
+        { title: "Cumplimiento normativo", body: "Cada cliente es responsable de cumplir la normativa aplicable a su sector, incluida la relativa a los contenidos que publica y los datos que trata." },
+      ],
+    },
+    {
+      id: "propiedad",
+      eyebrow: "6",
+      title: "Propiedad intelectual",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Plataforma", body: "El software, el diseño y las marcas de Talkaris son propiedad de Talkaris. El uso del servicio no transfiere ningún derecho de propiedad." },
+      ],
+    },
+    {
+      id: "responsabilidad",
+      eyebrow: "7",
+      title: "Garantías y responsabilidad",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Servicio", body: "Prestamos el servicio con diligencia profesional, pero sin garantizar disponibilidad absoluta ni resultados de negocio específicos." },
+        { title: "Límite", body: "Nuestra responsabilidad se limita, en la medida permitida por la ley, al importe efectivamente abonado por el servicio en el periodo afectado." },
+        { title: "Respuestas de la IA", body: "Las respuestas generadas por los asistentes se basan en el conocimiento configurado y pueden contener errores. Recomendamos revisión humana en contextos críticos." },
+      ],
+    },
+    {
+      id: "ley",
+      eyebrow: "8",
+      title: "Ley aplicable",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Jurisdicción", body: "Estos términos se rigen por la legislación española. Para cuestiones sobre estos términos, contacta en hello@talkaris.com." },
+      ],
+    },
+  ],
+  ctaPanel: {
+    eyebrow: "Contacto",
+    title: "¿Dudas sobre los términos?",
+    body: "Escríbenos a hello@talkaris.com o solicita una demo para revisar tu caso.",
+    primaryLabel: "Enviar email",
+    primaryPath: "mailto:hello@talkaris.com",
+    secondaryLabel: "Solicitar demo",
+    secondaryPath: "/solicitar-demo",
+  },
+};
+
+const TERMS_EN: PublicPageDefinition = {
+  ...TERMS_ES,
+  locale: "en",
+  path: "/en/terms",
+  navLabel: "Terms",
+  breadcrumbLabel: "Terms of use",
+  title: "Talkaris terms of use",
+  description:
+    "Terms of use of the Talkaris platform: service, accounts, contracting, acceptable use, intellectual property and liability.",
+  seoTitle: "Terms of use | Talkaris",
+  seoDescription:
+    "Talkaris terms of use: scope of the service, accounts, contracting and pricing, acceptable use, intellectual property and liability.",
+  seoKeywords: ["terms of use", "service terms", "talkaris"],
+  heroEyebrow: "Legal · Updated August 22, 2026",
+  heroTitle: "Terms of use.",
+  heroCopy:
+    "These conditions govern the use of the Talkaris platform and this website. By contracting or using the service you accept these terms.",
+  heroSummary: "Questions? Write to hello@talkaris.com.",
+  heroBadges: ["SaaS", "No lock-in"],
+  primaryCtaLabel: "Request demo",
+  primaryCtaPath: "/en/request-demo",
+  secondaryCtaLabel: "Back to home",
+  secondaryCtaPath: "/en",
+  leadInTitle: "Clear terms for a clear service.",
+  leadInBody:
+    "Talkaris is a conversational AI SaaS platform. These terms describe what the service includes, how it is contracted and what is expected from each party.",
+  leadInProofs: [
+    "Per-project pricing, no lock-in.",
+    "Cancellation without penalty.",
+    "Your content and data remain yours.",
+  ],
+  sections: [
+    {
+      id: "scope",
+      eyebrow: "1",
+      title: "Scope of the service",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        {
+          title: "What Talkaris is",
+          body: "Talkaris is a conversational AI platform that includes an embeddable widget, governed knowledge base, conversational analytics and multi-tenant operations.",
+        },
+        {
+          title: "What it is not",
+          body: "Talkaris does not guarantee concrete business results. Performance depends on the knowledge provided, configuration and each customer's usage.",
+        },
+      ],
+    },
+    {
+      id: "accounts",
+      eyebrow: "2",
+      title: "Accounts and access",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Credential responsibility", body: "You are responsible for keeping your credentials confidential and for the activity that occurs under your account." },
+        { title: "Unauthorized access", body: "You must not access third-party data or functionality or attempt to compromise the security of the platform or other tenants." },
+      ],
+    },
+    {
+      id: "contracting",
+      eyebrow: "3",
+      title: "Contracting and pricing",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Plans", body: "Plans and their conditions are described on the pricing page. Plan changes are applied without friction." },
+        { title: "Commitment", body: "There is no minimum commitment. You can cancel at any time without penalty." },
+      ],
+    },
+    {
+      id: "content",
+      eyebrow: "4",
+      title: "Content and knowledge",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Ownership", body: "The content and knowledge you bring to the platform remain yours. You authorize us to process them solely to provide the service." },
+        { title: "Unlawful content", body: "You must not upload content that violates the law or third-party rights." },
+      ],
+    },
+    {
+      id: "acceptable-use",
+      eyebrow: "5",
+      title: "Acceptable use",
+      intro: "Using the platform for the following is prohibited:",
+      layout: "three-up",
+      cards: [
+        { title: "Prohibited activities", body: "It is not allowed to use Talkaris for unlawful, fraudulent activities or those infringing third-party rights.", bullets: ["Spam or impersonation", "Illegal content", "Unauthorized access attempts", "Reverse engineering the service"] },
+        { title: "Regulatory compliance", body: "Each customer is responsible for complying with the regulations applicable to their sector, including those related to published content and processed data." },
+      ],
+    },
+    {
+      id: "ip",
+      eyebrow: "6",
+      title: "Intellectual property",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Platform", body: "The software, design and Talkaris trademarks are the property of Talkaris. Using the service transfers no ownership rights." },
+      ],
+    },
+    {
+      id: "liability",
+      eyebrow: "7",
+      title: "Warranties and liability",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Service", body: "We provide the service with professional diligence, but without guaranteeing absolute availability or specific business results." },
+        { title: "Limit", body: "Our liability is limited, to the extent permitted by law, to the amount actually paid for the service in the affected period." },
+        { title: "AI answers", body: "Assistant-generated answers are based on the configured knowledge and may contain errors. Human review is recommended in critical contexts." },
+      ],
+    },
+    {
+      id: "law",
+      eyebrow: "8",
+      title: "Applicable law",
+      intro: "",
+      layout: "three-up",
+      cards: [
+        { title: "Jurisdiction", body: "These terms are governed by Spanish law. For questions about these terms, contact hello@talkaris.com." },
+      ],
+    },
+  ],
+  ctaPanel: {
+    eyebrow: "Contact",
+    title: "Questions about the terms?",
+    body: "Write to hello@talkaris.com or request a demo to review your case.",
+    primaryLabel: "Send email",
+    primaryPath: "mailto:hello@talkaris.com",
+    secondaryLabel: "Request demo",
+    secondaryPath: "/en/request-demo",
   },
 };
 
@@ -2364,6 +3044,8 @@ export const PUBLIC_PAGES: PublicPageDefinition[] = [
   BLOG_ES,
   PRICING_ES,
   CUSTOMERS_ES,
+  PRIVACY_ES,
+  TERMS_ES,
   HOME_EN,
   FEATURES_EN,
   INTEGRATIONS_EN,
@@ -2372,6 +3054,8 @@ export const PUBLIC_PAGES: PublicPageDefinition[] = [
   BLOG_EN,
   PRICING_EN,
   CUSTOMERS_EN,
+  PRIVACY_EN,
+  TERMS_EN,
 ];
 
 export function getPublicPageByPath(path: string): PublicPageDefinition | undefined {
@@ -2391,5 +3075,5 @@ export function getAlternatePublicPage(page: PublicPageDefinition, locale: Publi
 }
 
 export function getPublicNavigation(locale: PublicLocale): PublicPageDefinition[] {
-  return PUBLIC_PAGES.filter((page) => page.locale === locale);
+  return PUBLIC_PAGES.filter((page) => page.locale === locale && page.nav !== false);
 }

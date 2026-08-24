@@ -14,6 +14,7 @@ body {
 body {
   font-family: inherit;
   text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
 }
 
 img {
@@ -175,6 +176,11 @@ select {
   gap: 22px;
 }
 
+.hero-copy-pane,
+.hero-visual {
+  min-width: 0;
+}
+
 .hero-surface--home {
   grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
 }
@@ -225,17 +231,17 @@ select {
 .form-pitch-card h1 {
   margin: 0;
   font-family: "Outfit", "Segoe UI", sans-serif;
-  font-size: clamp(2.5rem, 5vw, 5rem);
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  max-width: 11ch;
+  font-size: clamp(2.6rem, 3.8vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  max-width: 20ch;
 }
 
 .page-hero--compact .form-pitch-card h1,
 .page-hero--compact .article-hero-card h1,
 .page-hero:not(.page-hero--home) .hero-copy-pane h1 {
-  font-size: clamp(2.2rem, 4vw, 4rem);
-  max-width: 13ch;
+  font-size: clamp(2.1rem, 3vw, 3.25rem);
+  max-width: 24ch;
 }
 
 .hero-copy {
@@ -1080,7 +1086,12 @@ textarea {
   .split-panel,
   .split-layout,
   .dashboard-columns {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-surface,
+  .hero-surface--home {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .hero-stat-grid,
@@ -2599,7 +2610,7 @@ body::-webkit-scrollbar-thumb:hover,
   .site-footer__links,
   .form-grid,
   .stack-form--inline {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .brand-lockup__copy small {
@@ -4499,7 +4510,7 @@ app-login-page {
       justify-content: center;
     }
     .chat-mockup {
-      width: 320px;
+      width: min(320px, 100%);
       max-width: 100%;
       border-radius: 16px;
       overflow: hidden;
@@ -4706,10 +4717,11 @@ app-login-page {
       padding: 0.75rem 1.5rem;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
       font-size: 0.9rem;
     }
-    .sticky-cta__inner span { flex: 1; }
+    .sticky-cta__inner span { flex: 1 1 220px; min-width: 0; }
     .sticky-cta__close {
       background: none;
       border: none;
@@ -4758,6 +4770,7 @@ app-login-page {
       padding: 5rem 0;
     }
     .testimonial-strip .section-heading h2 { color: #fff; }
+    .testimonial-strip .section-heading p { color: rgba(255, 255, 255, 0.62); }
     .testimonial-strip .eyebrow { color: var(--ck-accent, #8b5cf6); }
     .testimonial-strip__grid {
       display: grid;
@@ -4768,35 +4781,66 @@ app-login-page {
     .testimonial-strip__card {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
+      gap: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
       padding: 2rem;
+      background: rgba(255, 255, 255, 0.04);
     }
-    .testimonial-strip__quote {
-      font-size: 1rem;
-      line-height: 1.7;
-      font-style: italic;
+    .testimonial-strip__metric {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--ck-accent-soft);
+      color: var(--ck-accent);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .testimonial-strip__title {
       margin: 0;
-      color: rgba(255,255,255,0.85);
-    }
-    .testimonial-strip__author {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      font-size: 0.875rem;
-    }
-    .testimonial-strip__author strong {
-      font-weight: 700;
+      font-size: 1.15rem;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      font-family: var(--ck-font-heading);
       color: #fff;
     }
-    .testimonial-strip__author span {
-      color: rgba(255,255,255,0.65);
+    .testimonial-strip__quote {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.78);
     }
-    .testimonial-strip__company {
-      color: var(--ck-accent, #8b5cf6) !important;
-      font-size: 0.8rem;
-    }
+
+/* Logo bar caption */
+.logo-bar__caption {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ck-text-muted);
+  margin: 0 0 1rem;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .chat-msg {
+    animation: none;
+    opacity: 1;
+  }
+  .button,
+  .site-nav__link,
+  .brand-lockup__mark,
+  .logo-bar__track {
+    transition: none;
+  }
+  .button:hover {
+    transform: none;
+  }
+}
 
 /* Extracted inline style utilities */
 .ck-auto-009 { font-size: 0.75rem; color: var(--ck-text-muted); }

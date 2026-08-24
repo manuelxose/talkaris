@@ -23,3 +23,10 @@ apps/portal/releases/
 tmp-storage/
 current
 releases/
+
+# Ruflo local secrets and runtime data
+.env.local
+.env.*.local
+.claude-flow/data/
+.claude-flow/logs/
+.claude-flow/sessions/

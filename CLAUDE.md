@@ -45,5 +45,5 @@ Ensure system resilience via comprehensive QA and E2E testing. Follow TDD/BDD pr
 Owner of the user experience in the portal and widgets. Implement premium designs and smooth interactions.
 
 ## Support
-- CLI Tools: `npx @claude-flow/cli@latest`
+- CLI Tools: `npx ruflo@latest`
 - Orchestration: Refer to `AGENTS.md` for swarm definitions.

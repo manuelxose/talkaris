@@ -26,12 +26,21 @@ export class SeoService {
     this.meta.updateTag({ property: "og:url", content: payload.canonicalUrl });
     this.meta.updateTag({ property: "og:site_name", content: payload.siteName });
     this.meta.updateTag({ property: "og:locale", content: payload.locale });
+    this.meta.updateTag({
+      property: "og:locale:alternate",
+      content: payload.locale === "es_ES" ? "en_US" : "es_ES",
+    });
     this.meta.updateTag({ property: "og:image", content: payload.ogImageUrl });
+    this.meta.updateTag({ property: "og:image:width", content: "1200" });
+    this.meta.updateTag({ property: "og:image:height", content: "630" });
+    this.meta.updateTag({ property: "og:image:alt", content: payload.pageTitle });
     this.meta.updateTag({ name: "twitter:card", content: "summary_large_image" });
     this.meta.updateTag({ name: "twitter:title", content: payload.pageTitle });
     this.meta.updateTag({ name: "twitter:description", content: payload.description });
     this.meta.updateTag({ name: "twitter:image", content: payload.ogImageUrl });
-    this.meta.updateTag({ name: "keywords", content: payload.keywords });
+    this.meta.updateTag({ name: "twitter:image:alt", content: payload.pageTitle });
+
+    this.document.documentElement.setAttribute("lang", payload.locale.split("_")[0] || "es");
 
     this.syncLinks(payload);
     this.syncSchemas(payload.schemas);

@@ -30,11 +30,11 @@ import { MarketingFrameComponent } from "../shared/marketing-frame.component";
     >
       <section class="page-hero" id="main-content">
         <div class="site-shell">
-          <div class="breadcrumb-row">
+          <nav class="breadcrumb-row" aria-label="Breadcrumb">
             <a [routerLink]="locale === 'es' ? '/' : '/en'">{{ locale === "es" ? "Inicio" : "Home" }}</a>
-            <span>/</span>
+            <span aria-hidden="true">/</span>
             <span>Blog</span>
-          </div>
+          </nav>
 
           <div class="hero-surface">
             <div class="hero-copy-pane">
@@ -159,7 +159,7 @@ import { MarketingFrameComponent } from "../shared/marketing-frame.component";
             <article class="blog-card blog-card--featured" *ngIf="featuredPost">
               <img
                 class="blog-card__image"
-                [src]="featuredPost.imageUrl || '/assets/talkaris-editorial-campaign.png'"
+                [src]="featuredPost.imageUrl || '/assets/talkaris-editorial-campaign.webp'"
                 [alt]="featuredPost.imageUrl ? featuredPost.title : ''"
                 loading="eager"
               />
@@ -184,7 +184,7 @@ import { MarketingFrameComponent } from "../shared/marketing-frame.component";
               <article class="blog-card" *ngFor="let post of listedPosts">
                 <img
                   class="blog-card__image"
-                  [src]="post.imageUrl || '/assets/talkaris-editorial-campaign.png'"
+                  [src]="post.imageUrl || '/assets/talkaris-editorial-campaign.webp'"
                   [alt]="post.imageUrl ? post.title : ''"
                   loading="lazy"
                 />

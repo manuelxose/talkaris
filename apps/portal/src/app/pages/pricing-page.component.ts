@@ -30,11 +30,11 @@ import { MarketingFrameComponent } from "../shared/marketing-frame.component";
     >
       <section class="page-hero" id="main-content">
         <div class="site-shell">
-          <div class="breadcrumb-row">
+          <nav class="breadcrumb-row" aria-label="Breadcrumb">
             <a [routerLink]="locale === 'es' ? '/' : '/en'">{{ locale === "es" ? "Inicio" : "Home" }}</a>
-            <span>/</span>
+            <span aria-hidden="true">/</span>
             <span>{{ page.breadcrumbLabel }}</span>
-          </div>
+          </nav>
 
           <div class="hero-surface">
             <div class="hero-copy-pane">

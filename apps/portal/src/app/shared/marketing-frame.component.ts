@@ -15,7 +15,7 @@ import { LogoBarComponent } from "./logo-bar.component";
     </a>
 
     <!-- Sticky CTA bar -->
-    <div class="sticky-cta" [class.sticky-cta--visible]="showStickyCta" *ngIf="!stickyDismissed">
+    <div class="sticky-cta" [class.sticky-cta--visible]="showStickyCta" *ngIf="!hideStickyCta && !stickyDismissed">
       <div class="sticky-cta__inner">
         <span>{{ locale === "es" ? "¿Quieres ver Talkaris funcionando?" : "Want to see Talkaris in action?" }}</span>
         <a class="button button-primary button-primary--sm" [routerLink]="ctaPath">
@@ -42,6 +42,7 @@ import { LogoBarComponent } from "./logo-bar.component";
               class="menu-toggle"
               (click)="menuOpen = !menuOpen"
               [attr.aria-expanded]="menuOpen"
+              [attr.aria-label]="menuOpen ? (locale === 'es' ? 'Cerrar menú' : 'Close menu') : (locale === 'es' ? 'Abrir menú' : 'Open menu')"
               aria-controls="marketing-navigation"
             >
               {{ locale === "es" ? "Menú" : "Menu" }}
@@ -74,14 +75,14 @@ import { LogoBarComponent } from "./logo-bar.component";
       </main>
 
       <!-- Logo bar -->
-      <app-logo-bar></app-logo-bar>
+      <app-logo-bar [locale]="locale"></app-logo-bar>
 
       <footer class="site-footer">
         <div class="site-shell site-footer__grid">
           <div class="site-footer__brand">
             <span class="eyebrow">{{ locale === "es" ? "Talkaris" : "Talkaris" }}</span>
-            <h2>{{ platform.tagline }}</h2>
-            <p>{{ platform.summary }}</p>
+            <h2>{{ footerTagline }}</h2>
+            <p>{{ footerSummary }}</p>
             <div class="footer-proof">
               <span>{{ locale === "es" ? "Widget embebible" : "Embeddable widget" }}</span>
               <span>{{ locale === "es" ? "Conocimiento gobernado" : "Governed knowledge" }}</span>
@@ -121,22 +122,35 @@ import { LogoBarComponent } from "./logo-bar.component";
               <a [routerLink]="ctaPath">{{ ctaLabel }}</a>
             </div>
             <div>
-              <h3>{{ locale === "es" ? "Contacto" : "Contact" }}</h3>
-              <a [href]="'mailto:' + platform.contactEmail">{{ platform.contactEmail }}</a>
-              <a [href]="platform.portalBaseUrl" target="_blank" rel="noreferrer">{{ platform.portalBaseUrl }}</a>
+              <h3>{{ locale === "es" ? "Empresa" : "Company" }}</h3>
+              <a [routerLink]="locale === 'es' ? '/privacidad' : '/en/privacy'">
+                {{ locale === "es" ? "Política de privacidad" : "Privacy policy" }}
+              </a>
+              <a [routerLink]="locale === 'es' ? '/terminos' : '/en/terms'">
+                {{ locale === "es" ? "Términos de uso" : "Terms of use" }}
+              </a>
               <a [routerLink]="'/login'">
                 {{ locale === "es" ? "Acceso al portal" : "Portal access" }}
               </a>
+            </div>
+            <div>
+              <h3>{{ locale === "es" ? "Contacto" : "Contact" }}</h3>
+              <a [href]="'mailto:' + platform.contactEmail">{{ platform.contactEmail }}</a>
+              <a [href]="platform.portalBaseUrl" target="_blank" rel="noreferrer">{{ platform.portalBaseUrl }}</a>
             </div>
           </div>
         </div>
 
         <div class="site-shell site-footer__legal">
-          <span>© 2026 Talkaris</span>
+          <span>© {{ year }} Talkaris</span>
           <span class="site-footer__sep">·</span>
-          <span>{{ locale === "es" ? "Política de privacidad" : "Privacy policy" }}</span>
+          <a [routerLink]="locale === 'es' ? '/privacidad' : '/en/privacy'">
+            {{ locale === "es" ? "Política de privacidad" : "Privacy policy" }}
+          </a>
           <span class="site-footer__sep">·</span>
-          <span>{{ locale === "es" ? "Términos de uso" : "Terms of use" }}</span>
+          <a [routerLink]="locale === 'es' ? '/terminos' : '/en/terms'">
+            {{ locale === "es" ? "Términos de uso" : "Terms of use" }}
+          </a>
           <span class="site-footer__sep">·</span>
           <a [href]="'mailto:' + platform.supportEmail">{{ locale === "es" ? "Soporte" : "Support" }}: {{ platform.supportEmail }}</a>
         </div>
@@ -150,12 +164,27 @@ export class MarketingFrameComponent implements OnInit {
   @Input({ required: true }) alternatePath = "";
   @Input({ required: true }) ctaLabel = "";
   @Input({ required: true }) ctaPath = "";
+  @Input() hideStickyCta = false;
 
   menuOpen = false;
   showStickyCta = false;
   stickyDismissed = false;
+  year = new Date().getFullYear();
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
+
+  get footerTagline(): string {
+    return this.locale === "es"
+      ? "Infraestructura de IA conversacional para webs, productos y operaciones de soporte."
+      : this.platform.tagline || "Conversational AI infrastructure for websites, products and support operations.";
+  }
+
+  get footerSummary(): string {
+    return this.locale === "es"
+      ? "Talkaris centraliza demo pública, widget embebible, ingesta de conocimiento, operación de tenants y gobierno global en una sola plataforma."
+      : this.platform.summary ||
+          "Talkaris centralises public demo, embeddable widget, knowledge ingestion, tenant operations and global governance in one platform.";
+  }
 
   ngOnInit(): void {
     if (typeof sessionStorage !== "undefined") {
@@ -163,9 +192,14 @@ export class MarketingFrameComponent implements OnInit {
     }
   }
 
+  @HostListener("document:keydown.escape")
+  onEscape(): void {
+    this.menuOpen = false;
+  }
+
   @HostListener("window:scroll")
   onScroll(): void {
-    if (this.stickyDismissed) return;
+    if (this.stickyDismissed || this.hideStickyCta) return;
     if (typeof window !== "undefined") {
       this.showStickyCta = window.scrollY > 300;
     }

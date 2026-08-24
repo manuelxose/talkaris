@@ -2,6 +2,9 @@ import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { PublicLocale } from "../content/public-site";
 
+/**
+ * Honest capability proof strip — product facts, not fabricated testimonials.
+ */
 @Component({
   selector: "app-testimonial-strip",
   standalone: true,
@@ -10,19 +13,21 @@ import { PublicLocale } from "../content/public-site";
     <section class="testimonial-strip">
       <div class="site-shell">
         <div class="section-heading">
-          <span class="eyebrow">{{ locale === "es" ? "Lo que dicen" : "What they say" }}</span>
-          <h2>{{ locale === "es" ? "Equipos que ya decidieron." : "Teams that already decided." }}</h2>
+          <span class="eyebrow">{{ locale === "es" ? "Pruebas de producto" : "Product proof" }}</span>
+          <h2>{{ locale === "es" ? "Diseñado para pasar de demo a producción sin improvisar." : "Built to go from demo to production without improvisation." }}</h2>
+          <p>
+            {{
+              locale === "es"
+                ? "Capacidades verificables de la plataforma, sin cifras inventadas ni casos ficticios."
+                : "Verifiable platform capabilities — no invented figures, no fictional cases."
+            }}
+          </p>
         </div>
         <div class="testimonial-strip__grid">
-          <article class="testimonial-strip__card" *ngFor="let t of testimonials">
-            <blockquote class="testimonial-strip__quote">
-              &ldquo;{{ locale === "es" ? t.quoteEs : t.quoteEn }}&rdquo;
-            </blockquote>
-            <footer class="testimonial-strip__author">
-              <strong>{{ t.name }}</strong>
-              <span>{{ locale === "es" ? t.roleEs : t.roleEn }}</span>
-              <span class="testimonial-strip__company">{{ locale === "es" ? t.companyEs : t.companyEn }}</span>
-            </footer>
+          <article class="testimonial-strip__card" *ngFor="let item of proof">
+            <span class="testimonial-strip__metric">{{ locale === "es" ? item.metricEs : item.metricEn }}</span>
+            <h3 class="testimonial-strip__title">{{ locale === "es" ? item.titleEs : item.titleEn }}</h3>
+            <p class="testimonial-strip__quote">{{ locale === "es" ? item.bodyEs : item.bodyEn }}</p>
           </article>
         </div>
       </div>
@@ -31,33 +36,36 @@ import { PublicLocale } from "../content/public-site";
 export class TestimonialStripComponent {
   @Input() locale: PublicLocale = "es";
 
-  testimonials = [
+  proof = [
     {
-      quoteEs: "Desplegamos Talkaris en nuestra web en un día. El ROI fue visible en la primera semana de demos.",
-      quoteEn: "We deployed Talkaris on our website in a day. ROI was visible in the first week of demos.",
-      name: "Sergio M.",
-      roleEs: "CTO",
-      roleEn: "CTO",
-      companyEs: "SaaS de gestión inmobiliaria",
-      companyEn: "Property management SaaS",
+      metricEs: "< 5 min",
+      metricEn: "< 5 min",
+      titleEs: "Widget en producción sin dependencias de build",
+      titleEn: "Widget live without build dependencies",
+      bodyEs:
+        "Un snippet de una línea y una site key despliegan el widget en cualquier web. No hay que tocar tu stack.",
+      bodyEn:
+        "A one-line snippet and a site key deploy the widget on any site. Your stack stays untouched.",
     },
     {
-      quoteEs: "El aislamiento por tenant era exactamente lo que necesitábamos para nuestros clientes enterprise.",
-      quoteEn: "The tenant isolation was exactly what we needed for our enterprise clients.",
-      name: "Laura P.",
-      roleEs: "Head of Product",
-      roleEn: "Head of Product",
-      companyEs: "Agencia digital B2B",
-      companyEn: "B2B digital agency",
+      metricEs: "Multi-fuente",
+      metricEn: "Multi-source",
+      titleEs: "Conocimiento gobernado por proyecto",
+      titleEn: "Knowledge governed per project",
+      bodyEs:
+        "Sitemap, HTML, PDF, YouTube, Notion y Gemini File bajo una política de fuentes auditable y reindexable.",
+      bodyEn:
+        "Sitemap, HTML, PDF, YouTube, Notion and Gemini File under an auditable, re-indexable source policy.",
     },
     {
-      quoteEs: "La ingesta de YouTube nos ahorró semanas de documentación manual.",
-      quoteEn: "The YouTube ingestion saved us weeks of manual documentation work.",
-      name: "Ana C.",
-      roleEs: "Knowledge Manager",
-      roleEn: "Knowledge Manager",
-      companyEs: "Portal de formación técnica",
-      companyEn: "Technical training portal",
+      metricEs: "Multi-tenant",
+      metricEn: "Multi-tenant",
+      titleEs: "Aislamiento por tenant con visión global",
+      titleEn: "Tenant isolation with global visibility",
+      bodyEs:
+        "Branding, conocimiento, dominios y analítica separados por tenant, con gobierno central desde superadmin.",
+      bodyEn:
+        "Branding, knowledge, domains and analytics isolated per tenant, with central governance from superadmin.",
     },
   ];
 }

@@ -120,6 +120,34 @@ export const routes: Routes = [
   },
 
   // ============================================================
+  // LEGAL PAGES
+  // ============================================================
+  {
+    path: "privacidad",
+    loadComponent: () =>
+      import("./pages/legal-page.component").then((m) => m.LegalPageComponent),
+    data: { legalKey: "privacy", locale: "es" },
+  },
+  {
+    path: "en/privacy",
+    loadComponent: () =>
+      import("./pages/legal-page.component").then((m) => m.LegalPageComponent),
+    data: { legalKey: "privacy", locale: "en" },
+  },
+  {
+    path: "terminos",
+    loadComponent: () =>
+      import("./pages/legal-page.component").then((m) => m.LegalPageComponent),
+    data: { legalKey: "terms", locale: "es" },
+  },
+  {
+    path: "en/terms",
+    loadComponent: () =>
+      import("./pages/legal-page.component").then((m) => m.LegalPageComponent),
+    data: { legalKey: "terms", locale: "en" },
+  },
+
+  // ============================================================
   // ACCESS REQUEST / DEMO
   // ============================================================
   {

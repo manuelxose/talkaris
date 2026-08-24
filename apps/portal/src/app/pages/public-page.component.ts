@@ -17,11 +17,12 @@ import { SeoService } from "../services/seo.service";
 import { buildPageSeo } from "../services/seo-utils";
 import { MarketingFrameComponent } from "../shared/marketing-frame.component";
 import { TestimonialStripComponent } from "../shared/testimonial-strip.component";
+import { WidgetDemoComponent } from "../shared/widget-demo.component";
 
 @Component({
   selector: "app-public-page",
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, MarketingFrameComponent, TestimonialStripComponent],
+  imports: [CommonModule, RouterModule, FormsModule, MarketingFrameComponent, TestimonialStripComponent, WidgetDemoComponent],
   template: `
     <app-marketing-frame
       [locale]="locale"
@@ -30,14 +31,15 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
       [alternatePath]="alternatePage.path"
       [ctaLabel]="page.primaryCtaLabel"
       [ctaPath]="page.primaryCtaPath"
+      [hideStickyCta]="page.key === 'home'"
     >
       <section class="page-hero" [class.page-hero--home]="page.key === 'home'" id="main-content">
         <div class="site-shell">
-          <div class="breadcrumb-row" *ngIf="page.key !== 'home'">
+          <nav class="breadcrumb-row" *ngIf="page.key !== 'home'" aria-label="Breadcrumb">
             <a [routerLink]="locale === 'es' ? '/' : '/en'">{{ locale === "es" ? "Inicio" : "Home" }}</a>
-            <span>/</span>
+            <span aria-hidden="true">/</span>
             <span>{{ page.breadcrumbLabel }}</span>
-          </div>
+          </nav>
 
           <div class="hero-surface" [class.hero-surface--home]="page.key === 'home'">
             <div class="hero-copy-pane">
@@ -81,7 +83,12 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
             </aside>
 
             <!-- Home: animated chat widget mockup -->
-            <aside class="hero-visual hero-visual--chat" *ngIf="page.key === 'home'">
+            <aside
+              class="hero-visual hero-visual--chat"
+              *ngIf="page.key === 'home'"
+              role="img"
+              [attr.aria-label]="locale === 'es' ? 'Simulación de una conversación con el widget de Talkaris' : 'Simulated conversation with the Talkaris widget'"
+            >
               <div class="chat-mockup">
                 <div class="chat-mockup__bar">
                   <span class="chat-mockup__dot"></span>
@@ -120,6 +127,7 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
         </div>
       </section>
 
+      @defer (hydrate on viewport) {
       <section class="lead-in-section">
         <div class="site-shell lead-in-panel">
           <div>
@@ -247,6 +255,7 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
                     [(ngModel)]="inlineDemoForm.email"
                     name="inline-email"
                     type="email"
+                    autocomplete="email"
                     required
                     [placeholder]="locale === 'es' ? 'tu@empresa.com' : 'you@company.com'"
                   />
@@ -258,6 +267,7 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
                     class="ck-input"
                     [(ngModel)]="inlineDemoForm.company"
                     name="inline-company"
+                    autocomplete="organization"
                     required
                     [placeholder]="locale === 'es' ? 'Nombre de empresa' : 'Company name'"
                   />
@@ -269,6 +279,13 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
             </div>
           </div>
         </div>
+
+        <!-- Live widget demo (real production contract) -->
+        <app-widget-demo
+          [siteKey]="platform.demoSiteKey || DEFAULT_PORTAL_SETTINGS.demoSiteKey"
+          [apiBase]="platform.apiBaseUrl || DEFAULT_PORTAL_SETTINGS.apiBaseUrl"
+          [widgetBaseUrl]="platform.widgetBaseUrl || DEFAULT_PORTAL_SETTINGS.widgetBaseUrl"
+        ></app-widget-demo>
       </section>
 
       <section class="timeline-section" *ngIf="page.timeline?.length">
@@ -333,6 +350,7 @@ import { TestimonialStripComponent } from "../shared/testimonial-strip.component
           </div>
         </div>
       </section>
+      }
     </app-marketing-frame>
   `})
 export class PublicPageComponent implements OnInit {

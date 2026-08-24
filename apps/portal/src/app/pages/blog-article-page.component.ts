@@ -23,13 +23,13 @@ import { MarketingFrameComponent } from "../shared/marketing-frame.component";
     >
       <section class="page-hero page-hero--compact" id="main-content" *ngIf="post; else notFound">
         <div class="site-shell article-shell">
-          <div class="breadcrumb-row">
+          <nav class="breadcrumb-row" aria-label="Breadcrumb">
             <a [routerLink]="locale === 'es' ? '/' : '/en'">{{ locale === "es" ? "Inicio" : "Home" }}</a>
-            <span>/</span>
+            <span aria-hidden="true">/</span>
             <a [routerLink]="locale === 'es' ? '/blog' : '/en/blog'">Blog</a>
-            <span>/</span>
+            <span aria-hidden="true">/</span>
             <span>{{ post?.title }}</span>
-          </div>
+          </nav>
 
           <article class="article-hero-card">
             <span class="eyebrow">{{ post.category || (locale === "es" ? "Editorial" : "Editorial") }}</span>
@@ -47,7 +47,7 @@ import { MarketingFrameComponent } from "../shared/marketing-frame.component";
 
             <img
               class="article-hero-card__image"
-              [src]="post.imageUrl || '/assets/talkaris-editorial-campaign.png'"
+              [src]="post.imageUrl || '/assets/talkaris-editorial-campaign.webp'"
               [alt]="post.imageUrl ? post.title : ''"
               loading="eager"
             />

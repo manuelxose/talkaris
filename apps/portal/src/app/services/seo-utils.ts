@@ -118,6 +118,10 @@ export function buildBlogArticleSeo(
   const canonicalUrl = joinUrl(baseUrl, article.path);
   const pageTitle = `${article.title} | ${safeSettings.brandName}`;
   const imageUrl = article.imageUrl || safeSettings.seoImageUrl;
+  const isEn = article.locale === "en";
+  const alternateSlugPath = isEn
+    ? article.path.replace(/^\/en\/blog\//, "/blog/")
+    : article.path.replace(/^\/blog\//, "/en/blog/");
 
   return {
     pageTitle,
@@ -126,7 +130,24 @@ export function buildBlogArticleSeo(
     canonicalUrl,
     locale: article.locale === "es" ? "es_ES" : "en_US",
     keywords: [article.title, "blog", safeSettings.brandName, ...safeSettings.seoKeywords].join(", "),
-    links: [{ rel: "canonical", href: canonicalUrl }],
+    links: [
+      { rel: "canonical", href: canonicalUrl },
+      {
+        rel: "alternate",
+        href: joinUrl(baseUrl, isEn ? alternateSlugPath : article.path),
+        hreflang: "es",
+      },
+      {
+        rel: "alternate",
+        href: joinUrl(baseUrl, isEn ? article.path : alternateSlugPath),
+        hreflang: "en",
+      },
+      {
+        rel: "alternate",
+        href: joinUrl(baseUrl, isEn ? alternateSlugPath : article.path),
+        hreflang: "x-default",
+      },
+    ],
     schemas: [
       buildOrganizationSchema(safeSettings),
       buildWebSiteSchema(safeSettings),
@@ -236,7 +257,13 @@ function buildOrganizationSchema(settings: PortalSettings): Record<string, unkno
     "@type": "Organization",
     name: settings.organizationName || settings.brandName,
     url: settings.portalBaseUrl,
+    logo: joinUrl(settings.portalBaseUrl, "/assets/talkaris-icon-512.svg"),
     email: settings.contactEmail || settings.supportEmail,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: settings.supportEmail || settings.contactEmail,
+    },
   };
 }
 
