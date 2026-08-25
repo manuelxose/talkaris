@@ -24,7 +24,7 @@ tmp-storage/
 current
 releases/
 
-# Ruflo local secrets and runtime data
+# Tool local secrets and runtime data
 .env.local
 .env.*.local
 .claude-flow/data/

@@ -1,37 +1,13 @@
-# AGENTS.md - Swarm Definitions for Taskaris Rebuild
+# Talkaris agent instructions
 
-This document defines the specialized swarms managed by Ruflo.
+Talkaris is a multi-tenant platform with `chat-api`, `ingest-worker`, `ops-cli`, `portal`, `widget`, and shared `core` packages.
 
-## [ARCHITECTURE SWARM]
-- **Leader**: Claude (Strategist)
-- **Executor**: Codex
-- **Auditor**: Gemini
-- **Mission**: Define the new core structure, interfaces, and cross-cutting concerns.
-- **Priority**: High
+- Preserve tenant isolation and Clean Architecture boundaries.
+- Inspect before editing; never expose secrets or commit `.env` files.
+- Use one primary agent by default. Delegate only bounded implementation, visual review, verification, or performance work.
+- Use Graphify for cross-cutting changes when available; query only the relevant subgraph.
+- For UI work, use design skills on demand and validate responsive behavior with Playwright and axe.
 
-## [BACKEND SWARM]
-- **Mission**: Refactor `chat-api` and `ingest-worker` into a modular architecture.
-- **Capabilities**: Database schema adjustment, service layer extraction, multi-tenant middleware.
-- **Priority**: High
+Commands: `npm run build`, `npm run test`, `npm run dev:api`, `npm run dev:ingest`, `npm run dev:portal`.
 
-## [FRONTEND SWARM]
-- **Mission**: Rebuild `portal` and `widget` with a shared UI package and state management.
-- **Capabilities**: React/Next.js, Tailwind (if requested), Component-driven design.
-- **Priority**: Medium
-
-## [TESTING/QA SWARM]
-- **Mission**: End-to-end testing, unit test coverage, and security hardening.
-- **Leader**: Gemini
-- **Priority**: Continuous
-
-## agent Registry
-- **Orchestrator-01**: Claude-3.7-Sonnet
-- **Executor-01**: Codex-v2
-- **Auditor-01**: Gemini-2.0-Flash-Thinking
-
-## Resilience & Efficiency Policy
-- **Fallback Rule**: If any primary model (Claude/Codex/Gemini) is unavailable, Ruflo will automatically route the task to the next available model.
-- **Adaptive Effort**: effort must be proportional to capacity; simpler models focus on high-speed tasks.
-- **Token Saving**: Prioritize short prompts and concise responses. Use "Summarize" tools to minimize context overhead.
-- **Budgeting**: All tasks must respect the `RUFLO_MAX_TOKENS_LIMIT`.
-
+Shared workspace skills are cataloged at `/var/www/.agents/skills/manifest.json` and load on demand. Use Graphify for cross-cutting work; use Vercel and Impeccable only for applicable web tasks.
