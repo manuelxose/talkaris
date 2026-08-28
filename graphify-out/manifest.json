@@ -1,9 +1,9 @@
 {
   ".mcp.json": {
-    "mtime": 1787399317.1435459,
-    "seen": 1787599633.5853655,
-    "ast_hash": "221695c95307465bcd19c0a061eeb15d",
-    "semantic_hash": "221695c95307465bcd19c0a061eeb15d"
+    "mtime": 1787650576.5150015,
+    "seen": 1787654386.3920166,
+    "ast_hash": "39fcaa6fd7f6d4d670500978ca977562",
+    "semantic_hash": ""
   },
   "apps/chat-api/migrations/001_init.sql": {
     "mtime": 1773144645.6887422,
@@ -210,8 +210,8 @@
     "semantic_hash": "6c14ae85ef3fc3fb45ad95d8972af2b3"
   },
   "apps/portal/src/app/app.config.ts": {
-    "mtime": 1787405037.0623288,
-    "seen": 1787599633.5854414,
+    "mtime": 1787611597.125124,
+    "seen": 1787654386.3920965,
     "ast_hash": "b865b582830f95466ca693d0b06f01db",
     "semantic_hash": "b865b582830f95466ca693d0b06f01db"
   },
@@ -222,8 +222,8 @@
     "semantic_hash": "98684e528d49df307cff25519e29ae3f"
   },
   "apps/portal/src/app/app.routes.ts": {
-    "mtime": 1787403418.7802997,
-    "seen": 1787599633.5854456,
+    "mtime": 1787611597.1081243,
+    "seen": 1787654386.3921003,
     "ast_hash": "7c33443450c80f01025bb763c843125d",
     "semantic_hash": "7c33443450c80f01025bb763c843125d"
   },
@@ -420,8 +420,8 @@
     "semantic_hash": "24c6a1e536b5f80a726a14b387aa5700"
   },
   "apps/portal/src/app/content/public-site.ts": {
-    "mtime": 1787403375.7449691,
-    "seen": 1787599633.5854993,
+    "mtime": 1787611597.1081243,
+    "seen": 1787654386.392159,
     "ast_hash": "2067bfb3685ae9413137a238629c8259",
     "semantic_hash": "2067bfb3685ae9413137a238629c8259"
   },
@@ -468,26 +468,26 @@
     "semantic_hash": "400cd3828e061d112ec17721fc2fbafd"
   },
   "apps/portal/src/app/pages/blog-article-page.component.ts": {
-    "mtime": 1787403600.8834665,
-    "seen": 1787599633.5855277,
+    "mtime": 1787611597.1091242,
+    "seen": 1787654386.392187,
     "ast_hash": "aa2c7eb4204df227be9c0f026fb4da92",
     "semantic_hash": "aa2c7eb4204df227be9c0f026fb4da92"
   },
   "apps/portal/src/app/pages/blog-list-page.component.ts": {
-    "mtime": 1787403581.188773,
-    "seen": 1787599633.58553,
+    "mtime": 1787611597.1091242,
+    "seen": 1787654386.3921897,
     "ast_hash": "2f454bb79746735e4a48278949a9097d",
     "semantic_hash": "2f454bb79746735e4a48278949a9097d"
   },
   "apps/portal/src/app/pages/customers-page.component.ts": {
-    "mtime": 1787403581.1927729,
-    "seen": 1787599633.5855317,
+    "mtime": 1787611597.1091242,
+    "seen": 1787654386.3921916,
     "ast_hash": "13050e24173a716dbaace30fe28660d3",
     "semantic_hash": "13050e24173a716dbaace30fe28660d3"
   },
   "apps/portal/src/app/pages/legal-page.component.ts": {
-    "mtime": 1787403398.82461,
-    "seen": 1787599633.5855331,
+    "mtime": 1787611597.1081243,
+    "seen": 1787654386.3921933,
     "ast_hash": "205156cebca441f739811ee37042e83b",
     "semantic_hash": "205156cebca441f739811ee37042e83b"
   },
@@ -498,14 +498,14 @@
     "semantic_hash": "4700d699454cf4bf0d2948340de5056e"
   },
   "apps/portal/src/app/pages/pricing-page.component.ts": {
-    "mtime": 1787403581.232772,
-    "seen": 1787599633.5855362,
+    "mtime": 1787611597.1091242,
+    "seen": 1787654386.3921962,
     "ast_hash": "11f35613f06f6c085e2cc90ba44f4a2d",
     "semantic_hash": "11f35613f06f6c085e2cc90ba44f4a2d"
   },
   "apps/portal/src/app/pages/public-page.component.ts": {
-    "mtime": 1787405538.6700253,
-    "seen": 1787599633.585538,
+    "mtime": 1787611597.1091242,
+    "seen": 1787654386.3921976,
     "ast_hash": "e11816e383fce3a7d5dbc92f66ef1b2a",
     "semantic_hash": "e11816e383fce3a7d5dbc92f66ef1b2a"
   },
@@ -528,32 +528,32 @@
     "semantic_hash": "2e3835c05934bfa05266265123f502f6"
   },
   "apps/portal/src/app/services/seo-utils.ts": {
-    "mtime": 1787402813.9417048,
-    "seen": 1787599633.5855455,
+    "mtime": 1787611597.0521252,
+    "seen": 1787654386.3922043,
     "ast_hash": "5179d2f6d68a559c068ea42ade3f35b5",
     "semantic_hash": "5179d2f6d68a559c068ea42ade3f35b5"
   },
   "apps/portal/src/app/services/seo.service.ts": {
-    "mtime": 1787402796.1209815,
-    "seen": 1787599633.585547,
+    "mtime": 1787611597.056125,
+    "seen": 1787654386.3922057,
     "ast_hash": "6a2c96467c9cf0b92d75a486998e311e",
     "semantic_hash": "6a2c96467c9cf0b92d75a486998e311e"
   },
   "apps/portal/src/app/shared/logo-bar.component.ts": {
-    "mtime": 1787403515.7357912,
-    "seen": 1787599633.5855486,
+    "mtime": 1787611597.1081243,
+    "seen": 1787654386.3922074,
     "ast_hash": "cbf24fe4503ed3c33d57926ced36ba68",
     "semantic_hash": "cbf24fe4503ed3c33d57926ced36ba68"
   },
   "apps/portal/src/app/shared/marketing-frame.component.ts": {
-    "mtime": 1787405538.6700253,
-    "seen": 1787599633.58555,
+    "mtime": 1787611597.055125,
+    "seen": 1787654386.3922086,
     "ast_hash": "300c57dcfa03834331ba64a9da10a79f",
     "semantic_hash": "300c57dcfa03834331ba64a9da10a79f"
   },
   "apps/portal/src/app/shared/testimonial-strip.component.ts": {
-    "mtime": 1787402865.1079094,
-    "seen": 1787599633.5855513,
+    "mtime": 1787611597.054125,
+    "seen": 1787654386.3922102,
     "ast_hash": "7dea8524749a32f95fb014b1528240b8",
     "semantic_hash": "7dea8524749a32f95fb014b1528240b8"
   },
@@ -582,8 +582,8 @@
     "semantic_hash": "13079533f1486a0b47978b77aa8d1c08"
   },
   "apps/portal/src/seo-utils.test.ts": {
-    "mtime": 1787403723.8405533,
-    "seen": 1787599633.585559,
+    "mtime": 1787611597.1091242,
+    "seen": 1787654386.3922179,
     "ast_hash": "dfcc1886a7b0ec45783f5194219650e2",
     "semantic_hash": "dfcc1886a7b0ec45783f5194219650e2"
   },
@@ -856,5 +856,185 @@
     "seen": 1787599633.5856235,
     "ast_hash": "200f4f6497a65ab5eeea2270af98db6b",
     "semantic_hash": "200f4f6497a65ab5eeea2270af98db6b"
+  },
+  ".github/copilot-instructions.md": {
+    "mtime": 1773257244.2930734,
+    "seen": 1787654386.392287,
+    "ast_hash": "9ea81aed9b9591374bd01ac6c52c5252",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1787652070.5729184,
+    "seen": 1787654386.3922884,
+    "ast_hash": "b95912c4fdff73436b80c29c28af5cd4",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1787650552.3954253,
+    "seen": 1787654386.3922899,
+    "ast_hash": "f49e79077932b9106049ebc7d424d670",
+    "semantic_hash": ""
+  },
+  "GEMINI.md": {
+    "mtime": 1773844195.8139806,
+    "seen": 1787654386.392291,
+    "ast_hash": "4f6e797a74d546edabb80e236cfa04b9",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1773255332.9650104,
+    "seen": 1787654386.3922923,
+    "ast_hash": "86da64557d7b725887ea910d27aaab2f",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/index.html": {
+    "mtime": 1787611597.1081243,
+    "seen": 1787654386.3922937,
+    "ast_hash": "1c321e98f99a08d6ac99b6ca82504c7c",
+    "semantic_hash": ""
+  },
+  "apps/widget/public/frame.html": {
+    "mtime": 1774005261.9138455,
+    "seen": 1787654386.3922946,
+    "ast_hash": "278eb097aa5ac94f55bdd0995cdfcc5f",
+    "semantic_hash": ""
+  },
+  "docs/API_CONTRACTS.md": {
+    "mtime": 1774005421.268169,
+    "seen": 1787654386.3922956,
+    "ast_hash": "16b433b9c70dc70a909ec271df3a36b6",
+    "semantic_hash": ""
+  },
+  "docs/ARCHITECTURE.md": {
+    "mtime": 1774005497.096932,
+    "seen": 1787654386.392297,
+    "ast_hash": "3dc04e9b99494e57578b2528d086b900",
+    "semantic_hash": ""
+  },
+  "docs/DEPLOYMENT_PORTAL.md": {
+    "mtime": 1773176677.5855503,
+    "seen": 1787654386.3922982,
+    "ast_hash": "a2dc32e8bc34785232ab3de18ab80e05",
+    "semantic_hash": ""
+  },
+  "docs/OPERATIONS.md": {
+    "mtime": 1774005440.2098603,
+    "seen": 1787654386.3922994,
+    "ast_hash": "1e19bf65e3319ca0b6112f26b267d596",
+    "semantic_hash": ""
+  },
+  "docs/seo-architecture.md": {
+    "mtime": 1773255416.7366114,
+    "seen": 1787654386.3923008,
+    "ast_hash": "1ed907c93b9b9c9e7a532bc729148443",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-api-spec.md": {
+    "mtime": 1774005486.4861054,
+    "seen": 1787654386.3923018,
+    "ast_hash": "f9fb0b0e31fd3e90747b7353302f43a6",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-design-system.md": {
+    "mtime": 1773915952.6617062,
+    "seen": 1787654386.392303,
+    "ast_hash": "6ac4669b3569322ba6455c07e2ed8cf9",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-integrations.md": {
+    "mtime": 1774005452.2736638,
+    "seen": 1787654386.3923042,
+    "ast_hash": "43e99d6423d38cf9113010f2f5b35615",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-product-architecture.md": {
+    "mtime": 1774005503.7948225,
+    "seen": 1787654386.3923054,
+    "ast_hash": "38774fcf667b568a72c72916dd0439f4",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-product-roadmap.md": {
+    "mtime": 1773360233.0126977,
+    "seen": 1787654386.3923063,
+    "ast_hash": "e7cd83b107e1243c803af5bae1ba0835",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-screen-map.md": {
+    "mtime": 1773353799.1635897,
+    "seen": 1787654386.3923078,
+    "ast_hash": "75a3c8607759b2cdbd8e42facce4dded",
+    "semantic_hash": ""
+  },
+  "docs/talkaris-technical-decisions.md": {
+    "mtime": 1774006666.794477,
+    "seen": 1787654386.3923087,
+    "ast_hash": "ca57eed9dc9d9b67ca38432eca01e403",
+    "semantic_hash": ""
+  },
+  "infra/docker-compose.yml": {
+    "mtime": 1773176308.4187002,
+    "seen": 1787654386.39231,
+    "ast_hash": "ab84a69100dcdd8b61e12c43b74b306a",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-apple-touch-icon.svg": {
+    "mtime": 1773916007.6058302,
+    "seen": 1787654386.3923113,
+    "ast_hash": "f02e6648452ac959740ab9dfff153b58",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-blog-scene.svg": {
+    "mtime": 1773255041.0798757,
+    "seen": 1787654386.3923123,
+    "ast_hash": "dc51fd22868ba4156842bff2d29f9a88",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-editorial-campaign.webp": {
+    "mtime": 1787403169.1401827,
+    "seen": 1787654386.3923137,
+    "ast_hash": "96a96c0db8dfec00d386740f8b5f82ab",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-favicon.svg": {
+    "mtime": 1773916007.6058302,
+    "seen": 1787654386.392315,
+    "ast_hash": "9bfb301c8004997842aa117bddb092ec",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-hero-campaign.webp": {
+    "mtime": 1787403168.9701853,
+    "seen": 1787654386.3923159,
+    "ast_hash": "2714c3a0be53e3ec8b1368109eff9310",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-hero-scene.svg": {
+    "mtime": 1773255041.0798757,
+    "seen": 1787654386.3923173,
+    "ast_hash": "76656c1a05078da26e94732d96481f06",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-icon-192.svg": {
+    "mtime": 1773916007.6058302,
+    "seen": 1787654386.3923185,
+    "ast_hash": "fe4d192ed332b55d82819625714f2a4e",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-icon-512.svg": {
+    "mtime": 1773916007.6058302,
+    "seen": 1787654386.3923197,
+    "ast_hash": "fd0cafc38ab61e190cfc6ff30e1f4ea0",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-integration-scene.svg": {
+    "mtime": 1773255041.0798757,
+    "seen": 1787654386.392323,
+    "ast_hash": "ac88900d7689c2f158c5b41a451bb956",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/public/assets/talkaris-social-card.svg": {
+    "mtime": 1773916007.6078303,
+    "seen": 1787654386.3923242,
+    "ast_hash": "437c64387c917492f7a2a80aec91d4fa",
+    "semantic_hash": ""
   }
 }
