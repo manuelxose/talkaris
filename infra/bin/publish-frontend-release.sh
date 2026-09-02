@@ -235,12 +235,12 @@ verify_expected_text() {
     extra_args+=(--resolve "${PUBLIC_HOST}:443:127.0.0.1" -k)
   fi
 
-  for _ in {1..3}; do
-    body="$(curl -fsS --max-time 15 "${extra_args[@]}" "${PUBLIC_URL}" || true)"
+  for _ in {1..5}; do
+    body="$(curl -fsS --max-time 15 --retry 3 --retry-connrefused --retry-delay 1 "${extra_args[@]}" "${PUBLIC_URL}" || true)"
     if printf '%s' "${body}" | grep -Fq "${EXPECTED_TEXT}"; then
       return 0
     fi
-    sleep 2
+    sleep 3
   done
 
   echo "Expected text not found on ${PUBLIC_URL}: ${EXPECTED_TEXT}" >&2
