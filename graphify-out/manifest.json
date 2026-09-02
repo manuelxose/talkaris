@@ -1,9 +1,9 @@
 {
   ".mcp.json": {
     "mtime": 1787650576.5150015,
-    "seen": 1787654386.3920166,
+    "seen": 1788021698.0331705,
     "ast_hash": "39fcaa6fd7f6d4d670500978ca977562",
-    "semantic_hash": ""
+    "semantic_hash": "39fcaa6fd7f6d4d670500978ca977562"
   },
   "apps/chat-api/migrations/001_init.sql": {
     "mtime": 1773144645.6887422,
@@ -1036,5 +1036,11 @@
     "seen": 1787654386.3923242,
     "ast_hash": "437c64387c917492f7a2a80aec91d4fa",
     "semantic_hash": ""
+  },
+  ".claude/settings.json": {
+    "mtime": 1788021491.1112773,
+    "seen": 1788021698.0331607,
+    "ast_hash": "b7aa8417bdc0e914ee4d548274784b9c",
+    "semantic_hash": "b7aa8417bdc0e914ee4d548274784b9c"
   }
 }

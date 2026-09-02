@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "type": "fullstack-web",
+  "languages": [
+    "javascript",
+    "typescript"
+  ],
+  "frameworks": [
+    "angular"
+  ],
+  "databases": [
+    "sql"
+  ],
+  "packageManager": "npm",
+  "monorepo": true,
+  "tests": [
+    "app.spec.ts",
+    "bot-test.component.ts",
+    "canonical-runtime.test.d.ts",
+    "canonical-runtime.test.js",
+    "canonical-runtime.test.ts",
+    "design-governance.test.ts",
+    "seo-utils.test.ts",
+    "talkaris-api-spec.md",
+    "testimonial-strip.component.ts",
+    "tsconfig.spec.json"
+  ],
+  "ui": true,
+  "seo": false,
+  "docker": true,
+  "graphify": true,
+  "approximateFiles": 1042,
+  "skills": [
+    "accessibility",
+    "angular",
+    "api-design",
+    "cicd",
+    "code-review",
+    "database-migrations",
+    "docker",
+    "e2e-testing",
+    "frontend-architecture",
+    "graphify-first-analysis",
+    "javascript",
+    "nodejs",
+    "observability",
+    "performance-engineering",
+    "repository-discovery",
+    "security-review",
+    "sql",
+    "testing",
+    "typescript",
+    "ux-ui-engineering"
+  ],
+  "agents": [
+    "architect",
+    "backend",
+    "database",
+    "devops",
+    "frontend",
+    "performance",
+    "qa",
+    "reviewer",
+    "security",
+    "ux-ui"
+  ]
+}
