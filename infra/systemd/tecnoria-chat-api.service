@@ -1,0 +1,17 @@
+[Unit]
+Description=Tecnoria Chat API
+After=network.target postgresql.service tecnoria-api.service
+Wants=postgresql.service tecnoria-api.service
+
+[Service]
+Type=simple
+User=tecnoria
+Group=tecnoria
+WorkingDirectory=/var/www/talkaris/apps/chat-api
+EnvironmentFile=/etc/tecnoria/chat-api.env
+ExecStart=/usr/bin/node /var/www/talkaris/apps/chat-api/dist/main.js
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

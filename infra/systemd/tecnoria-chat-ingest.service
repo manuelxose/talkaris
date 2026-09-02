@@ -1,0 +1,17 @@
+[Unit]
+Description=Tecnoria Chat Ingest Worker
+After=network.target postgresql.service tecnoria-chat-api.service
+Wants=postgresql.service tecnoria-chat-api.service
+
+[Service]
+Type=simple
+User=tecnoria
+Group=tecnoria
+WorkingDirectory=/var/www/talkaris/apps/ingest-worker
+EnvironmentFile=/etc/tecnoria/ingest-worker.env
+ExecStart=/usr/bin/node /var/www/talkaris/apps/ingest-worker/dist/main.js --watch
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

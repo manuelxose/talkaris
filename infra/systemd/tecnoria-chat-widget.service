@@ -1,0 +1,17 @@
+[Unit]
+Description=Tecnoria Chat Widget
+After=network.target tecnoria-chat-api.service
+Wants=tecnoria-chat-api.service
+
+[Service]
+Type=simple
+User=tecnoria
+Group=tecnoria
+WorkingDirectory=/var/www/talkaris/apps/widget
+EnvironmentFile=/etc/tecnoria/widget.env
+ExecStart=/usr/bin/node /var/www/talkaris/apps/widget/server.mjs
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
