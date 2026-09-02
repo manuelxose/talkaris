@@ -235,11 +235,16 @@ verify_expected_text() {
     extra_args+=(--resolve "${PUBLIC_HOST}:443:127.0.0.1" -k)
   fi
 
-  body="$(curl -fsS "${extra_args[@]}" "${PUBLIC_URL}")"
-  if ! printf '%s' "${body}" | grep -Fq "${EXPECTED_TEXT}"; then
-    echo "Expected text not found on ${PUBLIC_URL}: ${EXPECTED_TEXT}" >&2
-    exit 1
-  fi
+  for _ in {1..3}; do
+    body="$(curl -fsS --max-time 15 "${extra_args[@]}" "${PUBLIC_URL}" || true)"
+    if printf '%s' "${body}" | grep -Fq "${EXPECTED_TEXT}"; then
+      return 0
+    fi
+    sleep 2
+  done
+
+  echo "Expected text not found on ${PUBLIC_URL}: ${EXPECTED_TEXT}" >&2
+  exit 1
 }
 
 echo "==> ${APP_NAME}: building staging dist"
