@@ -23,6 +23,29 @@ Publish the full product on `talkaris.com` with:
 - `4102` -> `widget`
 - `4103` -> `portal`
 
+## Automated deploy (GitHub Actions)
+
+Workflow `.github/workflows/deploy.yml` (push a `main` o manual):
+
+1. CI hace SSH con el usuario `deploy` del VPS.
+2. `sudo /var/www/talkaris/infra/deploy-chat.sh`:
+   - `git pull --ff-only` (remoto `git@github-mx-account`), `npm install`
+   - build ordenado de workspaces: `domain -> core -> application -> infrastructure`,
+     despues `chat-api`, `ingest-worker`, `widget`
+   - restart `tecnoria-chat-api`, `tecnoria-chat-ingest`, `tecnoria-chat-widget`
+     + smoke `4101/health`
+   - portal: `/var/www/bin/deploy-talkaris-portal.sh` (build portal + release symlink +
+     restart `tecnoria-chat-portal` + smoke local/publico)
+3. El usuario `deploy` solo puede ejecutar los 3 scripts de deploy via sudo
+   (`/etc/sudoers.d/90-deploy`).
+4. Secretos del repo: `DEPLOY_SSH_HOST`, `DEPLOY_SSH_USER`, `DEPLOY_SSH_KEY`.
+
+Nota: el build raiz `npm run build` NO respeta el orden entre paquetes; usar el orden
+del script `infra/deploy-chat.sh`.
+
+Config real del servidor versionada en `infra/`: nginx (`talkaris.conf`), systemd
+(`tecnoria-chat-*.service`) y binarios de operacion (`infra/bin/`).
+
 ## Required env
 
 ### `apps/chat-api/.env`
