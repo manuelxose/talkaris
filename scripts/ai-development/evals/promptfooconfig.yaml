@@ -1,0 +1,13 @@
+description: Offline adapter smoke only; no Talkaris RAG quality claim
+prompts:
+  - "{{question}}"
+providers:
+  - id: file://./provider.cjs
+    config:
+      mode: offline
+tests:
+  - vars:
+      question: Synthetic transport validation
+    assert:
+      - type: javascript
+        value: JSON.parse(output).fixture === true && JSON.parse(output).usedFallback === true

@@ -3,6 +3,7 @@ dist/
 .angular/
 .cache/
 coverage/
+__pycache__/
 evidence/m0/
 evidence/m0-history/
 evidence/ci-*/

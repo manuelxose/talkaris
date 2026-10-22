@@ -1,5 +1,7 @@
 # Talkaris — Product Roadmap
 
+> **Documento histórico.** El plan de ejecución vigente propuesto, basado en la auditoría funcional del 22 de octubre de 2026, está en [Roadmap para un producto viable](talkaris-viability-roadmap.md). Los estados de implementación de este documento no equivalen a validación funcional actual.
+
 ## Visión del Producto
 
 Talkaris es una plataforma multi-tenant de IA conversacional que permite a empresas desplegar chatbots de conocimiento en sus sitios web y productos. La visión es convertirse en la plataforma de referencia para empresas hispanohablantes que quieren ofrecer soporte, captación de leads y autoservicio con IA — con la calidad técnica de Linear o Vercel y la simplicidad de Chatbase.
