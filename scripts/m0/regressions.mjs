@@ -85,7 +85,7 @@ for (const [kind, column] of [['conversations','c.session_id'],['leads','le.name
 await defect('F12-api-key-consumption', () => request(tenantPath('a','conversations'),null,'GET',null,{Authorization:'Bearer m0-key-a'}),
   r => r.status === 200 && r.text.includes(f.conversations.a.id), r => r.status === 401 && r.data.code === 'UNAUTHENTICATED', 'A valid stored scoped key authenticates the advertised API', 'M5');
 await defect('F16-test-chat-contract', () => request(tenantPath('a',`projects/${f.projects.a.projectKey}/test-chat`),'admin','POST',{message:'M0 synthetic knowledge'}),
-  r => r.status === 200 && typeof r.data.message === 'string', r => r.status === 500 && /Cannot read properties of undefined/.test(r.text), 'Test chat returns deterministic fallback or cited response without provider access', 'M4');
+  r => r.status === 200 && typeof r.data.message === 'string', r => r.status === 500 && r.data.message === "Cannot read properties of undefined (reading 'salesKeywords')", 'Test chat returns deterministic fallback or cited response without provider access', 'M4');
 
 const db = new Client({connectionString:databaseUrl}); await db.connect();
 try {

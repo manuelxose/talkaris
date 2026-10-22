@@ -63,6 +63,8 @@ Responsabilidad por defecto: ingeniería implementa y verifica; producto/operaci
 
 Ejecución 2026-10-22: **en curso, PARTIAL; G0 no aprobado** en `codex/m0-baseline`, base `a23eab97df894e3ee3a4a9eaa7d9083b92be8788`. M0.1 inventario documentado con producción no verificada; M0.2/M0.3 infraestructura y caracterización implementadas con evidencia parcial; M0.4 harness preparado, ejecución bloqueada por compilación/WSL; M0.5 contrato/CI/revisión inicial presentes, validación final pendiente. Detalle y comandos en `docs/m0/report.md` y `docs/m0/README.md`. No se cierran casillas: faltan navegador, baseline revisado, repetibilidad completa e informe original de auditoría. No se ejecuta M1. Identificadores de entrega se añadirán al publicar la PR.
 
+Entrega inicial: commit `a648dae` publicado; [PR #1 en borrador](https://github.com/manuelxose/tecnoria-chat-platform/pull/1), sin merge. [CI runner-local inicial](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39819169410) en ejecución; no se presupone su resultado. Revisión independiente inicial completada con correcciones del harness; falta revisión final de evidencia.
+
 **Resultado:** poder demostrar cada reparación sin arriesgar producción.
 
 - [ ] **M0.1 Inventario vigente.** Confirmar versión desplegada, migraciones aplicadas, rutas activas y configuración no secreta. Registrar qué funcionalidades están estables, incompletas o sin verificar.

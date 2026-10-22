@@ -67,8 +67,8 @@ try {
   // The fixed M0 project is dedicated. Refuse to reuse a possibly populated database.
   await execute('docker', [...compose, 'ps', '-q'], 'compose-existing', {}, false);
   assert.equal((await readFile(resolve(output, 'compose-existing.log'), 'utf8')).trim(), '', 'M0 services already exist: run npm run m0:down first');
-  await execute('docker', [...compose, 'up', '-d', '--wait'], 'compose-up', {}, false);
   started = true;
+  await execute('docker', [...compose, 'up', '-d', '--wait'], 'compose-up', {}, false);
   process.env.DATABASE_URL = databaseUrl;
   const identity = new Client({ connectionString: databaseUrl });
   await identity.connect();
