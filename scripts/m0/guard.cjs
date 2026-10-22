@@ -4,7 +4,7 @@ const { join } = require('node:path');
 const { tmpdir } = require('node:os');
 const { syncBuiltinESMExports } = require('node:module');
 const hosts = new Set(['127.0.0.1', 'localhost', '::1']);
-const ports = new Set([45432, 45101, 45102, 45103, 45124, 45125, 45126]);
+const ports = new Set([45432, 45101, 45102, 45103, 45124, 45125, 45126, 45127]);
 const connect = net.Socket.prototype.connect;
 const tsxPipe = pid => join(tmpdir(), `tsx-${process.geteuid()}`, `${pid}.pipe`);
 net.Socket.prototype.connect = function (...args) {

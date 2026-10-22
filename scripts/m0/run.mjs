@@ -121,6 +121,7 @@ try {
   await ready('http://127.0.0.1:45102/frame.html', widget);
   const portal = launch('node', ['apps/portal/dist/portal/server/server.mjs'], 'portal', { PORT: '45103' });
   await ready('http://localhost:45103/health', portal);
+  await execute('node', ['scripts/m0/login-browser.mjs'], 'login-browser');
   await execute('node', ['scripts/m0/browser.mjs', ...(process.argv.includes('--capture-browser') ? ['--record'] : [])], 'browser');
 } catch (error) {
   failure = String(error);
