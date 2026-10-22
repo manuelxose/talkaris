@@ -116,9 +116,10 @@ try {
         row.milliseconds=Math.round(performance.now()-start);
         row.events=[...new Set(events)].sort(); row.rawErrors=rawErrors; row.responses=responses;
         row.signature=createHash('sha256').update(JSON.stringify({events:row.events,dataChecks:row.dataChecks})).digest('hex');
-        row.status=row.events.length?'observed-defects':'pass'; rows.push(row);
+        row.status=row.events.some(event=>!event.includes('BLOCKED_BY_CLIENT'))?'observed-defects':row.events.length?'boundary-only':'pass'; rows.push(row);
         await writeFile('evidence/m0/browser.json',JSON.stringify(rows,null,2));
         console.log(`${row.id}: ${row.status} (${row.events.length} observations)`);
+        assert.ok(!row.events.some(event=>event.startsWith('fatal:')),`Browser execution blocked at ${row.id}; inspect partial evidence before retrying`);
       }
       await context.close();
     }

@@ -64,8 +64,20 @@ for (const kind of ['rating','handover']) {
 await defect('F01-viewer-foreign-handover-write', () => request(tenantPath('a',`conversations/${f.conversations.b.id}/handover`),'viewer','PUT',{status:'assigned'}),
   r => [403,404].includes(r.status), r => r.status === 200 && r.data.id === f.handover.b.id && r.data.status === 'assigned', 'Viewer cannot modify any handover, including foreign UUIDs', 'M1');
 await defect('F02-private-original-public', async () => {
-  const response = await fetch(f.privateDocument.url); return {status:response.status,text:await response.text()};
-}, r => [401,403,404].includes(r.status), r => r.status === 200 && r.text === f.privateDocument.contentSentinel, 'Private original requires authorized membership', 'M1');
+  const response = await fetch(f.privateDocument.url); return {status:response.status,text:await response.text(),cacheControl:response.headers.get('cache-control')};
+}, r => [401,403,404].includes(r.status), r => r.status === 200 && r.text === f.privateDocument.contentSentinel && /public.*max-age=2592000.*immutable/.test(r.cacheControl), 'Private original requires authorized membership', 'M1');
+await control('F02-own-member-can-read-original',async()=>{
+  const response=await fetch(f.privateDocument.url,{headers:{Cookie:cookies.admin}});assert.equal(response.status,200);assert.equal(await response.text(),f.privateDocument.contentSentinel);
+});
+await defect('F02-foreign-member-original',async()=>{
+  const response=await fetch(f.privateDocument.url,{headers:{Cookie:cookies.outsider}});return {status:response.status,text:await response.text(),cacheControl:response.headers.get('cache-control')};
+},r=>[403,404].includes(r.status),r=>r.status===200&&r.text===f.privateDocument.contentSentinel&&/public.*max-age=2592000.*immutable/.test(r.cacheControl),'Foreign member cannot read an existing private original','M1');
+await control('F02-public-logo-remains-anonymous',async()=>{
+  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64');
+  const uploaded=await fetch(api+tenantPath('a','assets/logo'),{method:'POST',headers:{Cookie:cookies.admin,'Content-Type':'image/png','x-upload-filename':'m0-public-logo.png'},body:png});
+  assert.equal(uploaded.status,201);const asset=await uploaded.json();
+  const response=await fetch(api+new URL(asset.url).pathname.replace(/^\/api/,''));assert.equal(response.status,200);assert.ok(Buffer.from(await response.arrayBuffer()).equals(png));
+});
 await defect('F04-source-secret-viewer', () => request(tenantPath('a','sources'),'viewer'), r => r.status === 403 || r.status === 200 && !r.text.includes(f.sources.a.secretSentinel),
   r => r.status === 200 && r.text.includes(f.sources.a.secretSentinel), 'Connector credentials must be redacted', 'M1');
 await defect('F04-original-notion-token-viewer',async()=>{
@@ -150,8 +162,8 @@ await defect('F02-new-private-upload-public', async () => {
   finally {await db.end();}
   const path=new URL(asset.url).pathname.replace(/^\/api/,'');
   const downloaded=await fetch(api+path);
-  return {status:downloaded.status,text:await downloaded.text(),sentinel};
-},r=>[401,403,404].includes(r.status),r=>r.status===200&&r.text===r.sentinel,'New private upload must require authorization on original download','M1');
+  return {status:downloaded.status,text:await downloaded.text(),sentinel,cacheControl:downloaded.headers.get('cache-control'),urlHasQuery:!!new URL(asset.url).search};
+},r=>[401,403,404].includes(r.status),r=>r.status===200&&r.text===r.sentinel&&!r.urlHasQuery&&/public.*max-age=2592000.*immutable/.test(r.cacheControl),'New private upload must require authorization on original download','M1');
 await defect('F03-loopback-website-fetch', async () => {
   const before=await (await fetch('http://127.0.0.1:45124/state')).json();
   const r=await request(tenantPath('a',`projects/${f.projects.a.projectKey}/website-integration`),'admin','POST',{baseUrl:'http://127.0.0.1:45124/ssrf-probe'});
@@ -160,17 +172,23 @@ await defect('F03-loopback-website-fetch', async () => {
 },
   r => r.status === 400 && r.data.code === 'INVALID_INPUT', r => r.status === 200 && r.data.entryUrl === 'http://127.0.0.1:45124/ssrf-probe' && r.receiverRequests.includes('/robots.txt'),
   'Loopback input rejected before controlled local fetch; no private infrastructure contacted', 'M1');
-for(const [scenario,url] of [['original-viewer-loopback','http://127.0.0.1:45124/internal'],['dns-localhost','http://localhost:45124/internal'],['redirect-to-loopback','http://127.0.0.1:45124/redirect']]) {
+await defect('F03-unsupported-scheme',async()=>{
+  const r=await request(tenantPath('a','projects/m0-nonexistent-project/crawl'),'viewer','POST',{url:'ftp://127.0.0.1:45124/internal'});
+  return {status:r.status,text:r.text};
+},r=>r.status===400,r=>r.status===500&&r.text.includes('TypeError: fetch failed'),'Unsupported scheme produces a controlled validation error','M1');
+for(const [scenario,url] of [['original-viewer-loopback','http://127.0.0.1:45124/internal'],['dns-localhost','http://localhost:45124/internal'],['redirect-to-loopback','http://127.0.0.1:45124/redirect'],['slow-private-input','http://127.0.0.1:45124/slow'],['large-private-input','http://127.0.0.1:45124/large']]) {
   await defect(`F03-${scenario}`,async()=>{
     const before=await (await fetch('http://127.0.0.1:45124/state')).json();
+    const start=performance.now();
     const r=await request(tenantPath('a','projects/m0-nonexistent-project/crawl'),'viewer','POST',{url});
     const after=await (await fetch('http://127.0.0.1:45124/state')).json();
-    return {...r,receiverRequests:after.slice(before.length).map(item=>item.url)};
-  },r=>[400,403,404].includes(r.status),r=>r.status===200&&r.data.metadata?.title==='M0 controlled internal fixture'&&r.receiverRequests.includes('/internal'),
+    const observed=after.slice(before.length);
+    return {...r,elapsedMilliseconds:Math.round(performance.now()-start),receiverRequests:observed.map(item=>item.url),receiverBytes:Math.max(0,...observed.map(item=>item.responseBytes??0))};
+  },r=>[400,403,404].includes(r.status),r=>r.status===200&&r.data.metadata?.title==='M0 controlled internal fixture'&&r.receiverRequests.includes(scenario==='redirect-to-loopback'?'/internal':new URL(url).pathname)&&(scenario!=='large-private-input'||r.receiverBytes>=2*1024*1024),
     'Viewer cannot crawl controlled private destinations, including redirects and missing projects','M1');
 }
 for (const id of ['F05','F17']) rows.push({id,status:'browser-suite',detail:'See browser.json: populated route direct navigation and reload at 390/768/1440'});
 rows.push({id:'original-audit',status:'source-reviewed',detail:'INFORME.md found in Windows Talkaris evidence workspace; SHA256 21e9a8c843ca37d171205e632ea37de8efc6152c0d22ce536cdec653e1161689. Original F01–F12/F16–F18 flows mapped; no production tests rerun.'});
-rows.push({id:'F03-additional-boundaries',status:'blocked',detail:'Unsupported-scheme, DNS-rebinding, oversized-body and timeout policy coverage remains incomplete; original audit only demonstrated controlled loopback. No production/private infrastructure probed.'});
+rows.push({id:'F03-additional-boundaries',status:'blocked',detail:'Private DNS/redirect/slow/2MiB inputs and unsupported scheme are executable. Public-origin timeout/size limits and DNS-rebinding policy are not defined/verified; remain M1 test-extension requirements, not claimed secure. No real private infrastructure probed.'});
 await saveResults('regressions',rows);
 console.log(JSON.stringify(rows.map(({id,status})=>({id,status})),null,2));

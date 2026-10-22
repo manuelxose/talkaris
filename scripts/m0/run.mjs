@@ -93,9 +93,14 @@ try {
   receivers = createServer(async (req, res) => {
     if (req.url === '/state') { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify(received)); return; }
     const chunks = []; for await (const chunk of req) chunks.push(chunk);
-    received.push({ method: req.method, url: req.url, body: Buffer.concat(chunks).toString() });
+    const entry={method:req.method,url:req.url,body:Buffer.concat(chunks).toString()};received.push(entry);
     if(req.url==='/redirect') {res.writeHead(302,{Location:'http://localhost:45124/internal'});res.end();return;}
-    if(req.url==='/internal') {res.writeHead(200,{'Content-Type':'text/html'});res.end('<html lang="en"><title>M0 controlled internal fixture</title><body>Only synthetic localhost data</body></html>');return;}
+    if(['/internal','/slow','/large'].includes(req.url)) {
+      if(req.url==='/slow') await delay(2000);
+      const body='<html lang="en"><title>M0 controlled internal fixture</title><body>'+ (req.url==='/large'?'X'.repeat(2*1024*1024):'Only synthetic localhost data') +'</body></html>';
+      entry.responseBytes=Buffer.byteLength(body);
+      res.writeHead(200,{'Content-Type':'text/html','Content-Length':Buffer.byteLength(body)});res.end(body);return;
+    }
     res.writeHead(req.url === '/webhook' ? 200 : 503, { 'Content-Type': 'text/plain' });
     res.end(req.url === '/webhook' ? 'M0 local receiver' : 'M0 controlled failure');
   });
