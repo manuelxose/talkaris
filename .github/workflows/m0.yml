@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   localhost:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -16,7 +16,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm ci --prefix scripts/m0/tools
-      - run: scripts/m0/tools/node_modules/.bin/playwright install --with-deps chromium
+      # This runner already includes Chromium system libraries. Avoid an apt
+      # upgrade/font installation on every run; install the pinned browser only.
+      - run: scripts/m0/tools/node_modules/.bin/playwright install chromium
       - run: npm run m0:test
       - if: always()
         uses: actions/upload-artifact@v4
