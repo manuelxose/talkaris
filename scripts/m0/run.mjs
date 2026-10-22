@@ -35,11 +35,13 @@ function launch(command, args, name, extra = {}, guarded = true) {
   return child;
 }
 async function execute(command, args, name, extra = {}, guarded = true) {
+  console.log(`M0 stage: ${name}`);
   const start = performance.now();
   const child = launch(command, args, name, extra, guarded);
   const [code, signal] = await once(child, 'close');
   await child.logFinished;
   timings.push({ name, milliseconds: Math.round(performance.now() - start), code, signal });
+  console.log(`M0 result: ${name} exit ${code}`);
   assert.equal(code, 0, `${name} failed (${code}/${signal}); see evidence/m0/${name}.log`);
 }
 async function ready(url, child) {

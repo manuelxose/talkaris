@@ -19,7 +19,7 @@ for (const prefix of ['app','admin']) {
 assert.equal(routeList.length,27,'Route inventory changed; review audit delta');
 await writeFile('evidence/m0/routes.json',JSON.stringify(routeList,null,2));
 await mkdir('evidence/m0/screenshots',{recursive:true});
-const normalize = value => String(value).replaceAll(base,'').replace(/http:\/\/127\.0\.0\.1:\d+/g,'').replace(/[0-9a-f]{8}-[0-9a-f-]{27,}/gi,':uuid').replace(/\?[^\s)]+/g,'');
+const normalize = value => String(value).split('\n')[0].replaceAll(base,'').replace(/http:\/\/127\.0\.0\.1:\d+/g,'').replace(/[0-9a-f]{8}-[0-9a-f-]{27,}/gi,':uuid').replace(/\?[^\s)]+/g,'');
 const rows = [];
 const authStates = {};
 const populated = {
@@ -53,9 +53,9 @@ try {
       const context = await authenticated(route.auth,viewport);
       const page = await context.newPage();
       const path = route.template.replace(':botKey',f.projectKey).replace(':id',f.conversationId);
-      let events = []; let responses = []; const pending = new Set();
-      page.on('pageerror',error=>events.push(`pageerror:${normalize(error.message)}`));
-      page.on('console',msg=>{if(msg.type()==='error') events.push(`console:${normalize(msg.text())}`);});
+      let events = []; let rawErrors=[]; let responses = []; const pending = new Set();
+      page.on('pageerror',error=>{rawErrors.push(error.stack);events.push(`pageerror:${normalize(error.message)}`);});
+      page.on('console',msg=>{if(msg.type()==='error') {rawErrors.push(msg.text());events.push(`console:${normalize(msg.text())}`);}});
       page.on('request',req=>{ if(new URL(req.url()).origin === base) pending.add(req); });
       page.on('requestfinished',req=>pending.delete(req));
       page.on('requestfailed',req=>{pending.delete(req); events.push(`requestfailed:${normalize(req.url())}:${req.failure()?.errorText}`);});
@@ -66,7 +66,7 @@ try {
         }
       });
       for (const phase of ['direct','reload']) {
-        events=[]; responses=[];
+        events=[]; rawErrors=[]; responses=[];
         const start=performance.now();
         const row = {id:`${route.template}@${viewport.width}:${phase}`,route:route.template,auth:route.auth,tenant:route.tenant,fixture:'populated A/B synthetic',viewport,phase,events:[],responses:[]};
         try {
@@ -78,7 +78,9 @@ try {
           await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
           assert.equal(new URL(page.url()).pathname,path,'Unexpected redirect');
           if(route.auth==='admin') {
-            await page.locator('.ck-workspace__select').waitFor({state:'visible'});
+            // Mobile CSS intentionally hides this select; inspect bound context,
+            // while geometry/keyboard checks assess actual visible controls.
+            await page.locator('.ck-workspace__select').waitFor({state:'attached'});
             assert.equal(await page.locator('.ck-workspace__select').inputValue(),f.tenantId,'Tenant context failed to initialize');
           }
           assert.equal(pending.size,0,'Requests still in flight');
@@ -112,10 +114,11 @@ try {
           await page.screenshot({path:screenshot,fullPage:true}); row.evidence=screenshot;
         } catch(error) { events.push(`fatal:${normalize(error.message)}`); }
         row.milliseconds=Math.round(performance.now()-start);
-        row.events=[...new Set(events)].sort(); row.responses=responses;
+        row.events=[...new Set(events)].sort(); row.rawErrors=rawErrors; row.responses=responses;
         row.signature=createHash('sha256').update(JSON.stringify({events:row.events,dataChecks:row.dataChecks})).digest('hex');
         row.status=row.events.length?'observed-defects':'pass'; rows.push(row);
         await writeFile('evidence/m0/browser.json',JSON.stringify(rows,null,2));
+        console.log(`${row.id}: ${row.status} (${row.events.length} observations)`);
       }
       await context.close();
     }
@@ -154,6 +157,7 @@ await writeFile('evidence/m0/browser.json',JSON.stringify(rows,null,2));
 await writeFile('evidence/m0/browser.md','# M0 route coverage\n\n| Route | Auth | Tenant | Viewport | Phase | Result | Events | Evidence |\n|---|---|---|---|---|---|---|---|\n'+rows.map(r=>`| ${r.route} | ${r.auth} | ${r.tenant} | ${r.viewport.width}×${r.viewport.height} | ${r.phase} | ${r.status} | ${r.events.join('; ').replaceAll('|','/')} | ${r.evidence??'browser.json'} |`).join('\n')+'\n');
 const signatures=Object.fromEntries(rows.map(r=>[r.id,{events:r.events,dataChecks:r.dataChecks,signature:r.signature}]));
 await writeFile('evidence/m0/browser-baseline-candidate.json',JSON.stringify(signatures,null,2));
+assert.ok(!rows.some(r=>r.events.some(event=>event.startsWith('fatal:'))),'Route/harness execution incomplete; fatal errors cannot become approved known-defect baseline');
 if(process.argv.includes('--record')) {
   console.log('Candidate captured; requires review before becoming the CI baseline.');
 } else {
