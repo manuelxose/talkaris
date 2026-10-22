@@ -11,6 +11,7 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { Pool } from "pg";
 import { buildFallbackAnswer, scoreCommercialIntent, selectTopChunks, } from "@tecnoria-chat/core";
 import { z } from "zod";
+import { verifyGoogleCredential } from "./google-auth.js";
 const envSchema = z.object({
     NODE_ENV: z.string().default("development"),
     PORT: z.coerce.number().default(4101),
@@ -23,6 +24,7 @@ const envSchema = z.object({
     DEFAULT_LEAD_WEBHOOK_URL: z.string().url().default("http://localhost:3001/api/v1/contact"),
     COOKIE_NAME: z.string().default("chat_console_session"),
     JWT_SECRET: z.string().min(16),
+    GOOGLE_CLIENT_ID: z.string().trim().default(""),
     PORTAL_PUBLIC_URL: z.string().url().default("http://localhost:4103"),
     PASSWORD_RESET_TTL_MINUTES: z.coerce.number().int().min(5).max(1440).default(60),
     SESSION_TTL_HOURS: z.coerce.number().int().min(1).max(168).default(8),
@@ -1210,6 +1212,44 @@ app.delete("/v1/ops/blog/:id", requirePublisherOps, asyncHandler(async (req, res
     }
     await queueTalkarisBlogReingestion("auctorio_delete");
     res.status(204).send();
+}));
+app.get("/v1/auth/google/config", (_req, res) => {
+    res.set("Cache-Control", "no-store").json({ clientId: env.GOOGLE_CLIENT_ID || null });
+});
+app.post("/v1/auth/google", rateLimitByIp("auth-login", 10, 15 * 60 * 1000), asyncHandler(async (req, res) => {
+    if (!env.GOOGLE_CLIENT_ID) {
+        res.status(503).json({ code: "GOOGLE_NOT_CONFIGURED" });
+        return;
+    }
+    if (!allowedOrigins.includes(req.headers.origin)) {
+        res.status(403).json({ code: "INVALID_ORIGIN" });
+        return;
+    }
+    const parsed = z.object({ credential: z.string().min(1).max(16384) }).safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ code: "INVALID_INPUT" });
+        return;
+    }
+    let email;
+    try {
+        email = await verifyGoogleCredential(parsed.data.credential, env.GOOGLE_CLIENT_ID);
+    } catch {
+        res.status(401).json({ code: "INVALID_CREDENTIALS" });
+        return;
+    }
+    const userRow = await getUserByEmail(email);
+    if (!userRow || userRow.status !== "active") {
+        res.status(401).json({ code: "INVALID_CREDENTIALS" });
+        return;
+    }
+    const user = await loadPortalUserById(userRow.id);
+    if (!user || user.status !== "active") {
+        res.status(401).json({ code: "INVALID_CREDENTIALS" });
+        return;
+    }
+    await pool.query("UPDATE users SET last_login_at = NOW(), updated_at = NOW() WHERE id = $1", [user.id]);
+    setSessionCookie(res, user);
+    res.json(user);
 }));
 app.post("/v1/auth/login", rateLimitByIp("auth-login", 10, 15 * 60 * 1000), asyncHandler(async (req, res) => {
     const parsed = loginSchema.safeParse(req.body);

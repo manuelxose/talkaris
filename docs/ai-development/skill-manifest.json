@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-22",
+  "entries": [
+    {
+      "name": "superpowers",
+      "repository": "https://github.com/obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "sourcePath": ".",
+      "location": ".agentic/vendor/obra--superpowers",
+      "kind": "claude-plugin",
+      "status": "installed",
+      "sha256": "c8a804b613303077480fbf07c7c7cb3f56e82bcd3750cdaaae7b44eb724f391c"
+    },
+    {
+      "name": "audit-context-building",
+      "repository": "https://github.com/trailofbits/skills",
+      "commit": "1e0cb77d071a8b9453391d111f17d34d2114e057",
+      "sourcePath": "plugins/audit-context-building",
+      "location": ".agentic/vendor/trailofbits--skills/plugins/audit-context-building",
+      "kind": "claude-plugin",
+      "status": "installed",
+      "sha256": "5135a29e97098d3cfad7508fd38aa817153c82b9bbc6fc895b4ff53c87c25bf3"
+    },
+    {
+      "name": "differential-review",
+      "repository": "https://github.com/trailofbits/skills",
+      "commit": "1e0cb77d071a8b9453391d111f17d34d2114e057",
+      "sourcePath": "plugins/differential-review",
+      "location": ".agentic/vendor/trailofbits--skills/plugins/differential-review",
+      "kind": "claude-plugin",
+      "status": "installed",
+      "sha256": "852afb331da31fc85ef8633378f7970b1adb75aeac2cb139f7b6a02c951a8589"
+    },
+    {
+      "name": "insecure-defaults",
+      "repository": "https://github.com/trailofbits/skills",
+      "commit": "1e0cb77d071a8b9453391d111f17d34d2114e057",
+      "sourcePath": "plugins/insecure-defaults",
+      "location": ".agentic/vendor/trailofbits--skills/plugins/insecure-defaults",
+      "kind": "claude-plugin",
+      "status": "installed",
+      "sha256": "fa435aaf39b7622d52b1db07f01a7ec490861a98951e9dde027771db2238a988"
+    },
+    {
+      "name": "static-analysis",
+      "repository": "https://github.com/trailofbits/skills",
+      "commit": "1e0cb77d071a8b9453391d111f17d34d2114e057",
+      "sourcePath": "plugins/static-analysis",
+      "location": ".agentic/vendor/trailofbits--skills/plugins/static-analysis",
+      "kind": "claude-plugin",
+      "status": "installed",
+      "sha256": "52eb6be837fe4b6a008634ea460937f4eb63039fa9f996733de1ed7ff2f6ed78"
+    },
+    {
+      "name": "promptfoo",
+      "repository": "https://github.com/promptfoo/promptfoo",
+      "commit": "dfe2d45e6f72be85c866b746e3852de0dd7622c5",
+      "sourcePath": "plugins/promptfoo",
+      "location": ".agentic/vendor/promptfoo--promptfoo/plugins/promptfoo",
+      "kind": "claude-plugin",
+      "status": "installed",
+      "sha256": "d12fd869c2dfbc2f560fb71444c0e547941cb01d78055b6d58b3546e49d590b0"
+    },
+    {
+      "name": "angular-developer",
+      "repository": "https://github.com/angular/skills",
+      "commit": "38d431e4836813f57cc9db64afbfca81f2346529",
+      "sourcePath": "angular-developer",
+      "location": ".agentic/vendor/angular--skills/angular-developer",
+      "kind": "skill",
+      "status": "installed",
+      "sha256": "5657d2b4fd462454658f7e75cd310dd158be463cbcfdc0b4331a5f66f74e2988"
+    },
+    {
+      "name": "web-design-guidelines",
+      "repository": "https://github.com/vercel-labs/agent-skills",
+      "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "sourcePath": "skills/web-design-guidelines",
+      "location": ".agentic/vendor/vercel-labs--agent-skills/skills/web-design-guidelines",
+      "kind": "skill",
+      "status": "installed",
+      "sha256": "15f9fc2e5f72d944ecd02eab01ec2b57274c48cd08e80053dfb25b3a00c38688"
+    },
+    {
+      "name": "playwright-cli",
+      "repository": "https://github.com/microsoft/playwright-cli",
+      "commit": "b1a5903c5b633b8c9f843ad7b629c2a78437040c",
+      "sourcePath": "skills/playwright-cli",
+      "location": ".agentic/vendor/microsoft--playwright-cli/skills/playwright-cli",
+      "kind": "skill",
+      "status": "installed",
+      "sha256": "3464550cc61b5598ceea6155d8e7c958d8e84c593d6f4ee861393c2bac1f26b6"
+    },
+    {
+      "name": "skill-creator",
+      "repository": "https://github.com/anthropics/skills",
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "sourcePath": "skills/skill-creator",
+      "location": ".agentic/vendor/anthropics--skills/skills/skill-creator",
+      "kind": "skill",
+      "status": "installed",
+      "sha256": "4c380cc27b46947975d8884aaf96dfc61a91e514313d6e523e0d0ff39b349684"
+    }
+  ],
+  "portableSkills": [
+    "angular-developer",
+    "web-design-guidelines",
+    "playwright-cli",
+    "skill-creator",
+    "using-git-worktrees",
+    "diagnosing-superpowers",
+    "writing-skills",
+    "verification-before-completion",
+    "requesting-code-review",
+    "brainstorming",
+    "writing-plans",
+    "dispatching-parallel-agents",
+    "systematic-debugging",
+    "test-driven-development",
+    "executing-plans",
+    "finishing-a-development-branch",
+    "receiving-code-review",
+    "subagent-driven-development",
+    "using-superpowers",
+    "audit-context-building",
+    "differential-review",
+    "sarif-parsing",
+    "codeql",
+    "semgrep",
+    "promptfoo-redteam-setup",
+    "promptfoo-evals",
+    "promptfoo-provider-setup",
+    "promptfoo-redteam-run"
+  ],
+  "policy": "Pinned local snapshots. No automatic updates. Native Claude plugins and portable Codex skills share reviewed source; no runtime model calls performed.",
+  "hashAlgorithm": "SHA256(concatenated lowercase SHA256 of files ordered by relative path)",
+  "claudePlugins": [
+    {
+      "name": "superpowers@talkaris-reviewed",
+      "scope": "project",
+      "projectPath": "/home/manuelxose/workspace/tecnoria-chat-platform",
+      "installPath": "/home/manuelxose/.claude/plugins/cache/talkaris-reviewed/superpowers/7.0.1",
+      "version": "7.0.1",
+      "installedAt": "2026-10-22T15:23:34.776Z",
+      "lastUpdated": "2026-10-22T15:23:34.776Z",
+      "validation": "native CLI install returned outcome ok"
+    },
+    {
+      "name": "audit-context-building@talkaris-reviewed",
+      "scope": "project",
+      "projectPath": "/home/manuelxose/workspace/tecnoria-chat-platform",
+      "installPath": "/home/manuelxose/.claude/plugins/cache/talkaris-reviewed/audit-context-building/2.0.2",
+      "version": "2.0.2",
+      "installedAt": "2026-10-22T15:23:36.135Z",
+      "lastUpdated": "2026-10-22T15:23:36.135Z",
+      "validation": "native CLI install returned outcome ok"
+    },
+    {
+      "name": "differential-review@talkaris-reviewed",
+      "scope": "project",
+      "projectPath": "/home/manuelxose/workspace/tecnoria-chat-platform",
+      "installPath": "/home/manuelxose/.claude/plugins/cache/talkaris-reviewed/differential-review/1.1.4",
+      "version": "1.1.4",
+      "installedAt": "2026-10-22T15:23:37.433Z",
+      "lastUpdated": "2026-10-22T15:23:37.433Z",
+      "validation": "native CLI install returned outcome ok"
+    },
+    {
+      "name": "insecure-defaults@talkaris-reviewed",
+      "scope": "project",
+      "projectPath": "/home/manuelxose/workspace/tecnoria-chat-platform",
+      "installPath": "/home/manuelxose/.claude/plugins/cache/talkaris-reviewed/insecure-defaults/2.0.3",
+      "version": "2.0.3",
+      "installedAt": "2026-10-22T15:23:38.688Z",
+      "lastUpdated": "2026-10-22T15:23:38.688Z",
+      "validation": "native CLI install returned outcome ok"
+    },
+    {
+      "name": "static-analysis@talkaris-reviewed",
+      "scope": "project",
+      "projectPath": "/home/manuelxose/workspace/tecnoria-chat-platform",
+      "installPath": "/home/manuelxose/.claude/plugins/cache/talkaris-reviewed/static-analysis/1.5.0",
+      "version": "1.5.0",
+      "installedAt": "2026-10-22T15:23:40.030Z",
+      "lastUpdated": "2026-10-22T15:23:40.030Z",
+      "validation": "native CLI install returned outcome ok"
+    },
+    {
+      "name": "promptfoo@talkaris-reviewed",
+      "scope": "project",
+      "installPath": "/home/manuelxose/.claude/plugins/cache/talkaris-reviewed/promptfoo/0.1.5",
+      "version": "0.1.5",
+      "installedAt": "2026-10-22T15:23:41.477Z",
+      "lastUpdated": "2026-10-22T15:23:41.477Z",
+      "projectPath": "/home/manuelxose/workspace/tecnoria-chat-platform",
+      "validation": "native CLI install returned outcome ok"
+    }
+  ],
+  "tools": {
+    "windows": {
+      "location": "C:\\Users\\Admin\\Documents\\ChatGPT\\talkaris\\.ai-tools",
+      "dependencies": {
+        "@playwright/cli": "0.1.22",
+        "@playwright/test": "1.64.1",
+        "@axe-core/playwright": "4.14.0",
+        "promptfoo": "0.124.1"
+      },
+      "lockfileSha256": "75d75913d732cc50e25abda36612bd432fa0f4b2cd1480c3d7b34b5eb1ee7778",
+      "lifecycleScripts": false,
+      "validation": {
+        "npmInstall": "pass; 617 packages",
+        "playwrightCliVersion": "0.1.22",
+        "promptfooCliVersion": "0.124.1",
+        "chromium": "156.0.8078.4",
+        "axe": {
+          "violations": 0,
+          "passes": 15
+        },
+        "liveModelCalls": 0,
+        "providerTests": "4/4 pass (root/agent verified)",
+        "promptfooOffline": "1/1 pass (root verified)",
+        "browserSmoke": {
+          "status": "pass (root verified)",
+          "widths": [
+            390,
+            768,
+            1440
+          ],
+          "browserErrors": 0,
+          "criticalOrSeriousAxe": 0
+        }
+      }
+    },
+    "linux": {
+      "location": ".agentic/tools",
+      "status": "installed",
+      "node": "22.23.2",
+      "dependencies": {
+        "@playwright/cli": "0.1.22",
+        "@playwright/test": "1.64.1",
+        "@axe-core/playwright": "4.14.0",
+        "promptfoo": "0.124.1"
+      },
+      "lockfileSha256": "b7f16e5c174d8f68c59e9d3ed49eaced9539975f2359dc91e4358dd1c5d35a5a",
+      "lifecycleScripts": false,
+      "validation": {
+        "npmInstall": "pass;652 native packages",
+        "npmCiDryRun": "pass after native lock repair",
+        "playwrightCliVersion": "0.1.22",
+        "promptfooCliVersion": "0.124.1",
+        "browserSmoke": {
+          "status": "pass",
+          "widths": [
+            390,
+            768,
+            1440
+          ],
+          "browserErrors": 0,
+          "criticalOrSeriousAxe": 0
+        },
+        "liveModelCalls": 0,
+        "providerTests": "4/4 pass",
+        "promptfooOffline": "1/1 pass; local offline provider; no-cache/no-table; telemetry/update checks disabled"
+      },
+      "note": "Windows npm lock needed native npm10 peer-resolution repair; exact four direct dependency pins retained. No Windows node_modules copied."
+    }
+  },
+  "validation": {
+    "pinnedSources": 10,
+    "portableSkillLinks": 28,
+    "nativePluginInstalls": 6,
+    "superpowersTelemetryDisabled": true
+  }
+}

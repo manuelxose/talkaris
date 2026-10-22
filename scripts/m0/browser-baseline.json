@@ -1,0 +1,2908 @@
+{
+  "/app/dashboard@390:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "http:500:/api/v1/portal/tenants/:uuid/analytics/satisfaction",
+      "layout:clipped-header-or-actions:12",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "03dce1eb2b719a664bdc22c4cea4063b29e7bbd280d5ad5ccc53448ad103aade"
+  },
+  "/app/dashboard@390:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "http:500:/api/v1/portal/tenants/:uuid/analytics/satisfaction",
+      "layout:clipped-header-or-actions:12",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "03dce1eb2b719a664bdc22c4cea4063b29e7bbd280d5ad5ccc53448ad103aade"
+  },
+  "/app/bots@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "c92e827b204f19f4fa61eac9c2c3e019f631f40899f6862c917b160b92e61058"
+  },
+  "/app/bots@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "c92e827b204f19f4fa61eac9c2c3e019f631f40899f6862c917b160b92e61058"
+  },
+  "/app/bots/new@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "bf1f814083f3e2c8cf6aa49562d4fd8abd19b04de79751fc02cad1157e4cec7e"
+  },
+  "/app/bots/new@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "bf1f814083f3e2c8cf6aa49562d4fd8abd19b04de79751fc02cad1157e4cec7e"
+  },
+  "/app/bots/:botKey@390:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:6",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 5
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "f7b679181980886d653bcf637fd000a4c06feb80c5462b1f9da273d288497352"
+  },
+  "/app/bots/:botKey@390:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:6",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 5
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "f7b679181980886d653bcf637fd000a4c06feb80c5462b1f9da273d288497352"
+  },
+  "/app/bots/:botKey/test@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "runtime:unavailable"
+    ],
+    "dataChecks": {
+      "runtimeIframe": 0,
+      "axe": []
+    },
+    "signature": "fc13ffa2aa255b5f25246c64f4f00d832c410d3d9207246a4042b311d91fd2ce"
+  },
+  "/app/bots/:botKey/test@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "runtime:unavailable"
+    ],
+    "dataChecks": {
+      "runtimeIframe": 0,
+      "axe": []
+    },
+    "signature": "fc13ffa2aa255b5f25246c64f4f00d832c410d3d9207246a4042b311d91fd2ce"
+  },
+  "/app/deployments@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:4",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "41022167071d15a6a3875c1339868a51bd7923ed88863b9ec4fea3e5c13f5f40"
+  },
+  "/app/deployments@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:4",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "41022167071d15a6a3875c1339868a51bd7923ed88863b9ec4fea3e5c13f5f40"
+  },
+  "/app/conversations@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:4",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "894db6820217d523ccebfad5ffe71d5692b40e31d5ac21d7b8c0fa63d715bf03"
+  },
+  "/app/conversations@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:4",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "894db6820217d523ccebfad5ffe71d5692b40e31d5ac21d7b8c0fa63d715bf03"
+  },
+  "/app/conversations/live@390:direct": {
+    "events": [
+      "console:ERROR Y",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "error:server-failure-presented-as-empty",
+      "http:500:/api/v1/portal/tenants/:uuid/handovers",
+      "layout:clipped-header-or-actions:6",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "1f52dfb43760f8a7b72d8fb638a39a8915f30139b4c93a878b9ff1ddecec9403"
+  },
+  "/app/conversations/live@390:reload": {
+    "events": [
+      "console:ERROR Y",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "error:server-failure-presented-as-empty",
+      "http:500:/api/v1/portal/tenants/:uuid/handovers",
+      "layout:clipped-header-or-actions:6",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "1f52dfb43760f8a7b72d8fb638a39a8915f30139b4c93a878b9ff1ddecec9403"
+  },
+  "/app/conversations/:id@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "30373fb75d34dc6ea17248b223bab1599d2ba48b201271d0ef8dab423d1dbdc5"
+  },
+  "/app/conversations/:id@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "30373fb75d34dc6ea17248b223bab1599d2ba48b201271d0ef8dab423d1dbdc5"
+  },
+  "/app/knowledge@390:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:6",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 7,
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "6474ed0f8d9aaa0fee1fd3befb5f89e347e64822cc3a77cc03bcc2e12f930e74"
+  },
+  "/app/knowledge@390:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:6",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 7,
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "6474ed0f8d9aaa0fee1fd3befb5f89e347e64822cc3a77cc03bcc2e12f930e74"
+  },
+  "/app/knowledge/documents@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "d6c3810b46c2c56be1acda927d53fdc0f87f0032ca3a39616a52e6d8684a41f4"
+  },
+  "/app/knowledge/documents@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "d6c3810b46c2c56be1acda927d53fdc0f87f0032ca3a39616a52e6d8684a41f4"
+  },
+  "/app/knowledge/ingestions@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:4",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "c5e267510c7e3309c61810896b6a494ca3110532faec3396ca50ee8b3435d638"
+  },
+  "/app/knowledge/ingestions@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:4",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "c5e267510c7e3309c61810896b6a494ca3110532faec3396ca50ee8b3435d638"
+  },
+  "/app/knowledge/schedules@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "84371d9c97be7b7ab30338c7f92f222628705626eac6fa517d727c94d18452fb"
+  },
+  "/app/knowledge/schedules@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "84371d9c97be7b7ab30338c7f92f222628705626eac6fa517d727c94d18452fb"
+  },
+  "/app/analytics@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:5",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "d517baf148a514d92fd9eaacf1b7ea25ed8fd3a0490c6f2fa5f483044134c9c1"
+  },
+  "/app/analytics@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:5",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "d517baf148a514d92fd9eaacf1b7ea25ed8fd3a0490c6f2fa5f483044134c9c1"
+  },
+  "/app/channels@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "184ead100d8c416fc7b56d1e7546541ca7dc6bab0a183d6ab397e16d2f6e4cd7"
+  },
+  "/app/channels@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "184ead100d8c416fc7b56d1e7546541ca7dc6bab0a183d6ab397e16d2f6e4cd7"
+  },
+  "/app/leads@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "ad1b0de60f4059c44b36b2ac8f735d40e588b6620bc0188d53c58f0dfe7de3b0"
+  },
+  "/app/leads@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "ad1b0de60f4059c44b36b2ac8f735d40e588b6620bc0188d53c58f0dfe7de3b0"
+  },
+  "/app/developers@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:5",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "d517baf148a514d92fd9eaacf1b7ea25ed8fd3a0490c6f2fa5f483044134c9c1"
+  },
+  "/app/developers@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:5",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "d517baf148a514d92fd9eaacf1b7ea25ed8fd3a0490c6f2fa5f483044134c9c1"
+  },
+  "/app/settings@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:9",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "7d30f162c236be5c3203a9572bdfc0bfb92fe370652f3de26a329c16b8522543"
+  },
+  "/app/settings@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:9",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "7d30f162c236be5c3203a9572bdfc0bfb92fe370652f3de26a329c16b8522543"
+  },
+  "/app/settings/members@390:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "d1417fae3a5482f9819a83c015e8092614a6b1c0481194113439bc3a3291ce02"
+  },
+  "/app/settings/members@390:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "d1417fae3a5482f9819a83c015e8092614a6b1c0481194113439bc3a3291ce02"
+  },
+  "/app/settings/api-keys@390:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "d1417fae3a5482f9819a83c015e8092614a6b1c0481194113439bc3a3291ce02"
+  },
+  "/app/settings/api-keys@390:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "d1417fae3a5482f9819a83c015e8092614a6b1c0481194113439bc3a3291ce02"
+  },
+  "/app/settings/webhooks@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "bf1f814083f3e2c8cf6aa49562d4fd8abd19b04de79751fc02cad1157e4cec7e"
+  },
+  "/app/settings/webhooks@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "bf1f814083f3e2c8cf6aa49562d4fd8abd19b04de79751fc02cad1157e4cec7e"
+  },
+  "/app/settings/notifications@390:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "3e0fe798bff482bc72f59cd46683ce3709193f817eaae7a5211d844d82439fbf"
+  },
+  "/app/settings/notifications@390:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "3e0fe798bff482bc72f59cd46683ce3709193f817eaae7a5211d844d82439fbf"
+  },
+  "/admin/overview@390:direct": {
+    "events": [
+      "axe:serious:scrollable-region-focusable",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:1",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "c7e15f5f200cc330dbe1161cf0f36ed111877686a667a80d2d60f4e40fac7eaf"
+  },
+  "/admin/overview@390:reload": {
+    "events": [
+      "axe:serious:scrollable-region-focusable",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:1",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "c7e15f5f200cc330dbe1161cf0f36ed111877686a667a80d2d60f4e40fac7eaf"
+  },
+  "/admin/requests@390:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:1",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "609a8c3e9c6f1105bcd886d7b651e46caa08e8483045e534b1b86f9e947d9970"
+  },
+  "/admin/requests@390:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "layout:clipped-header-or-actions:1",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "609a8c3e9c6f1105bcd886d7b651e46caa08e8483045e534b1b86f9e947d9970"
+  },
+  "/admin/tenants@390:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 3,
+      "axe": []
+    },
+    "signature": "80bce44959fbbe76befa375f8a38ff698b11d8c7dd884a3181dc2e16f6602701"
+  },
+  "/admin/tenants@390:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 3,
+      "axe": []
+    },
+    "signature": "80bce44959fbbe76befa375f8a38ff698b11d8c7dd884a3181dc2e16f6602701"
+  },
+  "/admin/users@390:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 6,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 6
+        }
+      ]
+    },
+    "signature": "6af7759b7068a42594b33a9cefefd673895cc64b5288c41bc71c66e31946d759"
+  },
+  "/admin/users@390:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:3",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 6,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 6
+        }
+      ]
+    },
+    "signature": "6af7759b7068a42594b33a9cefefd673895cc64b5288c41bc71c66e31946d759"
+  },
+  "/admin/platform@390:direct": {
+    "events": [
+      "axe:critical:label",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:1",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 17
+        }
+      ]
+    },
+    "signature": "1c88136eda6bbac684c8231dec7ecfec7486e94742bdce2f211cf0a09ed61457"
+  },
+  "/admin/platform@390:reload": {
+    "events": [
+      "axe:critical:label",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:1",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 17
+        }
+      ]
+    },
+    "signature": "1c88136eda6bbac684c8231dec7ecfec7486e94742bdce2f211cf0a09ed61457"
+  },
+  "/app/dashboard@768:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "http:500:/api/v1/portal/tenants/:uuid/analytics/satisfaction",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "d0695789c2ff03a05b741b2b7c9a4b3cf13e97fc90ae4982da408c993a79ce18"
+  },
+  "/app/dashboard@768:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "http:500:/api/v1/portal/tenants/:uuid/analytics/satisfaction",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "d0695789c2ff03a05b741b2b7c9a4b3cf13e97fc90ae4982da408c993a79ce18"
+  },
+  "/app/bots@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "82fad9e53d9d99453e0af625d56ae5a237b0c13d26e4c9a4d34e0917877f30c5"
+  },
+  "/app/bots@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "82fad9e53d9d99453e0af625d56ae5a237b0c13d26e4c9a4d34e0917877f30c5"
+  },
+  "/app/bots/new@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/bots/new@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/bots/:botKey@768:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 5
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "6f96f40b4133715c710e194a9ed61bdf84f021012834a045bd691bd470d850da"
+  },
+  "/app/bots/:botKey@768:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 5
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "6f96f40b4133715c710e194a9ed61bdf84f021012834a045bd691bd470d850da"
+  },
+  "/app/bots/:botKey/test@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "runtime:unavailable"
+    ],
+    "dataChecks": {
+      "runtimeIframe": 0,
+      "axe": []
+    },
+    "signature": "d0154cef3193c3c2050287be3bd21dd8f2bb4318e1285283ebe8246f3561e0d0"
+  },
+  "/app/bots/:botKey/test@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "runtime:unavailable"
+    ],
+    "dataChecks": {
+      "runtimeIframe": 0,
+      "axe": []
+    },
+    "signature": "d0154cef3193c3c2050287be3bd21dd8f2bb4318e1285283ebe8246f3561e0d0"
+  },
+  "/app/deployments@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/deployments@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/conversations@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "1638d6343e2495e10e41dd98dbfb2d1ff31865b964f554ff259b51bf2b19f365"
+  },
+  "/app/conversations@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "1638d6343e2495e10e41dd98dbfb2d1ff31865b964f554ff259b51bf2b19f365"
+  },
+  "/app/conversations/live@768:direct": {
+    "events": [
+      "console:ERROR Y",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "error:server-failure-presented-as-empty",
+      "http:500:/api/v1/portal/tenants/:uuid/handovers",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "378fc7be3562fca7b67e3a3f06299eb60614f83ea00fd9b704294ef289a2cd8b"
+  },
+  "/app/conversations/live@768:reload": {
+    "events": [
+      "console:ERROR Y",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "error:server-failure-presented-as-empty",
+      "http:500:/api/v1/portal/tenants/:uuid/handovers",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "378fc7be3562fca7b67e3a3f06299eb60614f83ea00fd9b704294ef289a2cd8b"
+  },
+  "/app/conversations/:id@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "bb752aee56e53e6549d8b9a6c879a65cb4f3b9838df72aa1a41fa4896c4410c5"
+  },
+  "/app/conversations/:id@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "bb752aee56e53e6549d8b9a6c879a65cb4f3b9838df72aa1a41fa4896c4410c5"
+  },
+  "/app/knowledge@768:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 7,
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "da2a7f50c220ae5f8646bc04b2e904582ef85feecdbd3b085007f229a74f37a7"
+  },
+  "/app/knowledge@768:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 7,
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "da2a7f50c220ae5f8646bc04b2e904582ef85feecdbd3b085007f229a74f37a7"
+  },
+  "/app/knowledge/documents@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "45c5e72085dc125e685f2f33de9e2581e4640cdceed500bc29f3769d6ae7ecdd"
+  },
+  "/app/knowledge/documents@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "45c5e72085dc125e685f2f33de9e2581e4640cdceed500bc29f3769d6ae7ecdd"
+  },
+  "/app/knowledge/ingestions@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "45c5e72085dc125e685f2f33de9e2581e4640cdceed500bc29f3769d6ae7ecdd"
+  },
+  "/app/knowledge/ingestions@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "45c5e72085dc125e685f2f33de9e2581e4640cdceed500bc29f3769d6ae7ecdd"
+  },
+  "/app/knowledge/schedules@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "6f9f7201c59029569a9e41cfe19bcd9c8eb173f1d2dd00f4bedfdb8ab2905ca7"
+  },
+  "/app/knowledge/schedules@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "6f9f7201c59029569a9e41cfe19bcd9c8eb173f1d2dd00f4bedfdb8ab2905ca7"
+  },
+  "/app/analytics@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/analytics@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/channels@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/channels@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/leads@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "d1fd71081ff57b96be6276c40ae7499f03cf574f665d89724b61254e88e6e995"
+  },
+  "/app/leads@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "d1fd71081ff57b96be6276c40ae7499f03cf574f665d89724b61254e88e6e995"
+  },
+  "/app/developers@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/developers@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/settings@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/settings@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/settings/members@768:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "5be4c6ee42372b4f996e2d19c1b149000104aabecb2a72312b576ca6afde6e31"
+  },
+  "/app/settings/members@768:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "5be4c6ee42372b4f996e2d19c1b149000104aabecb2a72312b576ca6afde6e31"
+  },
+  "/app/settings/api-keys@768:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "5be4c6ee42372b4f996e2d19c1b149000104aabecb2a72312b576ca6afde6e31"
+  },
+  "/app/settings/api-keys@768:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": []
+    },
+    "signature": "5be4c6ee42372b4f996e2d19c1b149000104aabecb2a72312b576ca6afde6e31"
+  },
+  "/app/settings/webhooks@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/settings/webhooks@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "26fd6322f61a6ebbe4c5d3946fb75d020c7562ea723fdaaa0af34d45fb76f335"
+  },
+  "/app/settings/notifications@768:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "84a8af210c229251ec48da5689d8fbd8cfa17a388df2b9bd6bd5cf3d26963ea4"
+  },
+  "/app/settings/notifications@768:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "84a8af210c229251ec48da5689d8fbd8cfa17a388df2b9bd6bd5cf3d26963ea4"
+  },
+  "/admin/overview@768:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "e40b54d537ea623132a78d6aa594930ae8323fd149c6e3e8b39f2467d103e9ff"
+  },
+  "/admin/overview@768:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "e40b54d537ea623132a78d6aa594930ae8323fd149c6e3e8b39f2467d103e9ff"
+  },
+  "/admin/requests@768:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "ebc3cfdcedc3f629968e8cc0dd1ba0d9e48fec9a0cac31d3b295e68b563de179"
+  },
+  "/admin/requests@768:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "ebc3cfdcedc3f629968e8cc0dd1ba0d9e48fec9a0cac31d3b295e68b563de179"
+  },
+  "/admin/tenants@768:direct": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 3,
+      "axe": []
+    },
+    "signature": "45ee92df84cca5968012254a7969cddea4c5a7586fcd453d9834127d9ed4282c"
+  },
+  "/admin/tenants@768:reload": {
+    "events": [
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 3,
+      "axe": []
+    },
+    "signature": "45ee92df84cca5968012254a7969cddea4c5a7586fcd453d9834127d9ed4282c"
+  },
+  "/admin/users@768:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 6,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 6
+        }
+      ]
+    },
+    "signature": "827e39d835e4c297fb3f79e9c1dece4df0a4b3db0ce1af699947b5eef1bed483"
+  },
+  "/admin/users@768:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "layout:clipped-header-or-actions:2",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 6,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 6
+        }
+      ]
+    },
+    "signature": "827e39d835e4c297fb3f79e9c1dece4df0a4b3db0ce1af699947b5eef1bed483"
+  },
+  "/admin/platform@768:direct": {
+    "events": [
+      "axe:critical:label",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 17
+        }
+      ]
+    },
+    "signature": "9a71878623a6b3646cb14c3bc8ec4e050b833f0117b524c0434975898cecdb22"
+  },
+  "/admin/platform@768:reload": {
+    "events": [
+      "axe:critical:label",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 17
+        }
+      ]
+    },
+    "signature": "9a71878623a6b3646cb14c3bc8ec4e050b833f0117b524c0434975898cecdb22"
+  },
+  "/app/dashboard@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "http:500:/api/v1/portal/tenants/:uuid/analytics/satisfaction",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "98965dbc328cfca8eac9a728e1cb13f354d944b4f4ac67e36188aadf4b45f386"
+  },
+  "/app/dashboard@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "http:500:/api/v1/portal/tenants/:uuid/analytics/satisfaction",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "98965dbc328cfca8eac9a728e1cb13f354d944b4f4ac67e36188aadf4b45f386"
+  },
+  "/app/bots@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "d2bc9f2dc85b61c95596c44e8020e2bfeb398350c9f0b347d8227cea113a8852"
+  },
+  "/app/bots@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "d2bc9f2dc85b61c95596c44e8020e2bfeb398350c9f0b347d8227cea113a8852"
+  },
+  "/app/bots/new@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/bots/new@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/bots/:botKey@1440:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 5
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 4
+        }
+      ]
+    },
+    "signature": "5e71fb262b312ff98b32f38df0b7318e0a86febb98d149be0f1958d21aa8667c"
+  },
+  "/app/bots/:botKey@1440:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 5
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 4
+        }
+      ]
+    },
+    "signature": "5e71fb262b312ff98b32f38df0b7318e0a86febb98d149be0f1958d21aa8667c"
+  },
+  "/app/bots/:botKey/test@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "runtime:unavailable"
+    ],
+    "dataChecks": {
+      "runtimeIframe": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "79e5ea4c13a10d510c50d80fcd25e35d413bd2e555b2afbc1700453cec0bd3dd"
+  },
+  "/app/bots/:botKey/test@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "runtime:unavailable"
+    ],
+    "dataChecks": {
+      "runtimeIframe": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "79e5ea4c13a10d510c50d80fcd25e35d413bd2e555b2afbc1700453cec0bd3dd"
+  },
+  "/app/deployments@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/deployments@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/conversations@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "702c1073688cfeb2c9aa0079810149bd408bb11215aa0e5ad027c58ceff0fc7b"
+  },
+  "/app/conversations@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "702c1073688cfeb2c9aa0079810149bd408bb11215aa0e5ad027c58ceff0fc7b"
+  },
+  "/app/conversations/live@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR Y",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "error:server-failure-presented-as-empty",
+      "http:500:/api/v1/portal/tenants/:uuid/handovers",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "ff5e43aa2315a53c84e715d631f73ca98b2a180b0dcf2bbd99d654eab5387ab4"
+  },
+  "/app/conversations/live@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR Y",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "console:Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "error:server-failure-presented-as-empty",
+      "http:500:/api/v1/portal/tenants/:uuid/handovers",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "ff5e43aa2315a53c84e715d631f73ca98b2a180b0dcf2bbd99d654eab5387ab4"
+  },
+  "/app/conversations/:id@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "0c3a6c5ae49d4781b411ceba9223fab7a7c4ecb80cfeaa9bae88cc5da0a45ff0"
+  },
+  "/app/conversations/:id@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "0c3a6c5ae49d4781b411ceba9223fab7a7c4ecb80cfeaa9bae88cc5da0a45ff0"
+  },
+  "/app/knowledge@1440:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 7,
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 4
+        }
+      ]
+    },
+    "signature": "8f797dce6a7840fbb0d393a90c4d6f0a3e195048403c73abf64f0f8c7486ec8b"
+  },
+  "/app/knowledge@1440:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 7,
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 4
+        }
+      ]
+    },
+    "signature": "8f797dce6a7840fbb0d393a90c4d6f0a3e195048403c73abf64f0f8c7486ec8b"
+  },
+  "/app/knowledge/documents@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "2d282d605c6c3d2cea9490087ce52757465ffa038ecad9d05d90fec3903ab71a"
+  },
+  "/app/knowledge/documents@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "2d282d605c6c3d2cea9490087ce52757465ffa038ecad9d05d90fec3903ab71a"
+  },
+  "/app/knowledge/ingestions@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "axe:serious:scrollable-region-focusable",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "792ab9514e6f9949f3323c7da9052328331d06c3f23713bd6e8af959f3218d89"
+  },
+  "/app/knowledge/ingestions@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "axe:serious:scrollable-region-focusable",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 3
+        }
+      ]
+    },
+    "signature": "792ab9514e6f9949f3323c7da9052328331d06c3f23713bd6e8af959f3218d89"
+  },
+  "/app/knowledge/schedules@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "82fad9e53d9d99453e0af625d56ae5a237b0c13d26e4c9a4d34e0917877f30c5"
+  },
+  "/app/knowledge/schedules@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "82fad9e53d9d99453e0af625d56ae5a237b0c13d26e4c9a4d34e0917877f30c5"
+  },
+  "/app/analytics@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "5d609b30417a24d3a3fd85e27520d417b152696ba6e75c3eba3e71664ce969f5"
+  },
+  "/app/analytics@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "5d609b30417a24d3a3fd85e27520d417b152696ba6e75c3eba3e71664ce969f5"
+  },
+  "/app/channels@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "5d609b30417a24d3a3fd85e27520d417b152696ba6e75c3eba3e71664ce969f5"
+  },
+  "/app/channels@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "5d609b30417a24d3a3fd85e27520d417b152696ba6e75c3eba3e71664ce969f5"
+  },
+  "/app/leads@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "45c5e72085dc125e685f2f33de9e2581e4640cdceed500bc29f3769d6ae7ecdd"
+  },
+  "/app/leads@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "45c5e72085dc125e685f2f33de9e2581e4640cdceed500bc29f3769d6ae7ecdd"
+  },
+  "/app/developers@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "5d609b30417a24d3a3fd85e27520d417b152696ba6e75c3eba3e71664ce969f5"
+  },
+  "/app/developers@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "5d609b30417a24d3a3fd85e27520d417b152696ba6e75c3eba3e71664ce969f5"
+  },
+  "/app/settings@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/settings@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/settings/members@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "14f72bf1fd3868fadce73078e9847f489640f4599e281b42d2163e65b7638aa0"
+  },
+  "/app/settings/members@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "14f72bf1fd3868fadce73078e9847f489640f4599e281b42d2163e65b7638aa0"
+  },
+  "/app/settings/api-keys@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "14f72bf1fd3868fadce73078e9847f489640f4599e281b42d2163e65b7638aa0"
+  },
+  "/app/settings/api-keys@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 1,
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "14f72bf1fd3868fadce73078e9847f489640f4599e281b42d2163e65b7638aa0"
+  },
+  "/app/settings/webhooks@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/settings/webhooks@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "45804b99cde0ac18d76357707968cbd1c1d4193d133e3e6afc8404a2a8d133a5"
+  },
+  "/app/settings/notifications@1440:direct": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "0fd4fba59495098ed2e2c1bb90be03305f70bc23e2e8a32d931af9924dc8ebec"
+  },
+  "/app/settings/notifications@1440:reload": {
+    "events": [
+      "axe:critical:label",
+      "axe:critical:select-name",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 2
+        }
+      ]
+    },
+    "signature": "0fd4fba59495098ed2e2c1bb90be03305f70bc23e2e8a32d931af9924dc8ebec"
+  },
+  "/admin/overview@1440:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "e40b54d537ea623132a78d6aa594930ae8323fd149c6e3e8b39f2467d103e9ff"
+  },
+  "/admin/overview@1440:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": []
+    },
+    "signature": "e40b54d537ea623132a78d6aa594930ae8323fd149c6e3e8b39f2467d103e9ff"
+  },
+  "/admin/requests@1440:direct": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "ebc3cfdcedc3f629968e8cc0dd1ba0d9e48fec9a0cac31d3b295e68b563de179"
+  },
+  "/admin/requests@1440:reload": {
+    "events": [
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'factory')",
+      "console:ERROR TypeError: Cannot read properties of undefined (reading 'onDestroy')",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "data:seeded-record-not-visible",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": false,
+      "tableRows": 0,
+      "axe": []
+    },
+    "signature": "ebc3cfdcedc3f629968e8cc0dd1ba0d9e48fec9a0cac31d3b295e68b563de179"
+  },
+  "/admin/tenants@1440:direct": {
+    "events": [
+      "axe:serious:scrollable-region-focusable",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 3,
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "580814967b8b4fa742800a33c9f6f346450d28c74c2c9987446d2e1e07d4584d"
+  },
+  "/admin/tenants@1440:reload": {
+    "events": [
+      "axe:serious:scrollable-region-focusable",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 3,
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        }
+      ]
+    },
+    "signature": "580814967b8b4fa742800a33c9f6f346450d28c74c2c9987446d2e1e07d4584d"
+  },
+  "/admin/users@1440:direct": {
+    "events": [
+      "axe:critical:select-name",
+      "axe:serious:scrollable-region-focusable",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 6,
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 6
+        }
+      ]
+    },
+    "signature": "ff7da561287d544ed488e9aec3531004bbd490ba95148665fb16e50cc7488180"
+  },
+  "/admin/users@1440:reload": {
+    "events": [
+      "axe:critical:select-name",
+      "axe:serious:scrollable-region-focusable",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "sentinelPresent": true,
+      "tableRows": 6,
+      "axe": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "count": 6
+        }
+      ]
+    },
+    "signature": "ff7da561287d544ed488e9aec3531004bbd490ba95148665fb16e50cc7488180"
+  },
+  "/admin/platform@1440:direct": {
+    "events": [
+      "axe:critical:label",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 17
+        }
+      ]
+    },
+    "signature": "9a71878623a6b3646cb14c3bc8ec4e050b833f0117b524c0434975898cecdb22"
+  },
+  "/admin/platform@1440:reload": {
+    "events": [
+      "axe:critical:label",
+      "console:Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+      "requestfailed:https://fonts.googleapis.com/css2:net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    ],
+    "dataChecks": {
+      "axe": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "count": 17
+        }
+      ]
+    },
+    "signature": "9a71878623a6b3646cb14c3bc8ec4e050b833f0117b524c0434975898cecdb22"
+  },
+  "workspace-switch@1440": {
+    "events": [],
+    "dataChecks": {
+      "a": {
+        "ownVisible": true,
+        "foreignVisible": false
+      },
+      "b": {
+        "ownVisible": true,
+        "foreignVisible": false
+      }
+    },
+    "signature": "a75e8ddd1aec00a1a3d94bead75cabdb2b8c449a9bfa3abc0e841cadc06167e3"
+  }
+}

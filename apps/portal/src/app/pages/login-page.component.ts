@@ -1,9 +1,10 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { CommonModule, DOCUMENT, isPlatformBrowser } from "@angular/common";
+import { AfterViewInit, Component, ElementRef, inject, NgZone, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterModule } from "@angular/router";
 import { DEFAULT_PORTAL_SETTINGS } from "../content/public-site";
 import { SessionStore } from "../core/session.store";
+import { PortalApiService } from "../core/portal-api.service";
 import { SeoService } from "../services/seo.service";
 import { buildNoIndexSeo } from "../services/seo-utils";
 
@@ -26,7 +27,9 @@ import { buildNoIndexSeo } from "../services/seo-utils";
             <p>Administra tenants, proyectos e integraciones desde el portal de Talkaris.</p>
           </div>
 
-          <div class="ck-alert ck-alert--danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div class="ck-alert ck-alert--danger" role="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <div #googleButton class="login-google" [attr.aria-busy]="loading"></div>
 
           <form class="ck-form-stack auth-form" (ngSubmit)="submit()">
             <div class="ck-field">
@@ -119,11 +122,72 @@ import { buildNoIndexSeo } from "../services/seo-utils";
       </aside>
     </div>
   `})
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild("googleButton") googleButton!: ElementRef<HTMLElement>;
+  private readonly api = inject(PortalApiService);
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly zone = inject(NgZone);
+  private destroyed = false;
   email = "";
   password = "";
   loading = false;
   errorMessage = "";
+
+  async ngAfterViewInit(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      const { clientId } = await this.api.googleConfig();
+      if (!clientId || this.destroyed) return;
+      await new Promise<void>((resolve, reject) => {
+        if (this.googleIdentity()) { resolve(); return; }
+        const script = this.document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.onload = () => { script.remove(); resolve(); };
+        script.onerror = () => { script.remove(); reject(new Error("Google unavailable")); };
+        this.document.head.appendChild(script);
+      });
+      if (this.destroyed) return;
+      const identity = this.googleIdentity();
+      if (!identity) throw new Error("Google unavailable");
+      identity.initialize({
+        client_id: clientId,
+        callback: ({ credential }) => this.zone.run(() => void this.submitGoogle(credential)),
+        auto_select: false,
+      });
+      identity.renderButton(this.googleButton.nativeElement, {
+        type: "standard", theme: "outline", size: "large", text: "continue_with", locale: "es",
+      });
+    } catch {
+      if (!this.destroyed) this.errorMessage = "Google no está disponible. Puedes entrar con email y contraseña.";
+    }
+  }
+
+  private googleIdentity() {
+    return (this.document.defaultView as (Window & {
+      google?: { accounts: { id: {
+        initialize(options: { client_id: string; callback: (response: { credential: string }) => void; auto_select: boolean }): void;
+        renderButton(element: HTMLElement, options: Record<string, unknown>): void;
+      } } };
+    }) | null)?.google?.accounts.id;
+  }
+
+  ngOnDestroy(): void { this.destroyed = true; }
+
+  async submitGoogle(credential: string): Promise<void> {
+    if (this.loading || this.destroyed) return;
+    this.loading = true;
+    this.errorMessage = "";
+    try {
+      const user = await this.session.loginGoogle(credential);
+      await this.router.navigate([user.platformRole === "superadmin" ? "/admin" : "/app"]);
+    } catch {
+      this.errorMessage = "No se pudo acceder con Google. Usa la cuenta asociada a un usuario activo de Talkaris.";
+    } finally {
+      this.loading = false;
+    }
+  }
 
   constructor(
     private readonly session: SessionStore,

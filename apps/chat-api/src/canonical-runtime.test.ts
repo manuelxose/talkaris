@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
-const ROOT = "/var/www/talkaris";
+const ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const SOURCE_DIRS = [
   path.join(ROOT, "apps/chat-api/src"),
   path.join(ROOT, "apps/ingest-worker/src"),

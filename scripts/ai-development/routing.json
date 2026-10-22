@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "automaticPaidSpending": false,
+  "monthlyBudgetUsd": 20,
+  "taskBudgetUsd": 2,
+  "agentBudgetUsd": 5,
+  "warningFraction": 0.8,
+  "paused": false,
+  "providers": {
+    "codex": {"command": "codex", "model": null, "availability": "installed; inherited user model, entitlement unverified", "billing": "unknown; verify account before execution"},
+    "claude": {"command": "claude", "model": "inherit", "availability": "installed; inherited user model, entitlement unverified", "billing": "unknown; verify subscription versus API before execution"}
+  },
+  "classes": {
+    "mechanical": "Use deterministic scripts first; otherwise lowest-cost verified model",
+    "implementation": "Use an entitled coding model from the current CLI catalog",
+    "high-risk": "Use verified high-reasoning model; independent model family review preferred"
+  },
+  "fallback": "Stop on unavailable model, exhausted quota, or unknown billing; coordinator explicitly selects another verified provider. Never silently switch to paid API."
+}

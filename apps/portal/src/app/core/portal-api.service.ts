@@ -93,6 +93,14 @@ export class PortalApiService {
     );
   }
 
+  googleConfig(): Promise<{ clientId: string | null }> {
+    return firstValueFrom(this.http.get<{ clientId: string | null }>(this.url("/v1/auth/google/config")));
+  }
+
+  loginGoogle(credential: string): Promise<PortalUser> {
+    return firstValueFrom(this.http.post<PortalUser>(this.url("/v1/auth/google"), { credential }, { withCredentials: true }));
+  }
+
   logout(): Promise<void> {
     return firstValueFrom(
       this.http.post<void>(this.url("/v1/auth/logout"), {}, { withCredentials: true })

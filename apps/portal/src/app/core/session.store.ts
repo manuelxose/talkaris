@@ -31,6 +31,13 @@ export class SessionStore {
     return user;
   }
 
+  async loginGoogle(credential: string): Promise<PortalUser> {
+    const user = await this.api.loginGoogle(credential);
+    this.user.set(user);
+    this.ready.set(true);
+    return user;
+  }
+
   async logout(): Promise<void> {
     await this.api.logout();
     this.user.set(null);
