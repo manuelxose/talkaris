@@ -4,6 +4,8 @@
 
 Delivery: implementation commit a648dae, pushed to codex/m0-baseline; draft PR https://github.com/manuelxose/tecnoria-chat-platform/pull/1 open, unmerged. Runner-local CI https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39819169410 in progress, not yet verified. Follow-up independent source review tightened F16 to exact salesKeywords error and ensured teardown after partial Compose startup. Actual Express runtime inventory captured 110 route layers. Browser baseline remains unapproved; no G0 closure.
 
+Audit source resolved: original INFORME.md found at C:/Users/Admin/Documents/ChatGPT/talkaris/auditoria-2026-10-22/INFORME.md, SHA256 21e9a8c843ca37d171205e632ea37de8efc6152c0d22ce536cdec653e1161689. Read original findings; exact crawl-as-viewer/nonexistent-project, fake Notion token, created analytics key and role/queue variants added, pending execution. See docs/m0/audit-source.md. No production snapshot/credentials copied. Commit a31b1fd records first review corrections and PR. CI https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39819467887 is executing runner-local tests; not yet verified. Browser/new fixture assertions, full repeatability and final independent evidence review remain open; no M1.
+
 User delivery rule: all M0–M8 engineering tests run on localhost with isolated services and synthetic fixtures; CI uses runner-local services. Each milestone requires its own branch, scoped commits and a PR with evidence, recorded SHAs and PR URL before closure. Milestone branch pushes/PR creation are authorized; automatic merge/deployment is not.
 
 2026-10-22: AI development environment setup. No MVP business feature implemented and no milestone closed.

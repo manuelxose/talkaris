@@ -24,6 +24,7 @@ const rows = [];
 const authStates = {};
 const populated = {
   '/app/bots':'M0 Bot a', '/app/conversations':'m0-bot-a',
+  '/app/conversations/:id':'M0 synthetic question',
   '/app/knowledge':'m0-local', '/app/knowledge/documents':'M0 Synthetic Private Document',
   '/app/knowledge/ingestions':'m0-local', '/app/knowledge/schedules':'M0 paused schedule',
   '/app/leads':'lead@example.test', '/app/settings/members':'m0-admin@example.test',
@@ -88,11 +89,21 @@ try {
             row.dataChecks={sentinelPresent:row.visible.includes(populated[route.template]),tableRows:row.tableRows};
             if(!row.dataChecks.sentinelPresent) events.push('data:seeded-record-not-visible');
           }
+          if(route.template==='/app/bots/:botKey/test') {
+            row.dataChecks.runtimeIframe=await page.locator('iframe').count();
+            if(!row.dataChecks.runtimeIframe) events.push('runtime:unavailable');
+          }
           if(responses.some(r=>r.status>=500)&&/No (?:[a-z]+ )*(?:found|yet|indexed|requests|conversations|leads|data)/i.test(row.visible)) events.push('error:server-failure-presented-as-empty');
           row.overflow=await page.evaluate(()=>({document:document.documentElement.scrollWidth,viewport:innerWidth}));
           if(row.overflow.document>viewport.width+1) events.push('layout:horizontal-page-overflow');
+          row.clipped=await page.evaluate(()=>[...document.querySelectorAll('.ck-page-header,.ck-appbar,main button,main a')].filter(el=>{
+            const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+            return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'&&!el.closest('.ck-table-wrap')&&(r.left < -1||r.right>innerWidth+1);
+          }).map(el=>({tag:el.tagName,text:el.textContent.trim().slice(0,80)})));
+          if(row.clipped.length) events.push(`layout:clipped-header-or-actions:${row.clipped.length}`);
           const axe=await new AxeBuilder({page}).analyze();
           row.axe=axe.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.target)}));
+          row.dataChecks.axe=row.axe.filter(v=>['critical','serious'].includes(v.impact)).map(v=>({id:v.id,impact:v.impact,count:v.nodes.length})).sort((a,b)=>a.id.localeCompare(b.id));
           for(const violation of row.axe.filter(v=>['critical','serious'].includes(v.impact))) events.push(`axe:${violation.impact}:${violation.id}`);
           await page.keyboard.press('Tab');
           row.keyboard=await page.evaluate(()=>({tag:document.activeElement?.tagName,name:document.activeElement?.getAttribute('aria-label')||document.activeElement?.textContent?.trim().slice(0,100)}));
@@ -109,8 +120,37 @@ try {
       await context.close();
     }
   }
+  const context=await authenticated('superadmin',{width:1440,height:900});
+  const page=await context.newPage();
+  const row={id:'workspace-switch@1440',route:'/app/bots',auth:'superadmin',tenant:'a → b',fixture:'populated A/B synthetic',viewport:{width:1440,height:900},phase:'workspace-switch',events:[],dataChecks:{}};
+  page.on('pageerror',error=>row.events.push(`pageerror:${normalize(error.message)}`));
+  try {
+    await page.goto(base+'/app/dashboard',{waitUntil:'networkidle'});
+    // Follow a real product link to exercise client-side navigation and context.
+    await page.locator('a[href="/app/bots"]').first().click();
+    await page.waitForURL(base+'/app/bots');
+    await page.waitForLoadState('networkidle');
+    for(const key of ['a','b']) {
+      const select=page.locator('.ck-workspace__select');
+      const response=await select.inputValue()===f.tenants[key].id?Promise.resolve():page.waitForResponse(r=>r.url().includes(`/tenants/${f.tenants[key].id}/projects`));
+      await select.selectOption(f.tenants[key].id);
+      await response;
+      await page.waitForLoadState('networkidle');
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+      assert.equal(await select.inputValue(),f.tenants[key].id);
+      const text=await page.locator('main').innerText();
+      row.dataChecks[key]={ownVisible:text.includes(`M0 Bot ${key}`),foreignVisible:text.includes(`M0 Bot ${key==='a'?'b':'a'}`)};
+      if(!row.dataChecks[key].ownVisible) row.events.push(`data:workspace-${key}-missing-own-bot`);
+      if(row.dataChecks[key].foreignVisible) row.events.push(`isolation:workspace-${key}-shows-foreign-bot`);
+    }
+    row.evidence='evidence/m0/screenshots/workspace-switch.png'; await page.screenshot({path:row.evidence,fullPage:true});
+  } catch(error) {row.events.push(`fatal:${normalize(error.message)}`);}
+  row.events=[...new Set(row.events)].sort(); row.status=row.events.length?'observed-defects':'pass';
+  row.signature=createHash('sha256').update(JSON.stringify({events:row.events,dataChecks:row.dataChecks})).digest('hex');
+  rows.push(row); await context.close();
 } finally { await browser.close(); }
-assert.equal(rows.length,162);
+assert.equal(rows.filter(r=>['direct','reload'].includes(r.phase)).length,162);
+await writeFile('evidence/m0/browser.json',JSON.stringify(rows,null,2));
 await writeFile('evidence/m0/browser.md','# M0 route coverage\n\n| Route | Auth | Tenant | Viewport | Phase | Result | Events | Evidence |\n|---|---|---|---|---|---|---|---|\n'+rows.map(r=>`| ${r.route} | ${r.auth} | ${r.tenant} | ${r.viewport.width}×${r.viewport.height} | ${r.phase} | ${r.status} | ${r.events.join('; ').replaceAll('|','/')} | ${r.evidence??'browser.json'} |`).join('\n')+'\n');
 const signatures=Object.fromEntries(rows.map(r=>[r.id,{events:r.events,dataChecks:r.dataChecks,signature:r.signature}]));
 await writeFile('evidence/m0/browser-baseline-candidate.json',JSON.stringify(signatures,null,2));

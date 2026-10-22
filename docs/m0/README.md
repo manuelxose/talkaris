@@ -26,7 +26,7 @@ Raw evidence is written to ignored `evidence/m0/`: process logs, fixture ownersh
 
 Known API defects use executable correct-behavior expectations plus narrow failure fingerprints. A different failure or an unexpected pass fails the suite. Browser signatures are reviewed against `scripts/m0/browser-baseline.json`; both new errors and disappearing known errors fail until reviewed. To capture a candidate after a deliberate change, use `npm run m0:test -- --capture-browser`; this does **not** approve it. Inspect raw observations and screenshots before updating the committed baseline. Never approve authentication/harness failures as product defects.
 
-Existing deployment workflows remain untouched. M0 CI uses runner-local Docker services and cannot deploy. Production version, applied production migrations, provider access, and customer behavior are unverified. The original `auditoria-2026-10-22/INFORME.md` was unavailable during initial discovery; finding IDs map the official roadmap descriptions until that source is restored.
+Existing deployment workflows remain untouched. M0 CI uses runner-local Docker services and cannot deploy. Production version, applied production migrations, provider access, and customer behavior are unverified. The original audit was found in the Windows evidence workspace after repository-only discovery; see `audit-source.md` for its hash and exact reproduction mappings.
 
 ## Change contract for M1–M8
 

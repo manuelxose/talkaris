@@ -27,7 +27,9 @@ const timings = [];
 function launch(command, args, name, extra = {}, guarded = true) {
   const log = createWriteStream(resolve(output, `${name}.log`));
   const child = spawn(command, args, { env: { ...(guarded ? env : baseEnv), ...extra }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
-  child.stdout.pipe(log); child.stderr.pipe(log);
+  child.stdout.pipe(log, {end:false}); child.stderr.pipe(log, {end:false});
+  child.logFinished = once(log, 'finish');
+  child.once('close', () => log.end());
   child.on('error', error => log.write(String(error)));
   children.push(child);
   return child;
@@ -35,7 +37,8 @@ function launch(command, args, name, extra = {}, guarded = true) {
 async function execute(command, args, name, extra = {}, guarded = true) {
   const start = performance.now();
   const child = launch(command, args, name, extra, guarded);
-  const [code, signal] = await once(child, 'exit');
+  const [code, signal] = await once(child, 'close');
+  await child.logFinished;
   timings.push({ name, milliseconds: Math.round(performance.now() - start), code, signal });
   assert.equal(code, 0, `${name} failed (${code}/${signal}); see evidence/m0/${name}.log`);
 }
@@ -89,6 +92,8 @@ try {
     if (req.url === '/state') { res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify(received)); return; }
     const chunks = []; for await (const chunk of req) chunks.push(chunk);
     received.push({ method: req.method, url: req.url, body: Buffer.concat(chunks).toString() });
+    if(req.url==='/redirect') {res.writeHead(302,{Location:'http://localhost:45124/internal'});res.end();return;}
+    if(req.url==='/internal') {res.writeHead(200,{'Content-Type':'text/html'});res.end('<html lang="en"><title>M0 controlled internal fixture</title><body>Only synthetic localhost data</body></html>');return;}
     res.writeHead(req.url === '/webhook' ? 200 : 503, { 'Content-Type': 'text/plain' });
     res.end(req.url === '/webhook' ? 'M0 local receiver' : 'M0 controlled failure');
   });

@@ -46,6 +46,7 @@ for (const role of ['admin','editor','viewer','superadmin']) {
   });
 }
 await control('foreign-project-id-rejected', async () => assert.equal((await request(tenantPath('a',`projects/${f.projects.b.projectKey}/snippet`),'admin')).status,404));
+await control('F01-original-control-foreign-messages-rejected',async()=>assert.equal((await request(tenantPath('a',`conversations/${f.conversations.b.id}/messages`),'viewer')).status,404));
 for(const [role,status] of [['admin',201],['editor',201],['viewer',403],['superadmin',201]]) {
   await control(`source-write-role-${role}`,async()=>assert.equal((await request(tenantPath('a','sources'),role,'POST',{
     projectKey:f.projectKey,sourceKey:`m0-role-${role}`,kind:'html',entryUrl:'http://127.0.0.1:45124/fail',visibility:'private'
@@ -67,8 +68,19 @@ await defect('F02-private-original-public', async () => {
 }, r => [401,403,404].includes(r.status), r => r.status === 200 && r.text === f.privateDocument.contentSentinel, 'Private original requires authorized membership', 'M1');
 await defect('F04-source-secret-viewer', () => request(tenantPath('a','sources'),'viewer'), r => r.status === 403 || r.status === 200 && !r.text.includes(f.sources.a.secretSentinel),
   r => r.status === 200 && r.text.includes(f.sources.a.secretSentinel), 'Connector credentials must be redacted', 'M1');
+await defect('F04-original-notion-token-viewer',async()=>{
+  const db=new Client({connectionString:databaseUrl});await db.connect();
+  try {await verifyDatabase(db);await db.query(`INSERT INTO sources(project_id,source_key,kind,entry_url,source_config) VALUES($1,'m0-notion-secret','notion','http://127.0.0.1:45124/internal',$2)`,[f.projects.a.id,JSON.stringify({token:'m0-fake-notion-token'})]);}
+  finally {await db.end();}
+  return request(tenantPath('a','sources'),'viewer');
+},r=>r.status===403||r.status===200&&!r.text.includes('m0-fake-notion-token'),r=>r.status===200&&r.text.includes('m0-fake-notion-token'),'Notion token must be redacted from viewer source listing','M1');
 await defect('F06-superadmin-api-key-write', () => request(tenantPath('a','api-keys'),'superadmin','POST',{name:'M0 superadmin key',scopes:['conversations:read']}),
   r => r.status === 201, r => r.status === 403 && r.data.code === 'FORBIDDEN', 'Superadmin may legitimately manage tenant credentials', 'M1');
+for(const [name,path,method,body,success] of [
+  ['invite','invitations','POST',{email:'super-invite@example.test',role:'viewer'},200],
+  ['webhook','webhooks','POST',{url:'http://127.0.0.1:45124/webhook',events:['handover.requested']},201],
+  ['notifications','notification-prefs','PUT',{emailRecipients:['sink@example.test']},200],
+]) await defect(`F06-original-superadmin-${name}`,()=>request(tenantPath('a',path),'superadmin',method,body),r=>r.status===success,r=>r.status===403&&r.data.code==='FORBIDDEN','Legitimate superadmin tenant administration must succeed','M1');
 await defect('F07-invitation-index', () => request(tenantPath('a','invitations'),'admin','POST',{email:'new-invite@example.test',role:'editor'}),
   r => r.status === 200, r => r.status === 500 && /constraint "idx_invitations_tenant_email".*does not exist/.test(r.data.message), 'Invitation persists and is delivered to local mail receiver', 'M5');
 await defect('F08-rating-index', () => request(`/v1/widget/conversations/${f.conversations.a.id}/rating`,null,'POST',{score:5,comment:'M0 updated rating'}),
@@ -78,12 +90,18 @@ await defect('F09-canonical-satisfaction', () => request(tenantPath('a','analyti
   r => r.status === 500 && /distribution.data.*GROUP BY/.test(r.text), 'CSAT matches the one seeded rating; exercise canonical override', 'M4');
 await defect('F10-handover-queue', () => request(tenantPath('a','handovers'),'admin'), r => r.status === 200 && r.text.includes(f.handover.a.id),
   r => r.status === 500 && /column c.session_id does not exist/.test(r.text), 'Populated handover queue returns seeded item', 'M4');
+for(const status of ['assigned','closed']) await defect(`F10-original-${status}-queue`,()=>request(tenantPath('a',`handovers?status=${status}`),'admin'),r=>r.status===200&&Array.isArray(r.data),r=>r.status===500&&r.data.message==='column c.session_id does not exist','Each handover status queries the current schema','M4');
 for (const [kind, column] of [['conversations','c.session_id'],['leads','le.name'],['analytics','ae.session_id']]) {
   await defect(`F11-export-${kind}`, () => request(tenantPath('a',`export/${kind}`),'admin'), r => r.status === 200 && r.text.includes('\n'),
     r => r.status === 500 && r.text.includes(`column ${column} does not exist`), 'CSV export succeeds against current populated schema', 'M4');
 }
 await defect('F12-api-key-consumption', () => request(tenantPath('a','conversations'),null,'GET',null,{Authorization:'Bearer m0-key-a'}),
   r => r.status === 200 && r.text.includes(f.conversations.a.id), r => r.status === 401 && r.data.code === 'UNAUTHENTICATED', 'A valid stored scoped key authenticates the advertised API', 'M5');
+await defect('F12-original-created-analytics-key',async()=>{
+  const created=await request(tenantPath('a','api-keys'),'admin','POST',{name:'M0 original analytics key',scopes:['analytics:read']});
+  assert.equal(created.status,201);assert.ok(created.data.key.startsWith('tlk_'));
+  return request(tenantPath('a','analytics/summary'),null,'GET',null,{Authorization:`Bearer ${created.data.key}`});
+},r=>r.status===200,r=>r.status===401&&r.data.code==='UNAUTHENTICATED','Created analytics:read key authenticates tenant analytics endpoint','M5');
 await defect('F16-test-chat-contract', () => request(tenantPath('a',`projects/${f.projects.a.projectKey}/test-chat`),'admin','POST',{message:'M0 synthetic knowledge'}),
   r => r.status === 200 && typeof r.data.message === 'string', r => r.status === 500 && r.data.message === "Cannot read properties of undefined (reading 'salesKeywords')", 'Test chat returns deterministic fallback or cited response without provider access', 'M4');
 
@@ -127,6 +145,9 @@ await defect('F02-new-private-upload-public', async () => {
   const uploaded=await fetch(api+tenantPath('a',`projects/${f.projects.a.projectKey}/assets/document`),{
     method:'POST',headers:{Cookie:cookies.admin,'Content-Type':'text/plain','x-upload-filename':'m0-upload.txt'},body:sentinel});
   assert.equal(uploaded.status,201); const asset=await uploaded.json();
+  const db=new Client({connectionString:databaseUrl});await db.connect();
+  try {await verifyDatabase(db);assert.equal((await db.query('SELECT visibility FROM sources WHERE project_id=$1 AND source_key=$2',[f.projects.a.id,asset.sourceKey])).rows[0].visibility,'private');}
+  finally {await db.end();}
   const path=new URL(asset.url).pathname.replace(/^\/api/,'');
   const downloaded=await fetch(api+path);
   return {status:downloaded.status,text:await downloaded.text(),sentinel};
@@ -139,7 +160,17 @@ await defect('F03-loopback-website-fetch', async () => {
 },
   r => r.status === 400 && r.data.code === 'INVALID_INPUT', r => r.status === 200 && r.data.entryUrl === 'http://127.0.0.1:45124/ssrf-probe' && r.receiverRequests.includes('/robots.txt'),
   'Loopback input rejected before controlled local fetch; no private infrastructure contacted', 'M1');
+for(const [scenario,url] of [['original-viewer-loopback','http://127.0.0.1:45124/internal'],['dns-localhost','http://localhost:45124/internal'],['redirect-to-loopback','http://127.0.0.1:45124/redirect']]) {
+  await defect(`F03-${scenario}`,async()=>{
+    const before=await (await fetch('http://127.0.0.1:45124/state')).json();
+    const r=await request(tenantPath('a','projects/m0-nonexistent-project/crawl'),'viewer','POST',{url});
+    const after=await (await fetch('http://127.0.0.1:45124/state')).json();
+    return {...r,receiverRequests:after.slice(before.length).map(item=>item.url)};
+  },r=>[400,403,404].includes(r.status),r=>r.status===200&&r.data.metadata?.title==='M0 controlled internal fixture'&&r.receiverRequests.includes('/internal'),
+    'Viewer cannot crawl controlled private destinations, including redirects and missing projects','M1');
+}
 for (const id of ['F05','F17']) rows.push({id,status:'browser-suite',detail:'See browser.json: populated route direct navigation and reload at 390/768/1440'});
-rows.push({id:'original-audit',status:'blocked',detail:'auditoria-2026-10-22/INFORME.md unavailable; tests map roadmap descriptions, exact original reproductions remain unverified'});
+rows.push({id:'original-audit',status:'source-reviewed',detail:'INFORME.md found in Windows Talkaris evidence workspace; SHA256 21e9a8c843ca37d171205e632ea37de8efc6152c0d22ce536cdec653e1161689. Original F01–F12/F16–F18 flows mapped; no production tests rerun.'});
+rows.push({id:'F03-additional-boundaries',status:'blocked',detail:'Unsupported-scheme, DNS-rebinding, oversized-body and timeout policy coverage remains incomplete; original audit only demonstrated controlled loopback. No production/private infrastructure probed.'});
 await saveResults('regressions',rows);
 console.log(JSON.stringify(rows.map(({id,status})=>({id,status})),null,2));
