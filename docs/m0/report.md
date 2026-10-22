@@ -1,70 +1,89 @@
-# TALKARIS M0 — execution evidence
+# TALKARIS M0 - EXECUTION REPORT
 
-Status: **PARTIAL — G0 not approved**. Branch `codex/m0-baseline`, based on `a23eab97df894e3ee3a4a9eaa7d9083b92be8788`. No M1–M8 business fixes, merge, deployment, or production access. Delivery identifiers and subsequent verification are recorded in `.planning/STATE.md` and the official roadmap.
+## 1. Executive outcome
 
-Skills actually read/applied: Ponytail, talkaris-architecture, talkaris-operations, talkaris-milestone-gate, talkaris-ui-quality and talkaris-tenant-security. Native architecture/browser/security discovery agents and a separate read-only reviewer were used; no unsupported model routing or paid provider inference was performed. Context Mode/GSD/Graphify were unavailable, so scoped source tracing and the existing manual state fallback were retained.
+**GO for M0 / Gate G0.** Reproducible engineering baseline completed; known product defects remain. No M1-M8 repairs, merge, deployment, production/staging/customer tests or paid provider calls were performed. No unresolved M0 implementation blocker remains after independent review. This is permission to begin evidence-based repairs, not product security or launch approval.
 
-## Architecture and current behavior
+## 2. Git state
 
-| Surface | Source evidence | Observed status |
+Branch `codex/m0-baseline`, isolated from the original dirty checkout; base `a23eab97df894e3ee3a4a9eaa7d9083b92be8788`. Verified implementation SHA: `fdababf429180af41478858c5d6e6577f2a49262`. Final documentation is a subsequent scoped commit. [PR #1](https://github.com/manuelxose/tecnoria-chat-platform/pull/1) is open and unmerged. Unrelated Google-auth work and local configuration were not transferred or committed.
+
+## 3. Architecture baseline
+
+Existing surfaces retained: Express chat-api, PostgreSQL/pgvector, ingest-worker, ops-cli, Angular portal, static widget and shared packages. Actual API inventory contains 110 registered route layers. `main.ts` prepends canonical handlers over `runtime-base.ts`; regressions exercise the actual stack, including F09's canonical SQL error. Session/tenant middleware and membership checks have inconsistent authorization, reproduced without repair.
+
+All 14 migrations executed on a fresh synthetic database, repeated, then replayed against populated fixtures. The migration runner has no version/checksum ledger. Migration 003 resets platform settings; the harness reapplies sanitized settings afterward. Actual worker one-shot execution reproduces F18. Production deployed SHA, applied migrations, credentials, Google authentication and providers are **unverified**: external verification is blocked by the localhost-only scope.
+
+## 4. Test infrastructure
+
+Dedicated `talkaris-m0` Compose project, PostgreSQL tmpfs, verified database identity and loopback bindings. Sanitized application environment with Node TCP allowlist; browser external requests aborted. Mailpit and local HTTP/webhook/crawler receivers replace external services. This is a controlled development harness, not a hostile-code sandbox.
+
+Fixtures include tenants A/B, six identity types (superadmin/admin/editor/viewer/disabled/outsider), explicit ownership, projects, conversations/messages, leads, ratings, handovers, invitations, keys, sources, jobs/errors, webhooks and schedules. There are 53 documents, pagination boundaries, Unicode/null values, private originals and public-logo controls. No customer snapshots or secrets are copied.
+
+Reproduce using `npm ci`, `npm ci --prefix scripts/m0/tools`, pinned Chromium installation and `npm run m0:test`; full prerequisites/reset/rollback are in [README.md](README.md). `npm run m0:down` removes only the dedicated services. The runner always cleans up and records completion after teardown; both final executions report cleanup passed.
+
+## 5. Regression results
+
+Both clean runs produced **25 passing controls and 32 exact known-defect probes**, plus three harness tests and 20 existing tests (API 8 + portal 12), with zero unexpected outcomes or skipped tests. The historical audit's 22 tests included two pre-existing uncommitted Google-auth tests; those are outside this committed-source baseline.
+
+| Findings | Executable characterization | Owning repair |
 |---|---|---|
-| API | `apps/chat-api/src/main.ts`, `runtime-base.ts` | Actual HTTP endpoints tested with synthetic PostgreSQL fixtures. Base imports register middleware/routes/error handler first; main then prepends canonical overrides with `prependLatestRouteLayer`. Exported stack is recorded by `scripts/m0/api.mjs` after all registrations. F09's canonical SQL error verifies the override, rather than mistakenly testing the base handler. |
-| Tenant/session | `runtime-base.ts` `authenticateCookieUser`, `authorizeTenant`; main tenant middleware | Real cookie login and A/B permission controls. Viewer handover writes/foreign reads and source secret exposure reproduced. Superadmin bypass followed by membership-only checks produces F06. |
-| PostgreSQL | `apps/chat-api/migrations/001_init.sql` through `014_gemini_source.sql`, `src/migrate.ts` | 14 ordered migrations; pgcrypto/vector required. Runner reexecutes SQL without version ledger/checksums. Fresh and repeated migrations passed locally; populated replay passed. Migration 003 resets platform defaults; harness restores synthetic settings afterward. Production applied versions are unverified. |
-| Worker | `apps/ingest-worker/src/main.ts`, `runtime-base.ts` | Import performs one job; `--watch` polls every 15 seconds. `FOR UPDATE SKIP LOCKED` claim transaction. Actual worker reproduced all URL failures reported as `done`. Scheduling, recovery and document transaction completeness remain unverified/outside M0 repairs. |
-| Portal | `apps/portal/src/app/app.routes.ts`, `cockpit-store.service.ts`, shell components, `src/server.ts` | 27 authenticated leaf routes (22 tenant, five admin), resolved from source. Browser uses `/api` proxy, SSR session check and first returned tenant selection. Authenticated execution pending complete build. |
-| Widget | `apps/widget/server.mjs`, `public/embed.js`, `frame.html` | Existing static widget served on separate M0 loopback port; compiled portal proxies it. No new chat engine. |
-| Deployment | `.github/workflows/deploy.yml`, `infra/deploy-chat.sh`, `infra/systemd`, `docs/DEPLOYMENT_PORTAL.md` | Existing main deployment preserved; never triggered by M0 branch. Deployed commit, migrations and external providers unverified. |
+| F01 | Foreign rating/handover read, viewer write and persistence; messages 404 control | M1 |
+| F02 | Existing/new private originals readable anonymously/foreign member, permanent public cache fingerprint; own-member and actual public PNG logo controls | M1 |
+| F03 | Viewer/nonexistent-project crawl, website sibling, loopback/DNS/redirect receiver proof, unsupported FTP, controlled slow and 2 MiB responses | M1 |
+| F04/F06 | Viewer secret disclosure; superadmin key/invite/webhook/notification denial without membership | M1 |
+| F05/F17 | Populated browser rendering, direct/reload resource context and workspace navigation | M2 |
+| F07/F12 | Exact invitation index error; created analytics key and stored conversation key rejected | M5 |
+| F08-F11/F16 | Exact rating/CSAT/queue/export SQL errors and undefined salesKeywords test-chat failure | M4 |
+| F18 | Real worker marks all-fetch-failed job done: discovered 1, fetched/processed 0 | M3 |
 
-Historical audit figures (26 findings, 27 routes, 100 checks, 22 tests) were not assumed current. The original audit was found outside the repository in the Windows Talkaris evidence workspace; `audit-source.md` records its SHA-256 and original reproduction mappings. Latest additions preserve its viewer/nonexistent-project crawl, Notion token listing, created analytics key and superadmin/queue variants; those additions need runtime verification. UI defects remain unverified until real browser evidence exists. Source-contract tests alone do not prove runtime behavior.
+Known defects are executed, not skipped; new errors and unexpected fixes fail the gate for review. Role/session controls, local reset email and webhook delivery passed. One explicit extension entry remains blocked: public-origin timeout/byte-limit/rebinding policy is not defined or verified. Private controlled slow/large/unsupported scenarios did execute; they do not establish protective limits. Independent review found this an M1 extension, not an essential M0 gap. See [audit-source.md](audit-source.md) for original reproduction mappings and report hash.
 
-## Executed local baseline
+## 6. Browser results
 
-The last completed backend run before WSL launch failures recorded:
+**27 authenticated routes, 390x844 / 768x1024 / 1440x900**, direct and reload (162 observations), plus real client navigation/workspace A-to-B switch: **163 observations per run**. All 81 direct/reload signature pairs match. Both clean runs match each other and the independently reviewed committed baseline SHA-256 `463c1c298e6fd6655b527afbda0681eff5c3e4d90c5b117578d7ac4a348464d7`.
 
-- 14 passing authentication/ownership controls, 18 expected defect probes, zero unexpected API outcomes; original-audit source blocked, F05/F17 referred to pending browser suite.
-- Three harness checks passed: classification of failures/unexpected fixes, TCP guard rejection, populated tenant ownership/role fixtures.
-- Existing committed API 8/8 and portal 12/12 unit/source tests passed (20 total), zero skipped. Earlier 22-test references included two pre-existing uncommitted Google-auth tests in the original checkout; those unrelated feature changes were deliberately not transferred into this isolated branch. The production Google deployment described by the audit is not certified by this committed-source baseline.
-- Fresh migration, repeat migration and populated migration replay passed. Shared package builds, API/worker/CLI TypeScript builds passed; full monorepo build exited 137 during Angular compilation on two attempts.
-- Second failed full build duration 115456 ms. Local API startup 838 ms (one sample); health 10 samples, 1.61–4.01 ms. These are local observations, not performance thresholds or production SLOs. Hardware/Node metadata is in raw `environment.json`.
-- WSL exposed approximately 5.9 GiB RAM and 2 GiB swap; concurrent pre-existing processes consumed most memory. Later WSL command launches stalled or returned `Wsl/Service/0x8007274c`. No user processes were stopped and WSL was not restarted.
+Each run classifies 150 observations with existing defects, 12 external-font-only boundaries and one passing workspace scenario; zero fatal harness or isolation observations. Angular missing-pipe/factory/onDestroy exceptions, API HTTP failures, missing populated rows, clipping and serious/critical axe findings remain captured, not repaired. Raw stacks, failed requests, counts, keyboard focus, bounding boxes and screenshots are in each browser artifact. External Google Fonts are intentionally blocked; production-font appearance is not certified. Full modal/loading/error-state remediation remains M2.
 
-Runner-local evidence from cancelled obsolete run `39819169410` (commit `a648dae`) additionally verified 22 controls, 18 exact known defects, three harness checks, the same 20 committed tests, populated migration replay and **successful complete monorepo build** (Angular bundle 11.778 seconds). Browser artifacts exposed a harness wait on a mobile-hidden workspace select; corrected in `0825fce`, with final verification pending. Cancellation is not a passing full-run result. Artifacts are attached to that GitHub Actions run; local downloaded copy is ignored under `evidence/ci-39819169410/`.
+## 7. CI and quality
 
-Cancelled obsolete run `39820886174` (`a583d28`) verified the original-audit additions: **23 controls and 28 exact known-defect probes**, three harness checks, 20 committed tests and complete build (Angular 17.670 seconds), including viewer/nonexistent-project crawler, controlled DNS/redirect, Notion-token exposure and newly created analytics key. Its browser stopped after partial snapshots because the then-unfixed mobile wait was obsolete. These are stage results, not a passing full run. CI setup logs also showed all Chromium runtime libraries already installed; a redundant apt font/upgrade pass took nearly ten minutes. CI now pins Ubuntu 24.04 and installs only the pinned Chromium binary, retaining all test checks.
+Two clean executions passed at the exact verified implementation SHA:
 
-Run `39822540366` (`65ee058`) completed **all 163 browser observations**: 27 routes × three viewports × direct/reload, plus real client navigation/workspace switch. Zero fatal/isolation observations; all 81 direct/reload pairs had identical signatures. F05, F17, clipping and axe violations were reproduced, not repaired. Full suite stopped only because the reviewed baseline file did not yet exist; cleanup passed. An independent agent reviewed raw results and screenshots and approved candidate SHA-256 `463c1c298e6fd6655b527afbda0681eff5c3e4d90c5b117578d7ac4a348464d7` as the known-behavior baseline. It is now committed as `scripts/m0/browser-baseline.json`; clean passing reruns are still required. External Google Fonts were deliberately blocked; font-only observations are environment boundaries, not product defects or exact production-font visual certification. New private-file/public-logo and slow/large/unsupported crawler extensions require verification.
+- [Manual run 39824730685](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39824730685)
+- [PR run 39824738406](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39824738406)
 
-Raw execution artifacts: ignored `evidence/m0/` with process logs, `run.json`, `regressions.json/.md`, `harness-tests.log`, `unit-tests.log`, `fixture-counts.json`, `runtime-routes.json`, receiver/config/environment evidence. Subsequent runs archive prior evidence under ignored `evidence/m0-history/`; reports must be tied to their run, never mixed. Latest source additions (pagination/Unicode fixtures, extra role/session and local mail/webhook controls, serial TypeScript compilation and final evidence handling) require rerun and must not be counted in the earlier passing totals.
+Every executable stage exited zero: migrations, harness, API/worker integration, existing tests, full monorepo build (including TypeScript compilation), browser comparison and cleanup. No separate lint result is claimed. Fresh tenant UUIDs differ between runs. The independent read-only reviewer compared normalized full observed payloads, browser signatures and raw artifacts and issued **GO**, with no unresolved P1/P2 implementation blocker.
 
-## Finding coverage
+Runner: Node 22.23.2, Ubuntu 24.04.5, AMD EPYC 9V74, four logical CPUs, 16,766,414,848 bytes memory; pinned Playwright 1.64.1, axe 4.14.0, Chromium 156.0.8078.4 revision 1248. API startup 950/952 ms, regressions 3895/3924 ms, existing tests 1437/1425 ms, full builds 29290/30059 ms, browser phases 236419/239091 ms. Browser duration includes axe/screenshots, not pure page latency; these are observations, not SLOs.
 
-All commands use `npm run m0:test` (see `README.md`). API cases are in `scripts/m0/regressions.mjs`; browser cases in `scripts/m0/browser.mjs`.
+The shared local WSL workstation suffered build exit 137 and later Chromium crashes/resource pressure and intermittent WSL launch errors. Those attempts are not counted as passes; cleanup passed. No user processes were stopped or WSL restarted. Earlier cancelled/candidate CI runs are not counted as successful full runs. Final evidence comes from the two isolated runner-local executions above.
 
-| ID | Existing behavior / expected behavior | Local evidence | Repair |
-|---|---|---|---|
-| F01 | Foreign rating/handover disclosed and viewer foreign handover persisted / deny by owner and role | Three exact HTTP defect probes plus persisted DB proof | M1 |
-| F02 | Private original publicly served / authorized download only | Existing original and actual upload endpoint followed by anonymous download | M1 |
-| F03 | Loopback website accepted and receiver contacted / reject before fetch | Canonical website-integration endpoint and receiver `/robots.txt` proof | M1 |
-| F04 | Viewer sees synthetic Authorization sentinel / redact secrets | Populated source list HTTP response | M1 |
-| F05 | Missing pipes/populated-table rendering / records visible | Browser implementation with content/count checks; execution blocked by build | M2 |
-| F06 | Superadmin credential creation denied without membership / legitimate global management | HTTP 403 FORBIDDEN fingerprint | M1 |
-| F07 | Invitation treats partial index as constraint / persist and deliver invitation | HTTP 500 naming `idx_invitations_tenant_email` | M5 |
-| F08 | Rating upsert treats unique index as constraint / persist/update score | HTTP 500 naming `idx_conversation_ratings_unique` | M4 |
-| F09 | Canonical CSAT aggregation invalid / aggregate fixture correctly | HTTP 500 requiring `distribution.data` GROUP BY | M4 |
-| F10 | Queue queries missing session column / populated queue loads | HTTP 500 `c.session_id` | M4 |
-| F11 | Three exports query obsolete columns / CSV from current data | HTTP 500 fingerprints for conversations/leads/analytics | M4 |
-| F12 | Stored scoped key rejected / advertised API accepts valid key | HTTP 401 UNAUTHENTICATED | M5 |
-| F16 | Test-chat uses incompatible project shape / fallback or cited response | HTTP 500 undefined `salesKeywords`; no paid provider | M4 |
-| F17 | Direct/reload tenant availability / selected tenant and resource loaded | Browser implementation; execution blocked by build | M2 |
-| F18 | Worker reports success after every fetch fails / failed status | Real one-shot worker; DB `done`, discovered 1, fetched/processed 0, failed local URL | M3 |
+Artifacts are attached to each Actions run and downloaded under ignored `evidence/ci-<run>/`; raw machine/human reports, environment, process logs, route inventory, receiver records and screenshots remain separate per run. CI retains uploaded artifacts for seven days; the committed reviewed baseline and this report persist.
 
-Known defects execute, not skip. Narrow fingerprints distinguish expected failures from arbitrary 500s. An unexpected fix also fails the gate for review. API passing here means faithful characterization, not fixed security. DNS/redirect crawler variants are implemented; unsupported-scheme/rebinding/timeout/size coverage remains incomplete, so loopback evidence does not certify comprehensive SSRF coverage. Public-logo/authenticated private download/access variants are not yet a complete private-document matrix. Full keyboard/modal and loading/error scenarios remain incomplete; navigation/workspace-switch implementation still needs execution.
+## 8. Files changed
 
-## Independent review and remaining gate
+| Files | Purpose |
+|---|---|
+| `infra/m0-compose.yml` | Disposable database/mail services |
+| `scripts/m0/{run,seed,api,regressions,browser,results}.mjs`, `guard.cjs`, `harness.test.mjs` | Orchestration, fixtures, actual-stack evidence, isolation and executable characterization |
+| `scripts/m0/browser-baseline.json`, `scripts/m0/tools/` manifests/lock | Reviewed signatures and pinned browser tooling |
+| `.github/workflows/m0.yml`, root `package.json`, `.gitignore` | Runner-local CI, commands and ignored generated evidence |
+| `apps/chat-api/src/canonical-runtime.test.ts` | Portable repository root resolution only |
+| `scripts/ai-development/{env.sh,control.py,routing.json}` | Reviewed environment/cooperative ownership prerequisites |
+| `docs/m0/`, `.planning/STATE.md`, `docs/talkaris-viability-roadmap.md` | Reproduction, delivery contract, audit mapping, evidence and official milestone state |
 
-A separate read-only architecture/review agent inspected source and raw artifacts. It reported missing reviewed browser baseline; missing widget startup; insufficient SSRF receiver proof/private-upload realism; missing populated-table assertions; stale evidence mixing; completion written before teardown; and migration 003 undoing sanitized settings. Source fixes were implemented; final execution/re-review remains required. No independent GO was issued.
+No business migration or application behavior repair. Existing main deployment workflow untouched. Rollback is reverting the scoped M0 commits and removing the disposable project; no production/data migration rollback is needed.
 
-G0 remains PARTIAL/NO-GO for closure: full build, browser capture and independent baseline approval are verified, but equivalent clean passing full reruns and final extension/evidence review are outstanding. CI executes only runner-local services and uploads failure artifacts. Its results must be verified, not inferred from workflow presence. M1 must not begin automatically.
+## 9. Risks
 
-Once available, inspect CI browser artifacts, review failure fingerprints/screenshots and table content, commit the reviewed candidate, run two clean full baselines, obtain final independent review, and update roadmap/state with commit/PR identifiers. Recommended first later M1 package: tenant-scoped conversation/handover/rating authorization, using F01 probes as the reproduction; preserve all M0 evidence while replacing the expected failures with correct passing assertions.
+Tenant leakage, private-file exposure, SSRF, connector secret disclosure and role inconsistencies remain known security risks. Canonical/base handler duplication, unversioned migrations and worker success semantics remain architectural limitations. The suite characterizes existing behavior and is not a security certification. External providers, deployed version, production migrations, backups and customer behavior remain unverified. Public-origin timeout/size/rebinding policy and complete UI interaction remediation belong to later milestones.
+
+Skills applied: Ponytail, talkaris-architecture, operations, milestone-gate, ui-quality and tenant-security. Native bounded discovery agents and independent review were used. Context Mode/GSD/Graphify CLI were unavailable; scoped source tracing and the existing manual `.planning/STATE.md` fallback were used, with no invented tool execution or graph refresh.
+
+## 10. Gate G0 decision
+
+**GO:** isolated populated services, actual original-audit reproductions, reviewed authenticated browser baseline, complete builds/tests, two equivalent clean executions, independent review, scoped commits and published PR are all evidenced. No essential M0 gate requirement remains. Production/provider checks incompatible with the localhost rule remain explicitly blocked, not silently passed. G0 does not approve release, merge or deployment.
+
+## 11. M1 handoff
+
+M0 fixtures, exact failure fingerprints, actual route ordering and role/ownership controls are ready. Begin with **M1.1 tenant-scoped conversation/handover/rating authorization (F01)**: resolve resources inside tenant before read/write and enforce role consistently across sibling canonical/base paths. Replace reviewed expected failures with correct passing assertions; preserve public-logo and own-member controls. Then address F02-F04/F06 and extend crawler policy tests. M1 is recommended only; **not executed**.

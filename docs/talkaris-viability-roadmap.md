@@ -1,7 +1,7 @@
 # Talkaris: roadmap para un producto viable
 
 Fecha de referencia: 22 de octubre de 2026.
-Estado: **propuesto; implementación pendiente**.
+Estado: **M0 completado (G0 GO); M1-M8 pendientes**.
 Este documento sustituye como plan de ejecución al roadmap histórico V1/V1.5/V2/V3. No certifica como terminadas las funcionalidades que ese documento marcaba con un check.
 
 ## 1. Objetivo y definición de producto viable
@@ -61,17 +61,15 @@ Responsabilidad por defecto: ingeniería implementa y verifica; producto/operaci
 
 ## 4. M0 — Base reproducible y cobertura de regresión
 
-Ejecución 2026-10-22: **en curso, PARTIAL; G0 no aprobado** en `codex/m0-baseline`, base `a23eab97df894e3ee3a4a9eaa7d9083b92be8788`. M0.1 inventario documentado con producción no verificada; M0.2/M0.3 infraestructura y caracterización implementadas con evidencia parcial; M0.4 harness preparado, ejecución local bloqueada por compilación/WSL y validación CI pendiente; M0.5 contrato/CI/revisión inicial presentes, validación final pendiente. Detalle y comandos en `docs/m0/report.md` y `docs/m0/README.md`. No se cierran casillas: faltan navegador, baseline revisado y repetibilidad completa. El informe original se localizó después en el workspace de evidencias Windows: `docs/m0/audit-source.md` conserva hash y mapeo de reproducciones. No se ejecuta M1.
-
-Entrega inicial: commit `a648dae` publicado; [PR #1 en borrador](https://github.com/manuelxose/tecnoria-chat-platform/pull/1), sin merge. [CI runner-local inicial](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39819169410) en ejecución; no se presupone su resultado. Revisión independiente inicial completada con correcciones del harness; falta revisión final de evidencia.
+Ejecución 2026-10-22: **M0 completado; Gate G0 GO para la base de ingeniería**, sin aprobación de seguridad/lanzamiento. Rama `codex/m0-baseline`, base `a23eab97df894e3ee3a4a9eaa7d9083b92be8788`, implementación verificada `fdababf429180af41478858c5d6e6577f2a49262`; cierre documental en commit posterior. [PR #1](https://github.com/manuelxose/tecnoria-chat-platform/pull/1) abierta, sin merge ni despliegue. Dos ejecuciones completas limpias aprobadas en el mismo SHA: [39824730685](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39824730685) y [39824738406](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39824738406). Cada una: 25 controles, 32 defectos conocidos exactos, 3 pruebas del harness, 20 existentes, migraciones fresh/repeat/populated, build completo, 163 observaciones de navegador equivalentes y limpieza correcta. Revisión independiente final: GO, sin bloqueadores de implementación M0. Evidencia, riesgos y comandos en `docs/m0/report.md`, `README.md` y `audit-source.md`. Versión/migraciones de producción y proveedores permanecen sin verificar por la regla localhost. Los defectos siguen pendientes; **M1 no ejecutado**.
 
 **Resultado:** poder demostrar cada reparación sin arriesgar producción.
 
-- [ ] **M0.1 Inventario vigente.** Confirmar versión desplegada, migraciones aplicadas, rutas activas y configuración no secreta. Registrar qué funcionalidades están estables, incompletas o sin verificar.
-- [ ] **M0.2 Entorno de pruebas aislado.** Crear tenants A/B, usuarios superadmin/admin/editor/viewer y visitantes; bots, conversaciones, leads, documentos y jobs ficticios. Configurar receptores locales de correo y webhooks.
-- [ ] **M0.3 Regresiones críticas.** Convertir las reproducciones de F01–F12 y F16–F18 en pruebas ejecutables. Incluir datos en las tablas; no probar únicamente estados vacíos.
-- [ ] **M0.4 Navegador.** Preparar recorridos autenticados para las 27 rutas, enlaces directos, recarga y vistas de 390/768/1440 px. Capturar errores de consola y fallos de red.
-- [ ] **M0.5 Contrato de entrega.** Checklist por cambio: migración, compatibilidad, prueba, rollback y evidencia. Establecer baseline de errores y tiempos antes de fijar mejoras de rendimiento.
+- [x] **M0.1 Inventario vigente.** Confirmar versión desplegada, migraciones aplicadas, rutas activas y configuración no secreta. Registrar qué funcionalidades están estables, incompletas o sin verificar.
+- [x] **M0.2 Entorno de pruebas aislado.** Crear tenants A/B, usuarios superadmin/admin/editor/viewer y visitantes; bots, conversaciones, leads, documentos y jobs ficticios. Configurar receptores locales de correo y webhooks.
+- [x] **M0.3 Regresiones críticas.** Convertir las reproducciones de F01–F12 y F16–F18 en pruebas ejecutables. Incluir datos en las tablas; no probar únicamente estados vacíos.
+- [x] **M0.4 Navegador.** Preparar recorridos autenticados para las 27 rutas, enlaces directos, recarga y vistas de 390/768/1440 px. Capturar errores de consola y fallos de red.
+- [x] **M0.5 Contrato de entrega.** Checklist por cambio: migración, compatibilidad, prueba, rollback y evidencia. Establecer baseline de errores y tiempos antes de fijar mejoras de rendimiento.
 
 **Aceptación:** los casos de seguridad fallan contra la versión actual por la razón esperada; las tablas con registros reproducen los errores; las pruebas pueden ejecutarse de nuevo con los mismos resultados. Ningún correo ni webhook de prueba alcanza a terceros.
 
