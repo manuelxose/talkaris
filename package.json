@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w packages/domain -w packages/core -w packages/application -w packages/infrastructure -w apps/chat-api -w apps/ingest-worker -w apps/ops-cli -w apps/portal -w apps/widget",
     "dev:api": "npm run -w @tecnoria-chat/chat-api dev",
     "dev:ingest": "npm run -w @tecnoria-chat/ingest-worker dev",
     "dev:portal": "npm run -w @tecnoria-chat/portal start",
