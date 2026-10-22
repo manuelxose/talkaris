@@ -1,0 +1,8 @@
+{
+  "name": "talkaris-m0-browser-tools",
+  "private": true,
+  "dependencies": {
+    "@playwright/test": "1.64.1",
+    "@axe-core/playwright": "4.14.0"
+  }
+}

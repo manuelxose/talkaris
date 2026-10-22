@@ -15,6 +15,8 @@
     "dev:widget": "npm run -w @tecnoria-chat/widget serve",
     "seed:talkaris": "npm run -w @tecnoria-chat/chat-api seed:talkaris",
     "cli": "npm run -w @tecnoria-chat/ops-cli cli",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "m0:test": "node scripts/m0/run.mjs",
+    "m0:down": "node scripts/m0/run.mjs --down"
   }
 }

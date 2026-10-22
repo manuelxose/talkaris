@@ -3,6 +3,8 @@ dist/
 .angular/
 .cache/
 coverage/
+evidence/m0/
+evidence/m0-history/
 *.log
 .vscode/
 
