@@ -1,5 +1,21 @@
 #!/bin/bash
 set -euo pipefail
+export PATH=/usr/local/bin:/usr/bin
+unset BASH_ENV ENV NODE_OPTIONS NODE_PATH LD_PRELOAD LD_LIBRARY_PATH
+trusted() {
+  local check owner mode
+  check="$(/usr/bin/realpath -e -- "$1")"
+  while :; do
+    owner="$(/usr/bin/stat -c '%u' "$check")" mode="$(/usr/bin/stat -c '%a' "$check")"
+    if [ "$owner" != 0 ] || (( (8#$mode & 0022) != 0 )); then
+      echo "Untrusted executable path: $check" >&2; return 1
+    fi
+    [ "$check" = / ] && break
+    check="$(/usr/bin/dirname "$check")"
+  done
+}
+for path in /usr/bin /usr/local/bin "$0"; do trusted "$path"; done
+for command in systemctl realpath readlink; do trusted "$(command -v "$command")"; done
 if [ "$#" -ne 1 ]; then echo 'Usage: check-release-processes.sh <release-directory>' >&2; exit 1; fi
 release="$(realpath -e "$1")"
 check_service() {

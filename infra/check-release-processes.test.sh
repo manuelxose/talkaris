@@ -3,7 +3,8 @@ set -euo pipefail
 tmp="$(mktemp -d)"
 pids=()
 node_link=0
-trap 'for pid in "${pids[@]}"; do kill "$pid" 2>/dev/null || true; done; rm -rf "$tmp"; if [ "$node_link" = 1 ]; then rm /usr/bin/node; fi' EXIT
+systemctl_test_created=0
+trap 'for pid in "${pids[@]}"; do kill "$pid" 2>/dev/null || true; done; rm -rf "$tmp"; if [ "$node_link" = 1 ]; then rm /usr/bin/node; fi; if [ "$systemctl_test_created" = 1 ]; then rm /usr/local/bin/systemctl; fi' EXIT
 if [ ! -e /usr/bin/node ]; then ln -s "$(command -v node)" /usr/bin/node; node_link=1; fi
 mkdir -p "$tmp/release/apps/chat-api/dist" "$tmp/release/apps/ingest-worker/dist" "$tmp/release/apps/widget" "$tmp/release/apps/portal/dist/portal/server" "$tmp/bin"
 for file in apps/chat-api/dist/main.js apps/ingest-worker/dist/main.js apps/widget/server.mjs apps/portal/dist/portal/server/server.mjs; do
@@ -27,12 +28,19 @@ esac
 if [ "$1" = show ]; then echo "$pid"; else kill -0 "$pid"; fi
 EOF
 chmod +x "$tmp/bin/systemctl"
-export PATH="$tmp/bin:$PATH"
+[ ! -e /usr/local/bin/systemctl ] || { echo 'test requires an unused /usr/local/bin/systemctl' >&2; exit 1; }
+cp "$tmp/bin/systemctl" /usr/local/bin/systemctl
+systemctl_test_created=1
+tools="/opt/talkaris-process-test-$$"
+mkdir -m 755 "$tools"
+cp "$(dirname "$0")/check-release-processes.sh" "$tools/check-release-processes.sh"
+chmod 644 "$tools/check-release-processes.sh"
+trap 'for pid in "${pids[@]}"; do kill "$pid" 2>/dev/null || true; done; rm -rf "$tmp" "$tools"; if [ "$node_link" = 1 ]; then rm /usr/bin/node; fi; if [ "$systemctl_test_created" = 1 ]; then rm /usr/local/bin/systemctl; fi' EXIT
 sleep 1
-bash "$(dirname "$0")/check-release-processes.sh" "$tmp/release" >/dev/null
+bash "$tools/check-release-processes.sh" "$tmp/release" >/dev/null
 mkdir "$tmp/other"
-if bash "$(dirname "$0")/check-release-processes.sh" "$tmp/other" >/dev/null 2>&1; then exit 1; fi
+if bash "$tools/check-release-processes.sh" "$tmp/other" >/dev/null 2>&1; then exit 1; fi
 kill "$ingest"
 wait "$ingest" 2>/dev/null || true
-if bash "$(dirname "$0")/check-release-processes.sh" "$tmp/release" >/dev/null 2>&1; then exit 1; fi
+if bash "$tools/check-release-processes.sh" "$tmp/release" >/dev/null 2>&1; then exit 1; fi
 echo 'release process identity tests passed'
