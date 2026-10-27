@@ -2,7 +2,9 @@
 set -euo pipefail
 script="$(realpath "$(dirname "$0")/prepare-release.sh")"
 tmp="$(mktemp -d)"
-trap 'rm -rf "$tmp"' EXIT
+seal_root="/opt/talkaris-seal-test-$$"
+mkdir -m 755 "$seal_root"
+trap 'rm -rf "$tmp" "$seal_root"' EXIT
 git init -q "$tmp/repo"
 git -C "$tmp/repo" config user.email test@example.invalid
 git -C "$tmp/repo" config user.name test
@@ -25,6 +27,25 @@ output="$(bash "$script" "$tmp/repo" "$sha" "$tmp/release")"
 test "$(cat "$tmp/release/apps/chat-api/dist/main.js")" = ok
 digest="$(printf '%s\n' "$output" | sed -n 's/.*manifest SHA-256: \([0-9a-f]*\);.*/\1/p')"
 node "$(dirname "$script")/release-manifest.mjs" verify "$tmp/release" "$digest" >/dev/null
+mkdir "$tmp/fakebin"
+cat > "$tmp/fakebin/gh" <<'EOF'
+#!/bin/sh
+printf '%s\n' "$@" > "$GH_ARGS"
+[ "${GH_FAIL:-0}" = 0 ]
+EOF
+chmod +x "$tmp/fakebin/gh"
+export GH_ARGS="$tmp/gh-args" PATH="$tmp/fakebin:$PATH"
+test "$(bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$sha")" = "$digest"
+grep -qx -- '--deny-self-hosted-runners' "$GH_ARGS"
+grep -qx -- "$sha" "$GH_ARGS"
+if GH_FAIL=1 bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$sha" >/dev/null 2>&1; then exit 1; fi
+if bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$(printf '%040d' 0)" >/dev/null 2>&1; then exit 1; fi
+bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$digest" >/dev/null
+if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$digest" >/dev/null 2>&1; then exit 1; fi
+if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$tmp/unsafe" "$digest" >/dev/null 2>&1; then exit 1; fi
+su -s /bin/sh nobody -c "test -r '$seal_root/sealed/apps/chat-api/dist/main.js'"
+if su -s /bin/sh nobody -c "echo changed > '$seal_root/sealed/apps/chat-api/dist/main.js'" 2>/dev/null; then exit 1; fi
+node "$(dirname "$script")/release-manifest.mjs" verify "$seal_root/sealed" "$digest" >/dev/null
 printf extra > "$tmp/release/unexpected"
 if node "$(dirname "$script")/release-manifest.mjs" verify "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
 rm "$tmp/release/unexpected"

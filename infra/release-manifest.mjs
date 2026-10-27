@@ -42,6 +42,10 @@ if (operation === 'create') {
   const bytes = await readFile(manifestPath);
   if (hash(bytes) !== commit) throw new Error('Manifest digest mismatch');
   const manifest = JSON.parse(bytes);
-  if (JSON.stringify(await inventory()) !== JSON.stringify(manifest.files)) throw new Error('Release contents differ from manifest');
+  const actual = await inventory();
+  if (JSON.stringify(actual) !== JSON.stringify(manifest.files)) {
+    const file = [...new Set([...Object.keys(actual), ...Object.keys(manifest.files)])].find((name) => JSON.stringify(actual[name]) !== JSON.stringify(manifest.files[name]));
+    throw new Error(`Release contents differ from manifest: ${file}`);
+  }
   console.log(`Verified ${manifest.releaseId} ${manifest.commit}`);
 } else throw new Error('Usage: release-manifest.mjs create <release> <commit> <tree> | verify <release> <manifest-sha256>');
