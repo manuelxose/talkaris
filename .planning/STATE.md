@@ -1,5 +1,7 @@
 # Talkaris workflow state
 
+2026-10-27 PR and CI: draft PR #2, `https://github.com/manuelxose/talkaris/pull/2`, commit `88dbab65a3c2cf0514cdfdaa2f37ed1f27412b7a`, passed M0 workflow 40504066510 and development workflow 40504066418 on snapshot `bf849594327665fef43744d9c7faf7073183491f31f7a382f0db4096a8193021`. Check the PR for its current head and checks. Production is not release-ready: its checkout is dirty, actual artifact SHA and migrations are unknown, and restore/rollback are unverified. No merge or deployment; M1 not started.
+
 2026-10-27 release-gate review: the protected launcher was isolated for a scoped PR; local-dev startup changes remain outside it. Production checkout `a23eab97df894e3ee3a4a9eaa7d9083b92be8788` remains dirty with application changes, so its built artifact SHA is unknown. The proposed deploy guard refuses dirty or mismatched checkouts and intentionally requires the exact commit to be pre-staged; no deployment has been performed. Actual PR CI, applied production migrations, tested backup/restore and rollback remain release gates. M1 has not started.
 
 2026-10-27 protected launcher implementation: the first complete Docker namespace run passed on snapshot `a6526dea0a7260cc40774228e16cae417bcbcf61c6e13df17a42af7b4ff0e0ea`; see `evidence/talkaris-m0-c92d5b30-9f6/`. Launcher review fixes and documentation changed afterward; assess the latest final-tree run and actual CI separately. M0 remains partial pending release readiness; M1 has not started. Production checkout is dirty and its artifact SHA is unverified.

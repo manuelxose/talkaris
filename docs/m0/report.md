@@ -1,5 +1,9 @@
 # TALKARIS M0 - EXECUTION REPORT
 
+## Scoped PR and remote CI (2026-10-27)
+
+Draft [PR #2](https://github.com/manuelxose/talkaris/pull/2) at commit `88dbab65a3c2cf0514cdfdaa2f37ed1f27412b7a` passed [M0 CI](https://github.com/manuelxose/talkaris/actions/runs/40504066510) and [development checks](https://github.com/manuelxose/talkaris/actions/runs/40504066418). M0 CI reported snapshot `bf849594327665fef43744d9c7faf7073183491f31f7a382f0db4096a8193021`, matching the scoped local full run, and uploaded evidence. Check the PR for its current head and checks. The release guard refuses dirty or wrong-SHA source and requires the exact commit pre-staged; it does not establish artifact identity. The production checkout remains dirty; deployed artifact SHA, migration state, database restore and rollback remain unverified. No merge or deployment was performed. M1 has not started.
+
 ## Scoped PR and release guard (2026-10-27)
 
 The scoped PR excludes the unrelated local development launcher and portal start-port change. The previously recorded 245-file snapshot `42c5052b55bb5e73e02dae18982333923859423f40253d05daf8c6bed0417a89` matched the original checkout, but is not the scoped PR tree. Run the protected flow on the PR tree and inspect its actual CI artifacts before drawing conclusions about that tree.

@@ -2,6 +2,7 @@
 
 Fecha de referencia: 22 de octubre de 2026.
 Estado: **M0 parcial para el árbol local actual; G0 histórico; M1-M8 pendientes**.
+PR #2: el commit `88dbab65a3c2cf0514cdfdaa2f37ed1f27412b7a` pasó CI M0 y development checks; comprobar el head y checks actuales del PR. El release sigue bloqueado por checkout de producción sucio, SHA de artefacto y migraciones desconocidos, y backup/restore y rollback sin verificar. M1 no se ha iniciado.
 Revisión de release: el árbol de producción contiene cambios y su artefacto y migraciones no están verificados. El guard propuesto bloquea despliegues con checkout sucio o SHA distinto y exige preparar el commit exacto antes del workflow; CI remoto, backup/restore y rollback siguen siendo gates independientes.
 El primer flujo completo con el nuevo lanzador aislado pasó en el snapshot `a6526dea0a7260cc40774228e16cae417bcbcf61c6e13df17a42af7b4ff0e0ea`; comprobar por separado la ejecución del árbol final y CI real tras los ajustes de revisión. Véase `docs/m0/report.md`.
 Revisión 2026-10-27: la prueba negativa de la entrada pasa y el comando normal se detiene antes de las etapas; siguen pendientes el lanzador aislado reproducible, su integración en CI y la ejecución completa del árbol final. M1 no se ha iniciado.
