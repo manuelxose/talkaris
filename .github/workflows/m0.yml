@@ -7,9 +7,14 @@ permissions:
 jobs:
   migration-upgrades:
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        postgres:
+          - pgvector/pgvector@sha256:b740286128ce8e232fe0de3c8db2267d91aedc598dfbeaefb7ffb0b79ceef1b3
+          - pgvector/pgvector@sha256:7b822b0aac60967beb1ea5e576b8602c94c300a157d187f385ae3e0da199b90a
     services:
       postgres:
-        image: pgvector/pgvector:pg16
+        image: ${{ matrix.postgres }}
         env:
           POSTGRES_PASSWORD: synthetic
         ports:

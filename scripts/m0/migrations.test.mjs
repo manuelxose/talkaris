@@ -20,9 +20,11 @@ function migrate(schema, baseline) {
   const env = { ...process.env, DATABASE_URL: url.toString() };
   delete env.MIGRATION_BASELINE_VERSION;
   delete env.MIGRATION_BASELINE_CONFIRM;
+  delete env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM;
   if (baseline) {
     env.MIGRATION_BASELINE_VERSION = String(baseline);
     env.MIGRATION_BASELINE_CONFIRM = 'VERIFIED_SCHEMA_AND_RECOVERABLE_BACKUP';
+    env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM = 'EXCLUSIVE_DDL_FREE_MAINTENANCE';
   }
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['--import', 'tsx', 'apps/chat-api/src/migrate.ts'], { env });
@@ -110,6 +112,23 @@ test('migration upgrade matrix and failure paths', async () => {
       await changed.client.end();
     }
 
+    const disabled = await setup(2);
+    await disabled.client.query('ALTER TABLE tenant_memberships DISABLE TRIGGER ALL');
+    assert.match((await migrate(disabled.schema, 2)).output, /constraint triggers are disabled/);
+    await disabled.client.end();
+
+    for (const ledgerVersion of [0, 1]) {
+      const ahead = await setup(2);
+      await ahead.client.query('CREATE TABLE talkaris_schema_migrations (version integer PRIMARY KEY, filename text NOT NULL UNIQUE, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())');
+      if (ledgerVersion) await ahead.client.query('INSERT INTO talkaris_schema_migrations(version,filename,checksum) VALUES (1,$1,$2)', [names[0], createHash('sha256').update(sql[0]).digest('hex')]);
+      const rejected = await migrate(ahead.schema);
+      assert.notEqual(rejected.code, 0);
+      assert.match(rejected.output, /Empty migration ledger|schema markers/);
+      assert.equal((await ahead.client.query("SELECT brand_name FROM platform_settings WHERE id='default'")).rows[0].brand_name, 'Custom brand');
+      assert.equal((await ahead.client.query('SELECT count(*)::int AS n FROM talkaris_schema_migrations')).rows[0].n, ledgerVersion);
+      await ahead.client.end();
+    }
+
     const interrupted = await setup(2);
     await interrupted.client.query('CREATE TABLE talkaris_schema_migrations (version integer PRIMARY KEY, filename text NOT NULL UNIQUE, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())');
     for (let i = 0; i < 2; i++) await interrupted.client.query('INSERT INTO talkaris_schema_migrations(version,filename,checksum) VALUES ($1,$2,$3)', [i + 1, names[i], createHash('sha256').update(sql[i]).digest('hex')]);
@@ -125,6 +144,24 @@ test('migration upgrade matrix and failure paths', async () => {
     assert.equal(recovered.code, 0, recovered.output);
     assert.equal((await interrupted.client.query("SELECT brand_name FROM platform_settings WHERE id='default'")).rows[0].brand_name, 'Custom brand');
     await interrupted.client.end();
+
+    const concurrentSettings = await setup(2);
+    await concurrentSettings.client.query('CREATE TABLE talkaris_schema_migrations (version integer PRIMARY KEY, filename text NOT NULL UNIQUE, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())');
+    for (let i = 0; i < 2; i++) await concurrentSettings.client.query('INSERT INTO talkaris_schema_migrations(version,filename,checksum) VALUES ($1,$2,$3)', [i + 1, names[i], createHash('sha256').update(sql[i]).digest('hex')]);
+    await concurrentSettings.client.query('BEGIN');
+    await concurrentSettings.client.query("UPDATE platform_settings SET brand_name='Concurrent update' WHERE id='default'");
+    const upgrade = migrate(concurrentSettings.schema);
+    let waiting = false;
+    for (let i = 0; i < 100 && !waiting; i++) {
+      waiting = Boolean((await admin.query("SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'LOCK TABLE platform_settings%'" )).rowCount);
+      if (!waiting) await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    assert.ok(waiting, 'migration did not wait for the active settings update');
+    await concurrentSettings.client.query('COMMIT');
+    const upgraded = await upgrade;
+    assert.equal(upgraded.code, 0, upgraded.output);
+    assert.equal((await concurrentSettings.client.query("SELECT brand_name FROM platform_settings WHERE id='default'")).rows[0].brand_name, 'Concurrent update');
+    await concurrentSettings.client.end();
 
     const concurrent = await setup(0);
     const runs = await Promise.all([migrate(concurrent.schema), migrate(concurrent.schema)]);

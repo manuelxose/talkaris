@@ -11,6 +11,7 @@ const env = z.object({
   // Only for an independently verified, backed-up database without a historical ledger.
   MIGRATION_BASELINE_VERSION: z.coerce.number().int().positive().optional(),
   MIGRATION_BASELINE_CONFIRM: z.string().optional(),
+  MIGRATION_BASELINE_MAINTENANCE_CONFIRM: z.string().optional(),
 }).parse(process.env);
 
 const migrationsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../migrations");
@@ -100,24 +101,59 @@ async function inspectMarkers(client: Client, schema: string, latest: number): P
   return result;
 }
 
+async function hasSchemaObjects(client: Client, schema: string): Promise<boolean> {
+  const objects = await client.query(
+    "SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace " +
+    "WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f') AND c.relname<>'talkaris_schema_migrations' " +
+    "AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_class'::regclass " +
+    "AND d.objid=c.oid AND d.deptype='e') " +
+    "UNION ALL SELECT 1 FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace " +
+    "WHERE n.nspname=$1 AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_proc'::regclass AND d.objid=p.oid AND d.deptype='e') " +
+    "UNION ALL SELECT 1 FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace " +
+    "WHERE n.nspname=$1 AND t.typtype IN ('d','e','r','m') AND NOT EXISTS " +
+    "(SELECT 1 FROM pg_depend d WHERE d.classid='pg_type'::regclass AND d.objid=t.oid AND d.deptype='e') LIMIT 1", [schema],
+  );
+  return objects.rows.length > 0;
+}
+
+async function verifyMarkers(client: Client, schema: string, version: number, total: number): Promise<void> {
+  const disabled = await client.query(
+    "SELECT 1 FROM pg_trigger g JOIN pg_class t ON t.oid=g.tgrelid JOIN pg_namespace n ON n.oid=t.relnamespace " +
+    "WHERE n.nspname=$1 AND g.tgisinternal AND g.tgenabled NOT IN ('O','A') LIMIT 1", [schema],
+  );
+  if (disabled.rows.length) throw new Error("Internal constraint triggers are disabled; refusing to migrate");
+  if ((await client.query("SHOW session_replication_role")).rows[0].session_replication_role !== 'origin') {
+    throw new Error("Migration requires the origin replication role");
+  }
+  for (let current = 1; current <= total; current += 1) {
+    const state = await Promise.all(markers[current].map((marker) => exists(client, schema, marker)));
+    if (state.some((present) => (current <= version) !== present)) {
+      throw new Error("Migration history disagrees with schema markers; no writes performed");
+    }
+  }
+}
+
 async function verifyBaseline(client: Client, schema: string, version: number, migrations: Migration[]): Promise<void> {
   if (env.MIGRATION_BASELINE_CONFIRM !== confirmation) {
     throw new Error("MIGRATION_BASELINE_CONFIRM must explicitly attest a verified schema and recoverable backup");
   }
-  if (version > historical.length || migrations.length !== historical.length || migrations.some((migration, index) => migration.name !== historicalNames[index] || migration.checksum !== historical[index][0])) {
+  if (env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM !== 'EXCLUSIVE_DDL_FREE_MAINTENANCE') {
+    throw new Error("MIGRATION_BASELINE_MAINTENANCE_CONFIRM must attest exclusive DDL-free maintenance");
+  }
+  if (version > historical.length || migrations.length < historical.length || migrations.slice(0, historical.length).some((migration, index) => migration.name !== historicalNames[index] || migration.checksum !== historical[index][0])) {
     throw new Error("Historical migration files do not match the verified reference");
   }
   const serverVersion = Number((await client.query("SHOW server_version_num")).rows[0].server_version_num);
   if (Math.floor(serverVersion / 10000) !== 16) throw new Error("Historical baseline verification supports PostgreSQL 16 only");
+  const extensions = await client.query("SELECT extname,extversion FROM pg_extension WHERE extname IN ('pgcrypto','vector') ORDER BY extname");
+  if (extensions.rows.length !== 2 || extensions.rows[0].extname !== 'pgcrypto' || extensions.rows[0].extversion !== '1.3' ||
+      extensions.rows[1].extname !== 'vector' || !['0.6.0', '0.8.7'].includes(extensions.rows[1].extversion)) {
+    throw new Error("Historical baseline verification requires the tested pgcrypto and vector versions");
+  }
   if (await schemaFingerprint(client, schema) !== historical[version - 1][1]) {
     throw new Error("Historical schema differs from the verified reference; no writes performed");
   }
-  for (let current = 1; current <= migrations.length; current += 1) {
-    const state = await Promise.all(markers[current].map((marker) => exists(client, schema, marker)));
-    if (state.some((present) => (current <= version) !== present)) {
-      throw new Error("Migration baseline " + version + " disagrees with schema markers; no writes performed");
-    }
-  }
+  await verifyMarkers(client, schema, version, migrations.length);
 }
 
 async function main(): Promise<void> {
@@ -150,18 +186,7 @@ async function main(): Promise<void> {
 
     if (!hasLedger) {
       const schemaState = await inspectMarkers(client, schema, migrations.length);
-      const schemaObjects = await client.query(
-        "SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace " +
-        "WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f') " +
-        "AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_class'::regclass " +
-        "AND d.objid=c.oid AND d.deptype='e') " +
-        "UNION ALL SELECT 1 FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace " +
-        "WHERE n.nspname=$1 AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_proc'::regclass AND d.objid=p.oid AND d.deptype='e') " +
-        "UNION ALL SELECT 1 FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace " +
-        "WHERE n.nspname=$1 AND t.typtype IN ('d','e','r','m') AND NOT EXISTS " +
-        "(SELECT 1 FROM pg_depend d WHERE d.classid='pg_type'::regclass AND d.objid=t.oid AND d.deptype='e') LIMIT 1", [schema],
-      );
-      const populated = schemaObjects.rows.length > 0 || schemaState.some(Boolean) || (await Promise.all(
+      const populated = await hasSchemaObjects(client, schema) || schemaState.some(Boolean) || (await Promise.all(
         ["projects", "tenants", "users", "sources", "documents", "platform_settings"].map(
           (table) => exists(client, schema, { table }),
         ),
@@ -215,6 +240,10 @@ async function main(): Promise<void> {
         throw new Error("Migration history mismatch at version " + (index + 1) + "; refusing to replay or rewrite it");
       }
     }
+    if (existing.rows.length === 0 && await hasSchemaObjects(client, schema)) {
+      throw new Error("Empty migration ledger on a populated schema; refusing to replay migrations");
+    }
+    await verifyMarkers(client, schema, existing.rows.length, migrations.length);
     for (let index = existing.rows.length; index < migrations.length; index += 1) {
       const migration = migrations[index];
       await client.query("BEGIN");
@@ -222,6 +251,7 @@ async function main(): Promise<void> {
         // Migration 003 predates the ledger and overwrites the settings of existing 002 installs.
         const preserveSettings = index === 2 && existing.rows.length === 2;
         if (preserveSettings) {
+          await client.query("LOCK TABLE platform_settings IN SHARE ROW EXCLUSIVE MODE");
           await client.query("CREATE TEMP TABLE migration_002_settings ON COMMIT DROP AS SELECT * FROM platform_settings WHERE id='default'");
         }
         await client.query(migration.sql);
