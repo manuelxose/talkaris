@@ -104,7 +104,7 @@ async function inspectMarkers(client: Client, schema: string, latest: number): P
 async function hasSchemaObjects(client: Client, schema: string): Promise<boolean> {
   const objects = await client.query(
     "SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace " +
-    "WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f') AND c.relname<>'talkaris_schema_migrations' " +
+    "WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f','c') AND c.relname<>'talkaris_schema_migrations' " +
     "AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_class'::regclass " +
     "AND d.objid=c.oid AND d.deptype='e') " +
     "UNION ALL SELECT 1 FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace " +
@@ -140,6 +140,11 @@ async function verifyBaseline(client: Client, schema: string, version: number, m
   if (env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM !== 'EXCLUSIVE_DDL_FREE_MAINTENANCE') {
     throw new Error("MIGRATION_BASELINE_MAINTENANCE_CONFIRM must attest exclusive DDL-free maintenance");
   }
+  await verifyHistoricalSchema(client, schema, version, migrations, false);
+  await verifyMarkers(client, schema, version, migrations.length);
+}
+
+async function verifyHistoricalSchema(client: Client, schema: string, version: number, migrations: Migration[], ignoreLedger: boolean): Promise<void> {
   if (version > historical.length || migrations.length < historical.length || migrations.slice(0, historical.length).some((migration, index) => migration.name !== historicalNames[index] || migration.checksum !== historical[index][0])) {
     throw new Error("Historical migration files do not match the verified reference");
   }
@@ -150,10 +155,9 @@ async function verifyBaseline(client: Client, schema: string, version: number, m
       extensions.rows[1].extname !== 'vector' || !['0.6.0', '0.8.7'].includes(extensions.rows[1].extversion)) {
     throw new Error("Historical baseline verification requires the tested pgcrypto and vector versions");
   }
-  if (await schemaFingerprint(client, schema) !== historical[version - 1][1]) {
+  if (await schemaFingerprint(client, schema, ignoreLedger) !== historical[version - 1][1]) {
     throw new Error("Historical schema differs from the verified reference; no writes performed");
   }
-  await verifyMarkers(client, schema, version, migrations.length);
 }
 
 async function main(): Promise<void> {
@@ -244,6 +248,12 @@ async function main(): Promise<void> {
       throw new Error("Empty migration ledger on a populated schema; refusing to replay migrations");
     }
     await verifyMarkers(client, schema, existing.rows.length, migrations.length);
+    if (existing.rows.length > 0 && existing.rows.length < migrations.length) {
+      if (env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM !== 'EXCLUSIVE_DDL_FREE_MAINTENANCE') {
+        throw new Error("MIGRATION_BASELINE_MAINTENANCE_CONFIRM must attest exclusive DDL-free maintenance before resuming migrations");
+      }
+      await verifyHistoricalSchema(client, schema, existing.rows.length, migrations, true);
+    }
     for (let index = existing.rows.length; index < migrations.length; index += 1) {
       const migration = migrations[index];
       await client.query("BEGIN");

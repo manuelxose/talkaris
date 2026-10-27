@@ -14,7 +14,7 @@ await admin.connect();
 await admin.query('CREATE EXTENSION IF NOT EXISTS pgcrypto');
 await admin.query('CREATE EXTENSION IF NOT EXISTS vector');
 
-function migrate(schema, baseline) {
+function migrate(schema, baseline, maintenance = false) {
   const url = new URL(databaseUrl);
   url.searchParams.set('options', `-c search_path=${schema},public`);
   const env = { ...process.env, DATABASE_URL: url.toString() };
@@ -26,6 +26,7 @@ function migrate(schema, baseline) {
     env.MIGRATION_BASELINE_CONFIRM = 'VERIFIED_SCHEMA_AND_RECOVERABLE_BACKUP';
     env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM = 'EXCLUSIVE_DDL_FREE_MAINTENANCE';
   }
+  if (maintenance) env.MIGRATION_BASELINE_MAINTENANCE_CONFIRM = 'EXCLUSIVE_DDL_FREE_MAINTENANCE';
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['--import', 'tsx', 'apps/chat-api/src/migrate.ts'], { env });
     let output = '';
@@ -80,6 +81,7 @@ test('migration upgrade matrix and failure paths', async () => {
         for (const [key, value] of Object.entries(settings)) assert.deepEqual(after[key], value, `v${version} changed platform_settings.${key}`);
       }
       const before = (await client.query('SELECT * FROM talkaris_schema_migrations ORDER BY version')).rows;
+      if (version === 14) await client.query('CREATE INDEX custom_fixture_index ON users(status)');
       const repeat = await migrate(schema);
       assert.equal(repeat.code, 0, repeat.output);
       assert.deepEqual((await client.query('SELECT * FROM talkaris_schema_migrations ORDER BY version')).rows, before);
@@ -93,6 +95,10 @@ test('migration upgrade matrix and failure paths', async () => {
     await unknown.client.query('CREATE TABLE unrelated (id integer)');
     assert.match((await migrate(unknown.schema)).output, /MIGRATION_BASELINE_REQUIRED/);
     await unknown.client.end();
+    const unknownType = await setup(0);
+    await unknownType.client.query('CREATE TYPE unexpected_composite AS (value integer)');
+    assert.match((await migrate(unknownType.schema)).output, /MIGRATION_BASELINE_REQUIRED/);
+    await unknownType.client.end();
 
     for (const mutation of [
       "ALTER TABLE users ALTER COLUMN status SET DEFAULT 'disabled'",
@@ -129,18 +135,31 @@ test('migration upgrade matrix and failure paths', async () => {
       await ahead.client.end();
     }
 
+    const drift = await setup(2);
+    await drift.client.query('CREATE TABLE talkaris_schema_migrations (version integer PRIMARY KEY, filename text NOT NULL UNIQUE, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())');
+    for (let i = 0; i < 2; i++) await drift.client.query('INSERT INTO talkaris_schema_migrations(version,filename,checksum) VALUES ($1,$2,$3)', [i + 1, names[i], createHash('sha256').update(sql[i]).digest('hex')]);
+    assert.match((await migrate(drift.schema)).output, /exclusive DDL-free maintenance/);
+    await drift.client.query('ALTER TABLE users DROP CONSTRAINT users_email_key');
+    assert.match((await migrate(drift.schema, undefined, true)).output, /schema differs from the verified reference/);
+    assert.equal((await drift.client.query('SELECT count(*)::int AS n FROM talkaris_schema_migrations')).rows[0].n, 2);
+    assert.equal((await drift.client.query("SELECT brand_name FROM platform_settings WHERE id='default'")).rows[0].brand_name, 'Custom brand');
+    await drift.client.end();
+
     const interrupted = await setup(2);
     await interrupted.client.query('CREATE TABLE talkaris_schema_migrations (version integer PRIMARY KEY, filename text NOT NULL UNIQUE, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())');
     for (let i = 0; i < 2; i++) await interrupted.client.query('INSERT INTO talkaris_schema_migrations(version,filename,checksum) VALUES ($1,$2,$3)', [i + 1, names[i], createHash('sha256').update(sql[i]).digest('hex')]);
-    await interrupted.client.query("CREATE FUNCTION fail_migration() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'synthetic interruption'; END $$");
-    await interrupted.client.query('CREATE TRIGGER fail_migration BEFORE INSERT ON talkaris_schema_migrations FOR EACH ROW EXECUTE FUNCTION fail_migration()');
-    const failed = await migrate(interrupted.schema);
+    const support = `${interrupted.schema}_support`;
+    schemas.push(support);
+    await admin.query(`CREATE SCHEMA ${support}`);
+    await admin.query(`CREATE FUNCTION ${support}.fail_migration() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'synthetic interruption'; END $$`);
+    await interrupted.client.query(`CREATE TRIGGER fail_migration BEFORE INSERT ON talkaris_schema_migrations FOR EACH ROW EXECUTE FUNCTION ${support}.fail_migration()`);
+    const failed = await migrate(interrupted.schema, undefined, true);
     assert.notEqual(failed.code, 0);
     assert.match(failed.output, /transaction rolled back/);
     assert.equal((await interrupted.client.query("SELECT count(*)::int AS n FROM information_schema.columns WHERE table_schema=current_schema() AND table_name='platform_settings' AND column_name='seo_title'")).rows[0].n, 0);
     assert.equal((await interrupted.client.query('SELECT count(*)::int AS n FROM talkaris_schema_migrations')).rows[0].n, 2);
     await interrupted.client.query('DROP TRIGGER fail_migration ON talkaris_schema_migrations');
-    const recovered = await migrate(interrupted.schema);
+    const recovered = await migrate(interrupted.schema, undefined, true);
     assert.equal(recovered.code, 0, recovered.output);
     assert.equal((await interrupted.client.query("SELECT brand_name FROM platform_settings WHERE id='default'")).rows[0].brand_name, 'Custom brand');
     await interrupted.client.end();
@@ -150,7 +169,7 @@ test('migration upgrade matrix and failure paths', async () => {
     for (let i = 0; i < 2; i++) await concurrentSettings.client.query('INSERT INTO talkaris_schema_migrations(version,filename,checksum) VALUES ($1,$2,$3)', [i + 1, names[i], createHash('sha256').update(sql[i]).digest('hex')]);
     await concurrentSettings.client.query('BEGIN');
     await concurrentSettings.client.query("UPDATE platform_settings SET brand_name='Concurrent update' WHERE id='default'");
-    const upgrade = migrate(concurrentSettings.schema);
+    const upgrade = migrate(concurrentSettings.schema, undefined, true);
     let waiting = false;
     for (let i = 0; i < 100 && !waiting; i++) {
       waiting = Boolean((await admin.query("SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'LOCK TABLE platform_settings%'" )).rowCount);

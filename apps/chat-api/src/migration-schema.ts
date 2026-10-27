@@ -2,12 +2,12 @@ import { createHash } from 'node:crypto';
 import type { Client } from 'pg';
 
 // Include names as well as definitions: unexpected objects must not be silently adopted.
-export async function schemaFingerprint(client: Client, schema: string): Promise<string> {
+export async function schemaFingerprint(client: Client, schema: string, ignoreLedger = false): Promise<string> {
   const queries = [
     `SELECT c.relname, c.relkind, c.relrowsecurity, c.relforcerowsecurity,
        CASE WHEN c.relkind IN ('v','m') THEN pg_get_viewdef(c.oid, true) END AS view_definition
      FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
-     WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f')
+     WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f','c')
        AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_class'::regclass AND d.objid=c.oid AND d.deptype='e')
      ORDER BY c.relname`,
     `SELECT c.relname, a.attnum, a.attname, format_type(a.atttypid,a.atttypmod) AS type,
@@ -15,7 +15,7 @@ export async function schemaFingerprint(client: Client, schema: string): Promise
      FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
        JOIN pg_attribute a ON a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped
        LEFT JOIN pg_attrdef d ON d.adrelid=c.oid AND d.adnum=a.attnum
-     WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','f')
+     WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','f','c')
        AND NOT EXISTS (SELECT 1 FROM pg_depend x WHERE x.classid='pg_class'::regclass AND x.objid=c.oid AND x.deptype='e')
      ORDER BY c.relname,a.attnum`,
     `SELECT t.relname, c.conname, c.contype, c.convalidated, pg_get_constraintdef(c.oid,true) AS definition
@@ -46,6 +46,9 @@ export async function schemaFingerprint(client: Client, schema: string): Promise
      WHERE n.nspname=$1 ORDER BY c.relname,p.polname`,
   ];
   const rows = [];
-  for (const query of queries) rows.push((await client.query(query, [schema])).rows);
+  for (const query of queries) {
+    const result = (await client.query(query, [schema])).rows;
+    rows.push(ignoreLedger ? result.filter((row) => row.relname !== 'talkaris_schema_migrations') : result);
+  }
   return createHash('sha256').update(JSON.stringify(rows)).digest('hex');
 }
