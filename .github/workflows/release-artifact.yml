@@ -1,0 +1,40 @@
+name: Build attested release artifact
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.23.2'
+          cache: npm
+      - name: Build from the workflow commit
+        run: |
+          mkdir -p "$RUNNER_TEMP/releases"
+          bash infra/prepare-release.sh "$GITHUB_WORKSPACE" "$GITHUB_SHA" "$RUNNER_TEMP/releases/$GITHUB_SHA"
+          cp "$RUNNER_TEMP/releases/$GITHUB_SHA/manifest.json" "$RUNNER_TEMP/manifest.json"
+          tar -C "$RUNNER_TEMP/releases/$GITHUB_SHA" -czf "$RUNNER_TEMP/release.tar.gz" .
+      - name: Attest manifest and archive
+        uses: actions/attest-build-provenance@96b4a1ef7235a096b17240c259729fdd70c83d45 # v2
+        with:
+          subject-path: |
+            ${{ runner.temp }}/manifest.json
+            ${{ runner.temp }}/release.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/manifest.json
+            ${{ runner.temp }}/release.tar.gz
+          if-no-files-found: error

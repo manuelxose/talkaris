@@ -20,6 +20,7 @@ while IFS= read -r -d '' link; do
   target="$(realpath -e "$link")"
   case "$target" in "$release"/*) ;; *) echo "External link: $link" >&2; exit 1 ;; esac
 done < <(find . -type l -print0)
+find . -type f -exec chmod go-w {} +
 manifest_tool="$(dirname "$(realpath "$0")")/release-manifest.mjs"
 digest="$(node "$manifest_tool" create "$release" "$sha" "$(git -C "$repo" rev-parse "$sha^{tree}")")"
 node "$manifest_tool" verify "$release" "$digest"
