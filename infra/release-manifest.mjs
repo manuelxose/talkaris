@@ -8,7 +8,7 @@ const manifestPath = path.join(root, 'manifest.json');
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 async function inventory(dir = '') {
-  const result = {};
+  const result = Object.create(null);
   for (const name of (await readdir(path.join(root, dir))).sort()) {
     const relative = path.posix.join(dir, name);
     if (relative === 'manifest.json') continue;
