@@ -1,0 +1,15 @@
+name: Synthetic recovery tests
+on:
+  pull_request:
+    paths:
+      - 'infra/recovery/**'
+      - '.github/workflows/recovery-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  encrypted-inventory:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - run: bash infra/recovery/encrypt.test.sh
