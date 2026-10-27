@@ -82,15 +82,20 @@ async function verifyBaseline(client: Client, schema: string, version: number, t
     throw new Error("MIGRATION_BASELINE_CONFIRM must explicitly attest a verified schema and recoverable backup");
   }
   if (version > total) throw new Error("Baseline version is newer than the available migrations");
-  const state = await inspectMarkers(client, schema, total);
-  if (state.some((present, index) => (index < version) !== present)) {
-    throw new Error("Migration baseline " + version + " disagrees with schema markers; no writes performed");
+  for (let current = 1; current <= total; current += 1) {
+    const state = await Promise.all(markers[current].map((marker) => exists(client, schema, marker)));
+    if (state.some((present) => (current <= version) !== present)) {
+      throw new Error("Migration baseline " + version + " disagrees with schema markers; no writes performed");
+    }
   }
 }
 
 async function main(): Promise<void> {
   const names = (await readdir(migrationsDir)).filter((name) => name.endsWith(".sql"))
     .sort((a, b) => a.localeCompare(b));
+  if (names.some((name, index) => !name.startsWith(String(index + 1).padStart(3, "0") + "_"))) {
+    throw new Error("Migration filenames must have contiguous numeric versions");
+  }
   if (names.length !== Object.keys(markers).length) {
     throw new Error("Schema marker coverage must be updated before changing the migration set");
   }
@@ -115,7 +120,13 @@ async function main(): Promise<void> {
 
     if (!hasLedger) {
       const schemaState = await inspectMarkers(client, schema, migrations.length);
-      const populated = schemaState.some(Boolean) || (await Promise.all(
+      const schemaObjects = await client.query(
+        "SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace " +
+        "WHERE n.nspname=$1 AND c.relkind IN ('r','p','v','m','S','f') " +
+        "AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_class'::regclass " +
+        "AND d.objid=c.oid AND d.deptype='e') LIMIT 1", [schema],
+      );
+      const populated = schemaObjects.rows.length > 0 || schemaState.some(Boolean) || (await Promise.all(
         ["projects", "tenants", "users", "sources", "documents", "platform_settings"].map(
           (table) => exists(client, schema, { table }),
         ),
@@ -173,7 +184,17 @@ async function main(): Promise<void> {
       const migration = migrations[index];
       await client.query("BEGIN");
       try {
+        // Migration 003 predates the ledger and overwrites the settings of existing 002 installs.
+        const preserveSettings = index === 2 && existing.rows.length === 2;
+        if (preserveSettings) {
+          await client.query("CREATE TEMP TABLE migration_002_settings ON COMMIT DROP AS SELECT * FROM platform_settings WHERE id='default'");
+        }
         await client.query(migration.sql);
+        if (preserveSettings) {
+          await client.query("UPDATE platform_settings p SET (brand_name, legal_name, tagline, summary, support_email, website_url, product_domain, portal_base_url, api_base_url, widget_base_url, developed_by, demo_project_key, demo_site_key, hero_points, feature_flags, updated_at) = " +
+            "(SELECT brand_name, legal_name, tagline, summary, support_email, website_url, product_domain, portal_base_url, api_base_url, widget_base_url, developed_by, demo_project_key, demo_site_key, hero_points, feature_flags, updated_at FROM migration_002_settings) " +
+            "WHERE p.id='default' AND EXISTS (SELECT 1 FROM migration_002_settings)");
+        }
         await client.query(
           "INSERT INTO " + ledger + " (version,filename,checksum) VALUES ($1,$2,$3)",
           [index + 1, migration.name, migration.checksum],
