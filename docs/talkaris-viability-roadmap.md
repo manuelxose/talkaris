@@ -1,7 +1,10 @@
 # Talkaris: roadmap para un producto viable
 
 Fecha de referencia: 22 de octubre de 2026.
-Estado: **M0 completado (G0 GO); M1-M8 pendientes**.
+Estado: **M0 parcial para el árbol local actual; G0 histórico; M1-M8 pendientes**.
+Revisión de release: el árbol de producción contiene cambios y su artefacto y migraciones no están verificados. El guard propuesto bloquea despliegues con checkout sucio o SHA distinto y exige preparar el commit exacto antes del workflow; CI remoto, backup/restore y rollback siguen siendo gates independientes.
+El primer flujo completo con el nuevo lanzador aislado pasó en el snapshot `a6526dea0a7260cc40774228e16cae417bcbcf61c6e13df17a42af7b4ff0e0ea`; comprobar por separado la ejecución del árbol final y CI real tras los ajustes de revisión. Véase `docs/m0/report.md`.
+Revisión 2026-10-27: la prueba negativa de la entrada pasa y el comando normal se detiene antes de las etapas; siguen pendientes el lanzador aislado reproducible, su integración en CI y la ejecución completa del árbol final. M1 no se ha iniciado.
 Este documento sustituye como plan de ejecución al roadmap histórico V1/V1.5/V2/V3. No certifica como terminadas las funcionalidades que ese documento marcaba con un check.
 
 ## 1. Objetivo y definición de producto viable
@@ -60,6 +63,14 @@ M2 puede prepararse mientras se cierran casos de M1. M4 y M5 no dependen entre s
 Responsabilidad por defecto: ingeniería implementa y verifica; producto/operación valida los recorridos y decide alcance comercial. No se presuponen personas adicionales asignadas.
 
 ## 4. M0 — Base reproducible y cobertura de regresión
+
+**Salvaguarda 2026-10-27:** la ejecución predeterminada antigua ahora se detiene antes de las etapas si no se selecciona el modo experimental de namespace; la prueba negativa pasó. La variable por sí sola no establece aislamiento. Faltan el lanzador reproducible, integración de CI, ejecución del árbol final y revisión independiente; el job actual de CI fallará hasta integrar el lanzador. M0 sigue parcial y M1 no ha comenzado.
+
+**Inspección de producción de solo lectura 2026-10-27:** el checkout del servidor está en `a23eab97df894e3ee3a4a9eaa7d9083b92be8788` con cambios locales, por lo que el SHA de los artefactos en ejecución sigue sin demostrarse. API, worker, widget y portal están activos; health de API/portal y frame del widget respondieron correctamente. Esto no verifica migraciones, proveedores, backup ni rollback.
+
+**Continuación de aislamiento 2026-10-27:** dos ejecuciones completas pasaron en un namespace Docker Linux limitado a loopback, con migraciones fresh/repeat/populated, regresiones, build y navegador; sus huellas de navegador coincidieron. La aplicación local se ejecutó con una base sintética separada. La entrada y CI existentes aún no exigen ese aislamiento, falta revisión independiente y el SHA del artefacto desplegado sigue sin verificar. M0 permanece parcial; ver `evidence/m0-windows-20261027/isolation-local-20261027.md` y `docs/m0/report.md`.
+
+**Continuación 2026-10-27:** G0 sigue siendo histórico para `fdababf429180af41478858c5d6e6577f2a49262`; el árbol local modificado en `b4ec793d42b02b217381de77d95759310481a656` permanece parcial. Las pruebas unitarias y el build en copia aislada pasaron, pero faltan el flujo M0 completo, migraciones, navegador y revisión del árbol propuesto. El PR #1 se fusionó y el workflow de despliegue terminó correctamente para el merge; eso no verifica la versión efectiva en producción. Véase `evidence/m0-windows-20261027/handoff-20261027.md` y `continuation.md`. Los resultados históricos siguientes se conservan sin reinterpretarlos como una ejecución actual.
 
 Ejecución 2026-10-22: **M0 completado; Gate G0 GO para la base de ingeniería**, sin aprobación de seguridad/lanzamiento. Rama `codex/m0-baseline`, base `a23eab97df894e3ee3a4a9eaa7d9083b92be8788`, implementación verificada `fdababf429180af41478858c5d6e6577f2a49262`; cierre documental en commit posterior. [PR #1](https://github.com/manuelxose/tecnoria-chat-platform/pull/1) abierta, sin merge ni despliegue. Dos ejecuciones completas limpias aprobadas en el mismo SHA: [39824730685](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39824730685) y [39824738406](https://github.com/manuelxose/tecnoria-chat-platform/actions/runs/39824738406). Cada una: 25 controles, 32 defectos conocidos exactos, 3 pruebas del harness, 20 existentes, migraciones fresh/repeat/populated, build completo, 163 observaciones de navegador equivalentes y limpieza correcta. Revisión independiente final: GO, sin bloqueadores de implementación M0. Evidencia, riesgos y comandos en `docs/m0/report.md`, `README.md` y `audit-source.md`. Versión/migraciones de producción y proveedores permanecen sin verificar por la regla localhost. Los defectos siguen pendientes; **M1 no ejecutado**.
 

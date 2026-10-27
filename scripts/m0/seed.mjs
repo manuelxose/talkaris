@@ -11,7 +11,7 @@ export async function sanitizeSettings(db) {
 export async function verifyDatabase(client) {
   assert.equal(process.env.DATABASE_URL, databaseUrl, 'Only the dedicated M0 database is allowed');
   const { rows: [identity] } = await client.query('SELECT current_database() AS db, current_user AS usr, inet_server_port() AS port');
-  assert.deepEqual(identity, { db: 'talkaris_m0', usr: 'm0', port: 5432 });
+  assert.deepEqual(identity, { db: 'talkaris_m0', usr: 'm0', port: process.env.M0_NAMESPACE_SERVICES === '1' ? 45432 : 5432 });
 }
 
 export async function seed() {

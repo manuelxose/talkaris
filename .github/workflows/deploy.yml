@@ -22,4 +22,13 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script_stop: true
           script: |
-            sudo /var/www/talkaris/infra/deploy-chat.sh
+            cd /var/www/talkaris
+            if [ -n "$(git status --porcelain)" ]; then
+              echo "Dirty deployment checkout; refusing to deploy" >&2
+              exit 1
+            fi
+            if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
+              echo "Deployment checkout is not the requested commit; refusing to deploy" >&2
+              exit 1
+            fi
+            sudo /var/www/talkaris/infra/deploy-chat.sh main '${{ github.sha }}'

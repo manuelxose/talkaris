@@ -1,0 +1,139 @@
+{
+  "status": "completed",
+  "cleanup": "not-started",
+  "timings": [
+    {
+      "name": "build-domain",
+      "milliseconds": 1878,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "build-core",
+      "milliseconds": 1010,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "build-application",
+      "milliseconds": 1044,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "build-infrastructure",
+      "milliseconds": 1429,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "migrations-first",
+      "milliseconds": 564,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "migrations-repeat",
+      "milliseconds": 431,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "migrations-populated",
+      "milliseconds": 415,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "api-startup",
+      "milliseconds": 735,
+      "samples": 1
+    },
+    {
+      "name": "health",
+      "milliseconds": 3.202498999999989,
+      "sample": 1
+    },
+    {
+      "name": "health",
+      "milliseconds": 3.1312079999997877,
+      "sample": 2
+    },
+    {
+      "name": "health",
+      "milliseconds": 2.064962000000378,
+      "sample": 3
+    },
+    {
+      "name": "health",
+      "milliseconds": 2.9147540000003573,
+      "sample": 4
+    },
+    {
+      "name": "health",
+      "milliseconds": 2.927198000000317,
+      "sample": 5
+    },
+    {
+      "name": "health",
+      "milliseconds": 3.246231999999509,
+      "sample": 6
+    },
+    {
+      "name": "health",
+      "milliseconds": 1.77430700000059,
+      "sample": 7
+    },
+    {
+      "name": "health",
+      "milliseconds": 4.6048039999996035,
+      "sample": 8
+    },
+    {
+      "name": "health",
+      "milliseconds": 2.9519259999997303,
+      "sample": 9
+    },
+    {
+      "name": "health",
+      "milliseconds": 2.4166370000002644,
+      "sample": 10
+    },
+    {
+      "name": "harness-tests",
+      "milliseconds": 156,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "regressions",
+      "milliseconds": 4072,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "unit-tests",
+      "milliseconds": 1371,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "build",
+      "milliseconds": 32401,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "login-browser",
+      "milliseconds": 10123,
+      "code": 0,
+      "signal": null
+    },
+    {
+      "name": "browser",
+      "milliseconds": 209792,
+      "code": 0,
+      "signal": null
+    }
+  ]
+}

@@ -7,24 +7,21 @@ permissions:
 jobs:
   localhost:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22.23.2'
           cache: npm
-      - run: npm ci
-      - run: npm ci --prefix scripts/m0/tools
-      # This runner already includes Chromium system libraries. Avoid an apt
-      # upgrade/font installation on every run; install the pinned browser only.
-      - run: scripts/m0/tools/node_modules/.bin/playwright install chromium
+      - run: docker version
+      - run: npm ci --no-audit --no-fund
+      - run: node --test scripts/m0/entrypoint.test.mjs
+      - run: node --test scripts/m0/deploy-guard.test.mjs
       - run: npm run m0:test
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: m0-localhost-evidence
-          path: evidence/m0/
+          path: evidence/talkaris-m0-*/
           retention-days: 7
-      - if: always()
-        run: npm run m0:down
