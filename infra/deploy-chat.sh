@@ -1,6 +1,6 @@
 #!/bin/bash
 # Deploy completo de la plataforma chat (Talkaris) en produccion (VPS Contabo)
-# Uso: sudo /var/www/talkaris/infra/deploy-chat.sh [branch]
+# Uso: sudo /var/www/talkaris/infra/deploy-chat.sh <branch> <full-source-sha>
 # - Paquetes TS: build ordenado (domain -> core -> application -> infrastructure)
 # - Apps: chat-api + ingest-worker + widget (dist en sitio, restart, smoke 4101)
 # - Portal: release symlink via /var/www/bin/deploy-talkaris-portal.sh
@@ -9,6 +9,7 @@ IFS=$'\n\t'
 
 APP_DIR="/var/www/talkaris"
 BRANCH="${1:-main}"
+EXPECTED_SHA="${2:-}"
 CHAT_API_PORT="4101"
 
 if [ "${EUID:-$(id -u)}" -ne 0 ]; then
@@ -32,12 +33,20 @@ wait_http() {
 
 cd "${APP_DIR}"
 
-if git diff --quiet && git diff --cached --quiet; then
-  git fetch --prune origin
-  git checkout "${BRANCH}"
-  git pull --ff-only origin "${BRANCH}"
-else
-  echo "Working tree has local changes. Deploying current checkout without git sync."
+if [[ ! "${EXPECTED_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "Expected full source SHA is required" >&2
+  exit 1
+fi
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "Working tree has local changes; refusing to deploy" >&2
+  exit 1
+fi
+git fetch --prune origin
+git checkout "${BRANCH}"
+git pull --ff-only origin "${BRANCH}"
+if [[ "$(git rev-parse HEAD)" != "${EXPECTED_SHA}" ]]; then
+  echo "Checkout does not match expected source SHA; refusing to deploy" >&2
+  exit 1
 fi
 
 npm install --no-audit --no-fund
@@ -58,4 +67,4 @@ wait_http "http://127.0.0.1:${CHAT_API_PORT}/health"
 # Portal (build + release + restart + smoke local/publico)
 /var/www/bin/deploy-talkaris-portal.sh
 
-echo "Deploy talkaris OK: $(git rev-parse --short HEAD)"
+echo "Deploy talkaris OK; source SHA: $(git rev-parse HEAD)"

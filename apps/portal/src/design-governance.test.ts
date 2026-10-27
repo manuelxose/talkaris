@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 const appDir = new URL("./app/", import.meta.url);
 const stylesFile = new URL("./styles.css", import.meta.url);
+const srcDir = fileURLToPath(new URL(".", import.meta.url));
 
 function collectTsFiles(dir: URL, files: string[] = []): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -14,7 +16,7 @@ function collectTsFiles(dir: URL, files: string[] = []): string[] {
       continue;
     }
     if (entry.isFile() && entry.name.endsWith(".ts")) {
-      files.push(next.pathname);
+      files.push(fileURLToPath(next));
     }
   }
   return files;
@@ -33,7 +35,7 @@ test("portal app does not reintroduce local or inline styling", () => {
     const source = fs.readFileSync(file, "utf8");
     for (const check of checks) {
       if (check.pattern.test(source)) {
-        violations.push(`${path.relative("/var/www/talkaris/apps/portal/src", file)}: ${check.label}`);
+        violations.push(`${path.relative(srcDir, file)}: ${check.label}`);
       }
     }
   }
@@ -73,7 +75,7 @@ test("auth and marketing routes use ck form primitives for text controls", () =>
       const classPattern = new RegExp(`class\\s*=\\s*["'][^"']*\\b${target.expectedClass}\\b[^"']*["']`, "i");
       if (!classPattern.test(tag)) {
         const snippet = tag.replace(/\s+/g, " ").slice(0, 120);
-        violations.push(`${path.relative("/var/www/talkaris/apps/portal/src", target.file.pathname)}: ${snippet}`);
+        violations.push(`${path.relative(srcDir, fileURLToPath(target.file))}: ${snippet}`);
       }
     }
   }
@@ -119,7 +121,7 @@ test("portal source uses the canonical talkaris embed bases", () => {
     const source = fs.readFileSync(file, "utf8");
     for (const check of checks) {
       if (check.pattern.test(source)) {
-        violations.push(`${path.relative("/var/www/talkaris/apps/portal/src", file)}: ${check.label}`);
+        violations.push(`${path.relative(srcDir, file)}: ${check.label}`);
       }
     }
   }
@@ -143,7 +145,7 @@ test("portal source does not reintroduce legacy widget aliases", () => {
     const source = fs.readFileSync(file, "utf8");
     for (const check of checks) {
       if (check.pattern.test(source)) {
-        violations.push(`${path.relative("/var/www/talkaris/apps/portal/src", file)}: ${check.label}`);
+        violations.push(`${path.relative(srcDir, file)}: ${check.label}`);
       }
     }
   }

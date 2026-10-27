@@ -69,6 +69,8 @@ Advanced sources remain supported under Knowledge Sources, but they are no longe
 
 ## Verification
 
+The deployment workflow refuses a dirty server checkout and requires it to be pre-staged at the exact workflow commit before invoking the deploy script. The script also requires the branch and full expected source SHA and refuses to build if the checkout is dirty or the fetched branch differs. This deliberately blocks automatic deployment until the checkout can be prepared safely. The source SHA is not proof of the built artifact SHA; verify artifact provenance, migrations, backup/restore and rollback separately before release.
+
 Run these before a production deployment:
 
 ```bash
