@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { lstat, readFile, readdir, readlink, realpath, writeFile } from 'node:fs/promises';
+import { constants } from 'node:fs';
+import { lstat, open, readFile, readdir, readlink, realpath, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const [operation, rootArg, commit, tree] = process.argv.slice(2);
@@ -39,7 +40,15 @@ if (operation === 'create') {
   console.log(hash(await readFile(manifestPath)));
 } else if (operation === 'verify') {
   if (!/^[0-9a-f]{64}$/.test(commit ?? '')) throw new Error('Expected manifest SHA-256 required');
-  const bytes = await readFile(manifestPath);
+  if (!(await lstat(manifestPath)).isFile()) throw new Error('Manifest must be a regular file');
+  const handle = await open(manifestPath, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
+  let bytes;
+  try {
+    if (!(await handle.stat()).isFile()) throw new Error('Manifest must be a regular file');
+    bytes = await handle.readFile();
+  } finally {
+    await handle.close();
+  }
   if (hash(bytes) !== commit) throw new Error('Manifest digest mismatch');
   const manifest = JSON.parse(bytes);
   const actual = await inventory();

@@ -40,9 +40,17 @@ grep -qx -- '--deny-self-hosted-runners' "$GH_ARGS"
 grep -qx -- "$sha" "$GH_ARGS"
 if GH_FAIL=1 bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$sha" >/dev/null 2>&1; then exit 1; fi
 if bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$(printf '%040d' 0)" >/dev/null 2>&1; then exit 1; fi
-bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$digest" >/dev/null
-if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$digest" >/dev/null 2>&1; then exit 1; fi
-if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$tmp/unsafe" "$digest" >/dev/null 2>&1; then exit 1; fi
+bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$sha" >/dev/null
+if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$sha" >/dev/null 2>&1; then exit 1; fi
+if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$tmp/unsafe" "$sha" >/dev/null 2>&1; then exit 1; fi
+if GH_FAIL=1 bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/untrusted" "$sha" >/dev/null 2>&1; then exit 1; fi
+if [ -e "$seal_root/untrusted" ]; then exit 1; fi
+mv "$tmp/release/manifest.json" "$tmp/manifest.json"
+ln -s "$tmp/manifest.json" "$tmp/release/manifest.json"
+if node "$(dirname "$script")/release-manifest.mjs" verify "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/symlink" "$sha" >/dev/null 2>&1; then exit 1; fi
+rm "$tmp/release/manifest.json"
+mv "$tmp/manifest.json" "$tmp/release/manifest.json"
 su -s /bin/sh nobody -c "test -r '$seal_root/sealed/apps/chat-api/dist/main.js'"
 if su -s /bin/sh nobody -c "echo changed > '$seal_root/sealed/apps/chat-api/dist/main.js'" 2>/dev/null; then exit 1; fi
 node "$(dirname "$script")/release-manifest.mjs" verify "$seal_root/sealed" "$digest" >/dev/null

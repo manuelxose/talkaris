@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-if [ "$(id -u)" -ne 0 ] || [ "$#" -ne 3 ] || [[ "$2" != /* ]] || [[ ! "$3" =~ ^[0-9a-f]{64}$ ]]; then
-  echo 'Usage: root seal-release.sh <staged-release> <new-absolute-directory> <trusted-manifest-sha256>' >&2
+if [ "$(id -u)" -ne 0 ] || [ "$#" -ne 3 ] || [[ "$2" != /* ]] || [[ ! "$3" =~ ^[0-9a-f]{40}$ ]]; then
+  echo 'Usage: root seal-release.sh <staged-release> <new-absolute-directory> <expected-full-commit-sha>' >&2
   exit 1
 fi
 source_dir="$(realpath -e "$1")"
@@ -26,7 +26,10 @@ cp -a -- "$source_dir" "$staging/content"
 chown -hR root:root -- "$staging/content"
 find "$staging/content" -type f -exec chmod go-w {} +
 find "$staging/content" -type d -exec chmod 755 {} +
-node "$(dirname "$(realpath "$0")")/release-manifest.mjs" verify "$staging/content" "$3"
+script_dir="$(dirname "$(realpath "$0")")"
+[ -f "$staging/content/manifest.json" ] && [ ! -L "$staging/content/manifest.json" ] || { echo 'Manifest must be a regular file' >&2; exit 1; }
+digest="$(bash "$script_dir/verify-release-attestation.sh" "$staging/content/manifest.json" "$3")"
+node "$script_dir/release-manifest.mjs" verify "$staging/content" "$digest"
 mv -Tn -- "$staging/content" "$destination"
 [ ! -e "$staging/content" ] || { echo 'Destination already exists' >&2; exit 1; }
 rmdir "$staging"
