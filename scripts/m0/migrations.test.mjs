@@ -60,7 +60,7 @@ test('migration upgrade matrix and failure paths', async () => {
     return { schema, client, settings };
   }
   try {
-    for (const version of [0, 1, 2, 3, 5, 10, 14]) {
+    for (let version = 0; version <= 14; version++) {
       const { schema, client, settings } = await setup(version);
       const result = await migrate(schema, version);
       assert.equal(result.code, 0, `v${version}: ${result.output}`);
@@ -91,6 +91,24 @@ test('migration upgrade matrix and failure paths', async () => {
     await unknown.client.query('CREATE TABLE unrelated (id integer)');
     assert.match((await migrate(unknown.schema)).output, /MIGRATION_BASELINE_REQUIRED/);
     await unknown.client.end();
+
+    for (const mutation of [
+      "ALTER TABLE users ALTER COLUMN status SET DEFAULT 'disabled'",
+      'ALTER TABLE users DROP CONSTRAINT users_email_key',
+      'DROP INDEX idx_tenant_memberships_user',
+      'CREATE TABLE unexpected_table (id integer)',
+      "CREATE TYPE unexpected_type AS ENUM ('a')",
+      'CREATE POLICY unexpected_policy ON users USING (true)',
+    ]) {
+      const changed = await setup(2);
+      await changed.client.query(mutation);
+      const rejected = await migrate(changed.schema, 2);
+      assert.notEqual(rejected.code, 0, mutation);
+      assert.match(rejected.output, /schema differs from the verified reference/);
+      assert.equal((await changed.client.query("SELECT to_regclass('talkaris_schema_migrations') AS ledger")).rows[0].ledger, null);
+      assert.equal((await changed.client.query("SELECT password_hash FROM users WHERE email='fixture@example.test'")).rows[0].password_hash, 'synthetic-hash');
+      await changed.client.end();
+    }
 
     const interrupted = await setup(2);
     await interrupted.client.query('CREATE TABLE talkaris_schema_migrations (version integer PRIMARY KEY, filename text NOT NULL UNIQUE, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())');
