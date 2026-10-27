@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Client } from "pg";
 import { z } from "zod";
-import { schemaFingerprint } from "./migration-schema.js";
+import { verifyHistoricalSchema } from "./migration-schema.js";
 
 const env = z.object({
   DATABASE_URL: z.string().min(1),
@@ -18,27 +18,6 @@ const migrationsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)),
 const confirmation = "VERIFIED_SCHEMA_AND_RECOVERABLE_BACKUP";
 type Migration = { name: string; sql: string; checksum: string };
 
-// Generated from the unmodified migrations in a disposable PostgreSQL 16 database.
-const historical = [
-  ['9ebfa3c2de62e730df9c75dc5e9827df9167ddc6ddaaff9d4dbd427c4f8d6a15','ff30c773745941f929fd8ba02be3df52475f1813d10147204f57c44346a6c684'],
-  ['dfd9a0be34130222c36d2e38fcb81ad37f1c4e089e856fd4c2bbef5e8d092703','549c0e7e34cf39c20f79bac3b0fc8b12f1969f98aea6215ded423fad020f10e4'],
-  ['29818e00812a08a0cf81aab7e78f9f6e2abb2d087f18a746d00304f6bf8a623c','55f83da83af001a5eedbee247c179136061087533dd840dc724f10d2c63a1a82'],
-  ['6f82332a42313c8e4595cdabe989f67fe101debc3dbc9375a0c5adef92ac2cd4','5d0de48cb4dfc728bfb130241ba030bbd26707fad592d30abb047540aecaceec'],
-  ['b410533284dfaa6375fe3f59da05545251a58d1be79bbc4334ad3336c5cf2dc8','753d07e926edf157e63ccf765e851d479c5ed5c614cddde3fe28b4449381106e'],
-  ['28de88720cc6a3a52f2732beeb649d34d9e376728feb0827aa9c0e3cfe2e4b64','ba82b88bd33151021b336c34af5305ce81b263284488fbe78181d21e670cf508'],
-  ['a3b1d24474df96c12500b4be3d82326a86d0f3f44a8c0ca75a537370bb7f3203','902db2fb36b9463ec490557422f1711e3e6564e603f887cac58c8cd58ccaacd0'],
-  ['862ee369c4cb0524a1486cd1d7f67766bff1447342cf96810b1128fd011d6e04','dcd67bb160bde7259a011d9c3f20b1c0d0e8188eeaeebfa48f4b1a104aad554a'],
-  ['e412eace255f0e7178720e28a054981b53cd50376cb11c166eb0be67df97f424','02d313653d2f2242ec5ecefb2189dc0976316f56bc7464ca2aca1353e1747ec5'],
-  ['353caab22a8400b789e08724842ad324d54c59be9036331320ac7f0cc9c78c2a','2717194d39518281a30700c4a454d40a08aacc3d4eba527df1a527a9a1014c3b'],
-  ['66208bc36ec09cd3cc1c162bfd5701942599f4468e774cc773e942f2358cbd45','a8306b146daf4aa3c038c178cff3c4acd3e941d43f346e74dc80136f5aa54c19'],
-  ['400cc1d24a2fd6b047506a90204123af8e67f600f2999d2989ce332d0455d35b','128dbf20db8c57be4d20930e5354547fa5ccf54b2ffd64c9716cfcc5af76755a'],
-  ['fd93d871c2e8250984fc64b6e7a0851c651d7a3504753c1a5fb98f0dd9925128','c3f904c6555f10aa48e1e80244b8bd7b5471c004fca4bfc44cef5bc3d27810cc'],
-  ['5d3ed0318a44cca3665f1c0560d832cff87318eb9ce4b3c745bca6336f939a4a','409d904cdaee1a78c9ed176b61ff6ffc2cdcc541cff18c3ef3707245dbc1ccc9'],
-];
-const historicalNames = ['001_init.sql', '002_portal_auth.sql', '003_talkaris_launch.sql', '004_blog_module.sql',
-  '005_v1_5_features.sql', '006_handover_events.sql', '007_ai_config.sql', '008_handover_queue.sql',
-  '009_project_features.sql', '010_api_endpoint_source.sql', '011_more_source_kinds.sql', '012_language_mode.sql',
-  '013_channels.sql', '014_gemini_source.sql'];
 
 // Distinguishing markers are deliberately checked before a historical baseline is recorded.
 // These are NOT a complete schema audit; an operator must also verify the schema and backup.
@@ -144,21 +123,6 @@ async function verifyBaseline(client: Client, schema: string, version: number, m
   await verifyMarkers(client, schema, version, migrations.length);
 }
 
-async function verifyHistoricalSchema(client: Client, schema: string, version: number, migrations: Migration[], ignoreLedger: boolean): Promise<void> {
-  if (version > historical.length || migrations.length < historical.length || migrations.slice(0, historical.length).some((migration, index) => migration.name !== historicalNames[index] || migration.checksum !== historical[index][0])) {
-    throw new Error("Historical migration files do not match the verified reference");
-  }
-  const serverVersion = Number((await client.query("SHOW server_version_num")).rows[0].server_version_num);
-  if (Math.floor(serverVersion / 10000) !== 16) throw new Error("Historical baseline verification supports PostgreSQL 16 only");
-  const extensions = await client.query("SELECT extname,extversion FROM pg_extension WHERE extname IN ('pgcrypto','vector') ORDER BY extname");
-  if (extensions.rows.length !== 2 || extensions.rows[0].extname !== 'pgcrypto' || extensions.rows[0].extversion !== '1.3' ||
-      extensions.rows[1].extname !== 'vector' || !['0.6.0', '0.8.7'].includes(extensions.rows[1].extversion)) {
-    throw new Error("Historical baseline verification requires the tested pgcrypto and vector versions");
-  }
-  if (await schemaFingerprint(client, schema, ignoreLedger) !== historical[version - 1][1]) {
-    throw new Error("Historical schema differs from the verified reference; no writes performed");
-  }
-}
 
 async function main(): Promise<void> {
   const names = (await readdir(migrationsDir)).filter((name) => name.endsWith(".sql"))

@@ -34,6 +34,9 @@ jobs:
       - run: node --test scripts/m0/migrations.test.mjs
         env:
           MIGRATION_TEST_DATABASE_URL: postgresql://postgres:synthetic@127.0.0.1:5432/postgres
+      - run: node --import tsx --test scripts/m0/release-schema.test.mjs
+        env:
+          MIGRATION_TEST_DATABASE_URL: postgresql://postgres:synthetic@127.0.0.1:5432/postgres
   localhost:
     runs-on: ubuntu-24.04
     timeout-minutes: 60

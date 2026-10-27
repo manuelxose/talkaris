@@ -1,5 +1,40 @@
 import { createHash } from 'node:crypto';
 import type { Client } from 'pg';
+import { historical, historicalNames } from './migration-reference.js';
+
+// Caller keeps the session advisory lock and its read-only transaction through the release decision.
+export async function validateReleaseSchema(client: Client, migrations: Array<{ name: string; checksum: string }>, maintenance: string | undefined): Promise<void> {
+  if (maintenance !== 'EXCLUSIVE_DDL_FREE_MAINTENANCE') throw new Error('Exclusive DDL-free maintenance must be independently confirmed');
+  const context = (await client.query("SELECT current_schema() AS schema, current_setting('transaction_read_only') AS read_only, current_setting('transaction_isolation') AS isolation")).rows[0];
+  if (!context.schema || context.read_only !== 'on' || context.isolation !== 'repeatable read') throw new Error('A repeatable-read, read-only transaction is required');
+  const lock = await client.query("SELECT 1 FROM pg_locks WHERE pid=pg_backend_pid() AND locktype='advisory' AND classid=hashtext(current_database())::oid AND objid=hashtext(current_schema())::oid AND objsubid=2 AND mode='ExclusiveLock' AND granted");
+  if (!lock.rowCount) throw new Error('The migration advisory lock must be held by this session');
+  if (migrations.length !== historical.length) throw new Error('Release migration history has no approved schema reference');
+  const quoted = '"' + context.schema.replace(/"/g, '""') + '"';
+  const ledger = await client.query(`SELECT version,filename,checksum FROM ${quoted}.talkaris_schema_migrations ORDER BY version`);
+  if (ledger.rows.length !== migrations.length || ledger.rows.some((row, index) => row.version !== index + 1 || row.filename !== migrations[index].name || row.checksum !== migrations[index].checksum)) {
+    throw new Error('Release migration history does not match the database ledger');
+  }
+  const disabled = await client.query("SELECT 1 FROM pg_trigger g JOIN pg_class t ON t.oid=g.tgrelid JOIN pg_namespace n ON n.oid=t.relnamespace WHERE n.nspname=$1 AND g.tgisinternal AND g.tgenabled NOT IN ('O','A') LIMIT 1", [context.schema]);
+  if (disabled.rowCount || (await client.query("SHOW session_replication_role")).rows[0].session_replication_role !== 'origin') throw new Error('Constraint trigger enforcement is disabled');
+  await verifyHistoricalSchema(client, context.schema, ledger.rows.length, migrations, true);
+}
+
+export async function verifyHistoricalSchema(client: Client, schema: string, version: number, migrations: Array<{ name: string; checksum: string }>, ignoreLedger: boolean): Promise<void> {
+  if (version > historical.length || migrations.length < historical.length || migrations.slice(0, historical.length).some((migration, index) => migration.name !== historicalNames[index] || migration.checksum !== historical[index][0])) {
+    throw new Error("Historical migration files do not match the verified reference");
+  }
+  const serverVersion = Number((await client.query("SHOW server_version_num")).rows[0].server_version_num);
+  if (Math.floor(serverVersion / 10000) !== 16) throw new Error("Historical baseline verification supports PostgreSQL 16 only");
+  const extensions = await client.query("SELECT extname,extversion FROM pg_extension WHERE extname IN ('pgcrypto','vector') ORDER BY extname");
+  if (extensions.rows.length !== 2 || extensions.rows[0].extname !== 'pgcrypto' || extensions.rows[0].extversion !== '1.3' ||
+      extensions.rows[1].extname !== 'vector' || !['0.6.0', '0.8.7'].includes(extensions.rows[1].extversion)) {
+    throw new Error("Historical baseline verification requires the tested pgcrypto and vector versions");
+  }
+  if (await schemaFingerprint(client, schema, ignoreLedger) !== historical[version - 1][1]) {
+    throw new Error("Historical schema differs from the verified reference; no writes performed");
+  }
+}
 
 // Include names as well as definitions: unexpected objects must not be silently adopted.
 export async function schemaFingerprint(client: Client, schema: string, ignoreLedger = false): Promise<string> {
