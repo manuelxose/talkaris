@@ -4,7 +4,12 @@ script="$(realpath "$(dirname "$0")/prepare-release.sh")"
 tmp="$(mktemp -d)"
 seal_root="/opt/talkaris-seal-test-$$"
 mkdir -m 755 "$seal_root"
-trap 'rm -rf "$tmp" "$seal_root"' EXIT
+gh_test_created=0
+trap 'rm -rf "$tmp" "$seal_root"; if [ "$gh_test_created" = 1 ]; then rm -f /usr/local/bin/gh; fi' EXIT
+mkdir -m 755 "$seal_root/tools"
+cp "$(dirname "$script")"/{prepare-release.sh,release-manifest.mjs,verify-release-attestation.sh,seal-release.sh} "$seal_root/tools/"
+chmod 644 "$seal_root/tools"/*
+script="$seal_root/tools/prepare-release.sh"
 git init -q "$tmp/repo"
 git -C "$tmp/repo" config user.email test@example.invalid
 git -C "$tmp/repo" config user.name test
@@ -40,6 +45,12 @@ grep -qx -- '--deny-self-hosted-runners' "$GH_ARGS"
 grep -qx -- "$sha" "$GH_ARGS"
 if GH_FAIL=1 bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$sha" >/dev/null 2>&1; then exit 1; fi
 if bash "$(dirname "$script")/verify-release-attestation.sh" "$tmp/release/manifest.json" "$(printf '%040d' 0)" >/dev/null 2>&1; then exit 1; fi
+[ ! -e /usr/local/bin/gh ] || { echo 'test requires an unused /usr/local/bin/gh' >&2; exit 1; }
+cp "$tmp/fakebin/gh" /usr/local/bin/gh
+gh_test_created=1
+chmod 666 "$seal_root/tools/release-manifest.mjs"
+if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/untrusted-tools" "$sha" >/dev/null 2>&1; then exit 1; fi
+chmod 644 "$seal_root/tools/release-manifest.mjs"
 bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$sha" >/dev/null
 if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$seal_root/sealed" "$sha" >/dev/null 2>&1; then exit 1; fi
 if bash "$(dirname "$script")/seal-release.sh" "$tmp/release" "$tmp/unsafe" "$sha" >/dev/null 2>&1; then exit 1; fi
