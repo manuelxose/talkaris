@@ -1,28 +1,20 @@
 # M0 local regression environment
 
-Use Node 22.23.2, npm, Docker Engine with Compose, and Linux Chromium dependencies. Run from the repository root. Do not load application `.env` files. All credentials below are synthetic and usable only by the disposable M0 environment.
+`npm run m0:test` invokes the protected Docker launcher. It snapshots tracked and nonignored files, excluding evidence and `.env` files, and refuses common secret-shaped filenames and non-regular files. Do not place credentials in the source snapshot. The snapshot manifest and launcher output are stored in a unique `evidence/talkaris-m0-*` directory. Dependency installation runs before source is copied into the image.
+
+The runner uses Docker `--network none`; disposable tmpfs PostgreSQL and Mailpit join its network namespace. Before setting `M0_NAMESPACE_SERVICES`, preflight checks interfaces and routes, proxy variables, external IPv4/IPv6 and DNS, host gateway probes, service ports, a Node child and Chromium. The runner has no Docker socket or host volume. A marker alone is not proof of isolation. Preparation needs network access to download dependencies, images and Chromium; the test flow runs after isolation is checked.
+
+Use Node, npm, Git and Docker Engine with a Linux container backend. Run from the repository root. The Node 22.23.2, PostgreSQL and Mailpit images are pinned by digest, as is Playwright Chromium. Do not load application `.env` files. Filename screening is not a complete secret scan: inspect source inputs before running.
 
 ```sh
-npm ci
-npm ci --prefix scripts/m0/tools
-scripts/m0/tools/node_modules/.bin/playwright install --with-deps chromium
 npm run m0:test
 ```
 
-`m0:test` starts a dedicated `talkaris-m0` Compose project, verifies database identity, builds shared packages, applies real migrations twice, seeds populated tenants A/B, starts the real API, executes integration/security characterization and existing unit tests, builds every workspace, starts the compiled portal, and runs authenticated browser checks. It tears down its services in `finally`. PostgreSQL data uses tmpfs, not a production volume. No application `.env` or existing database is reused. The run refuses an already-running M0 project or populated database. Do not run concurrent M0 suites.
+The launcher creates uniquely named containers and removes the ones it created after the flow; PostgreSQL uses tmpfs. It verifies the synthetic database identity, applies fresh, repeat and populated migrations, then runs regressions, unit tests, build, login, browser and accessibility checks. No existing database or application `.env` is used. A forcibly terminated launcher may leave its uniquely named resources; inspect ownership before removing them.
 
-Ports (all host bindings are loopback): PostgreSQL 45432; API 45101; portal 45103; HTTP/webhook failure receiver 45124; Mailpit SMTP 45125 and API/UI 45126; isolated Google-auth HTTP unit fixture 45127. Docker 29 suppresses published ports on internal networks, so the bridge disables outbound masquerading instead. Mailpit has no SMTP relay. Application Node children use a TCP allowlist and sanitized environment without AI keys; only these local services are allowed. The tsx parent IPC pipe is the only Unix socket exception. Browser page requests to external origins are aborted. This is a deterministic development harness, not a hostile-code sandbox.
+Ports are private to the shared network namespace: PostgreSQL 45432; API 45101; portal 45103; receiver 45124; Mailpit 45125 and 45126; auth fixture 45127. Application children also use the existing TCP allowlist and synthetic configuration. This is a deterministic development harness, not a hostile-code sandbox.
 
-Migrations, seed and reset run as part of the single command. Teardown/reset after an interrupted run:
-
-```sh
-npm run m0:down
-# If a process was forcibly killed, verify no M0 runner remains before removing
-# its advisory /tmp/talkaris-m0-baseline.lock file.
-npm run m0:test
-```
-
-Raw evidence is written to ignored `evidence/m0/`: process logs, fixture ownership/counts, actual Express route order, machine/human regression reports, timing/environment metadata, browser route/viewport/phase matrix, screenshots, and receiver records. Each new run archives prior evidence under ignored `evidence/m0-history/`; CI uploads current evidence even when checks fail. Generated fixture IDs and session credentials are not committed.
+Raw evidence is copied from the runner into its unique evidence directory: process logs, fixture ownership/counts, route order, regression reports, timings, browser observations, screenshots and receiver records. CI uploads those directories even on failure. Generated fixture IDs and session credentials are not committed. `m0:down` is the legacy Compose cleanup command and is not used by the launcher; do not run it against services whose ownership is unknown.
 
 Known API defects use executable correct-behavior expectations plus narrow failure fingerprints. A different failure or an unexpected pass fails the suite. Browser signatures are reviewed against `scripts/m0/browser-baseline.json`; both new errors and disappearing known errors fail until reviewed. To capture a candidate after a deliberate change, use `npm run m0:test -- --capture-browser`; this does **not** approve it. Inspect raw observations and screenshots before updating the committed baseline. Never approve authentication/harness failures as product defects.
 

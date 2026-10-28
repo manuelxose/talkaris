@@ -1,25 +1,16 @@
-name: Deploy a producción (Contabo)
+name: Production deployment disabled
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
-concurrency:
-  group: deploy-prod
-  cancel-in-progress: false
+permissions:
+  contents: read
 
 jobs:
-  deploy:
+  blocked:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
-      - name: Desplegar vía SSH (build en servidor + smoke)
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.DEPLOY_SSH_HOST }}
-          username: ${{ secrets.DEPLOY_SSH_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script_stop: true
-          script: |
-            sudo /var/www/talkaris/infra/deploy-chat.sh
+      - name: Refuse deployment until release gates are implemented
+        run: |
+          echo 'Production deployment is disabled until immutable activation, recovery, and rollback are verified.' >&2
+          exit 1

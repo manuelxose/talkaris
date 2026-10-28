@@ -2,20 +2,33 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
 import { createWriteStream } from 'node:fs';
-import { mkdir, readFile, writeFile, open, unlink, rename } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, open, unlink, rename, readdir } from 'node:fs/promises';
 import { once } from 'node:events';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { cpus, totalmem, platform, release } from 'node:os';
 import { setTimeout as delay } from 'node:timers/promises';
 import { Client } from 'pg';
 import { databaseUrl, seed, verifyDatabase, sanitizeSettings } from './seed.mjs';
 
-process.chdir(new URL('../..', import.meta.url).pathname);
+const namespaceServices = process.env.M0_NAMESPACE_SERVICES === '1';
+if (!process.argv.includes('--down')) {
+  assert.ok(namespaceServices, 'M0 requires an independently verified loopback-only namespace; the legacy host flow is disabled');
+}
+process.chdir(fileURLToPath(new URL('../..', import.meta.url)));
+if (namespaceServices) {
+  assert.equal(platform(), 'linux', 'M0 namespace mode requires Linux');
+  assert.deepEqual(await readdir('/sys/class/net'), ['lo'], 'M0 namespace must have loopback only');
+  const routes = (await readFile('/proc/net/route', 'utf8')).trim().split('\n');
+  assert.equal(routes.length, 1, 'M0 namespace must have no IPv4 routes');
+  assert.ok(!(await readFile('/proc/net/ipv6_route', 'utf8')).split('\n').some(line => line.trim() && !line.trim().endsWith('lo')), 'M0 namespace must have no IPv6 routes outside loopback');
+}
 const compose = ['compose', '-f', 'infra/m0-compose.yml'];
 const output = resolve('evidence/m0');
 await mkdir(output, { recursive: true });
 const baseEnv = Object.fromEntries(['PATH','HOME','TMPDIR','LANG','PLAYWRIGHT_BROWSERS_PATH'].filter(k => process.env[k]).map(k => [k, process.env[k]]));
 const env = { ...baseEnv, NODE_ENV: 'test', DATABASE_URL: databaseUrl, PORT: '45101',
+  ...(namespaceServices ? { M0_NAMESPACE_SERVICES: '1' } : {}),
   ADMIN_BEARER_TOKEN: 'm0-fake-admin-token', LEAD_WEBHOOK_SHARED_SECRET: 'm0-fake-lead-secret',
   JWT_SECRET: 'm0-synthetic-jwt-secret-at-least-16', COOKIE_NAME: 'm0_session',
   DEFAULT_LEAD_WEBHOOK_URL: 'http://127.0.0.1:45124/webhook', SMTP_HOST: '127.0.0.1', SMTP_PORT: '45125', SMTP_FROM: 'M0 <m0@example.test>',
@@ -70,14 +83,19 @@ try {
   await mkdir(output, { recursive:true });
   await writeFile(resolve(output, 'environment.json'), JSON.stringify({ node: process.version, platform: platform(), release: release(), cpu: cpus()[0]?.model, logicalCPUs: cpus().length, memoryBytes: totalmem(), timestamp: new Date().toISOString() }, null, 2));
   // The fixed M0 project is dedicated. Refuse to reuse a possibly populated database.
-  await execute('docker', [...compose, 'ps', '-q'], 'compose-existing', {}, false);
-  assert.equal((await readFile(resolve(output, 'compose-existing.log'), 'utf8')).trim(), '', 'M0 services already exist: run npm run m0:down first');
-  started = true;
-  await execute('docker', [...compose, 'up', '-d', '--wait'], 'compose-up', {}, false);
+  if (!namespaceServices) {
+    await execute('docker', [...compose, 'ps', '-q'], 'compose-existing', {}, false);
+    assert.equal((await readFile(resolve(output, 'compose-existing.log'), 'utf8')).trim(), '', 'M0 services already exist: run npm run m0:down first');
+    started = true;
+    await execute('docker', [...compose, 'up', '-d', '--wait'], 'compose-up', {}, false);
+  }
   process.env.DATABASE_URL = databaseUrl;
   const identity = new Client({ connectionString: databaseUrl });
   await identity.connect();
-  try { await verifyDatabase(identity); } finally { await identity.end(); }
+  try {
+    await verifyDatabase(identity);
+    assert.equal(Number((await identity.query("SELECT count(*) FROM pg_tables WHERE schemaname = 'public'")).rows[0].count), 0, 'M0 database must be empty');
+  } finally { await identity.end(); }
   // Every application child receives only synthetic config and a TCP allowlist.
   await execute('npm', ['run','build','-w','@tecnoria-chat/domain'], 'build-domain');
   await execute('npm', ['run','build','-w','@tecnoria-chat/core'], 'build-core');
