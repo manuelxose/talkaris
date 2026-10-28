@@ -49,23 +49,37 @@ cp "$(dirname "$0")/check-release-processes.sh" "$tools/check-release-processes.
 cp "$(dirname "$0")/release-manifest.mjs" "$tools/release-manifest.mjs"
 chmod 644 "$tools/check-release-processes.sh"
 digest="$(node "$tools/release-manifest.mjs" create "$tmp/release" "$(printf '%040d' 1)" "$(printf '%040d' 2)")"
+check() {
+  /usr/bin/env -i PATH=/usr/local/bin:/usr/bin api="${api_override:-$api}" ingest="$ingest" widget="$widget" portal="$portal" TEST_FIND_FAIL="${TEST_FIND_FAIL:-}" /bin/bash "$tools/check-release-processes.sh" "$@"
+}
 sleep 1
-output="$(bash "$tools/check-release-processes.sh" "$tmp/release" "$digest")"
+printf 'touch "%s"\n' "$tmp/injected" > "$tmp/bash-env"
+output="$(BASH_ENV="$tmp/bash-env" check "$tmp/release" "$digest")"
+[ ! -e "$tmp/injected" ]
 [[ "$output" == *"Verified release $(printf '%040d' 1)"* ]]
 [[ "$output" == *"All four service process paths match verified release $tmp/release"* ]]
-if TEST_FIND_FAIL=1 bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
-if runuser -u nobody -- bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >"$tmp/nonroot.out" 2>&1; then exit 1; fi
+if TEST_FIND_FAIL=1 check "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+if runuser -u nobody -- /usr/bin/env -i PATH=/usr/local/bin:/usr/bin /bin/bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >"$tmp/nonroot.out" 2>&1; then exit 1; fi
 grep -q 'Root execution required' "$tmp/nonroot.out"
-if bash "$tools/check-release-processes.sh" "$tmp/release" "$(printf '%064d' 0)" >/dev/null 2>&1; then exit 1; fi
+if api_override=0 check "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+(cd "$tmp" && exec node "$tmp/release/apps/chat-api/dist/main.js") & wrong_cwd=$!; pids+=("$wrong_cwd")
+(cd "$tmp/release/apps/chat-api" && exec /usr/bin/sleep 60) & wrong_exe=$!; pids+=("$wrong_exe")
+printf 'setInterval(() => {}, 1000);\n' > "$tmp/wrong-entry.js"
+(cd "$tmp/release/apps/chat-api" && exec node "$tmp/wrong-entry.js") & wrong_entry=$!; pids+=("$wrong_entry")
+sleep 1
+for pid in "$wrong_cwd" "$wrong_exe" "$wrong_entry"; do
+  if api_override="$pid" check "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+done
+if check "$tmp/release" "$(printf '%064d' 0)" >/dev/null 2>&1; then exit 1; fi
 printf '%s\n' '// tampered' >> "$tmp/release/apps/widget/server.mjs"
-if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+if check "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
 sed -i '$d' "$tmp/release/apps/widget/server.mjs"
 chmod 666 "$tmp/release/apps/widget/server.mjs"
-if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+if check "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
 chmod 644 "$tmp/release/apps/widget/server.mjs"
 mkdir "$tmp/other"
-if bash "$tools/check-release-processes.sh" "$tmp/other" "$digest" >/dev/null 2>&1; then exit 1; fi
+if check "$tmp/other" "$digest" >/dev/null 2>&1; then exit 1; fi
 kill "$ingest"
 wait "$ingest" 2>/dev/null || true
-if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+if check "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
 echo 'release process identity tests passed'

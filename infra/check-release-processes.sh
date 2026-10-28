@@ -1,4 +1,5 @@
 #!/bin/bash
+# Invoke via a trusted parent that execs /usr/bin/env -i before starting Bash.
 set -euo pipefail
 export PATH=/usr/local/bin:/usr/bin
 unset BASH_ENV ENV NODE_OPTIONS NODE_PATH LD_PRELOAD LD_LIBRARY_PATH
