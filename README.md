@@ -74,6 +74,8 @@ npm run dev:portal
 npm run dev:ingest
 ```
 
+Private uploaded documents require a dedicated `INGEST_SERVICE_SECRET` of at least 32 characters, set to the same random value in the API and worker environments. Keep it distinct from `JWT_SECRET` and user passwords. Set `INGEST_API_ORIGIN` on the worker to the trusted API origin, for example `http://127.0.0.1:4101` for native development or `http://chat-api:4101` inside the Compose network. This origin is configuration, never taken from a document URL; use TLS when traffic crosses an untrusted network. If either setting is missing, private uploads cannot be ingested. Public logos remain anonymous; document originals require a tenant session.
+
 ## Local URLs
 
 - Portal: `http://localhost:4103`

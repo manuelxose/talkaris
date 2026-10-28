@@ -1,0 +1,37 @@
+name: Private document security
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  private-assets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: pgvector/pgvector@sha256:7b822b0aac60967beb1ea5e576b8602c94c300a157d187f385ae3e0da199b90a
+        env:
+          POSTGRES_DB: talkaris_security
+          POSTGRES_USER: security_test
+          POSTGRES_PASSWORD: synthetic-security-db-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U security_test -d talkaris_security"
+          --health-interval 2s --health-timeout 5s --health-retries 30
+    env:
+      DATABASE_URL: postgresql://security_test:synthetic-security-db-password@127.0.0.1:5432/talkaris_security
+      M0_SECURITY_DATABASE_URL: postgresql://security_test:synthetic-security-db-password@127.0.0.1:5432/talkaris_security
+      M0_SECURITY_PASSWORD: synthetic-security-test-password
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.2'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build -w packages/domain -w packages/core -w packages/application -w packages/infrastructure -w apps/chat-api -w apps/ingest-worker
+      - run: npm run migrate -w @tecnoria-chat/chat-api
+      - run: npm test
+      - run: node scripts/m0/private-assets.test.mjs
