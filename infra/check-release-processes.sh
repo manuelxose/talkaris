@@ -2,6 +2,7 @@
 set -euo pipefail
 export PATH=/usr/local/bin:/usr/bin
 unset BASH_ENV ENV NODE_OPTIONS NODE_PATH LD_PRELOAD LD_LIBRARY_PATH
+if [ "$EUID" -ne 0 ]; then echo 'Root execution required' >&2; exit 1; fi
 trusted() {
   local check owner mode
   check="$(/usr/bin/realpath -e -- "$1")"
@@ -16,14 +17,17 @@ trusted() {
 }
 script_dir="$(/usr/bin/dirname "$(/usr/bin/realpath -e "$0")")"
 for path in /usr/bin /usr/local/bin "$0" "$script_dir/release-manifest.mjs"; do trusted "$path"; done
-for command in systemctl realpath readlink node find; do trusted "$(command -v "$command")"; done
+for command in systemctl realpath readlink node find mktemp rm; do trusted "$(command -v "$command")"; done
 if [ "$#" -ne 2 ] || [[ ! "$2" =~ ^[0-9a-f]{64}$ ]]; then echo 'Usage: check-release-processes.sh <release-directory> <verified-manifest-sha256>' >&2; exit 1; fi
 release="$(realpath -e "$1")"
 trusted "$release"
+listing="$(mktemp -p /tmp)"
+trap 'rm -f -- "$listing"' EXIT
+find "$release" ! -type l -print0 > "$listing"
 while IFS= read -r -d '' item; do
   owner="$(/usr/bin/stat -c '%u' "$item")" mode="$(/usr/bin/stat -c '%a' "$item")"
   [ "$owner" = 0 ] && (( (8#$mode & 0022) == 0 )) || { echo "Untrusted release content: $item" >&2; exit 1; }
-done < <(find "$release" ! -type l -print0)
+done < "$listing"
 node "$script_dir/release-manifest.mjs" verify "$release" "$2"
 check_service() {
   local unit="$1" app="$2" entry="$3" pid cwd exe actual pid_after
@@ -44,4 +48,4 @@ check_service tecnoria-chat-api.service chat-api dist/main.js
 check_service tecnoria-chat-ingest.service ingest-worker dist/main.js
 check_service tecnoria-chat-widget.service widget server.mjs
 check_service tecnoria-chat-portal.service portal dist/portal/server/server.mjs
-echo "All four service processes use verified release $release"
+echo "All four service process paths match verified release $release"

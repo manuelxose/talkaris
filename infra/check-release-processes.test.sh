@@ -6,7 +6,8 @@ tools="$(mktemp -d /opt/talkaris-process-test.XXXXXXXX)"
 pids=()
 node_link=0
 systemctl_test_created=0
-trap 'for pid in "${pids[@]}"; do kill "$pid" 2>/dev/null || true; done; rm -rf "$tmp" "$tools"; if [ "$node_link" = 1 ]; then rm /usr/bin/node; fi; if [ "$systemctl_test_created" = 1 ]; then rm /usr/local/bin/systemctl; fi' EXIT
+find_test_created=0
+trap 'for pid in "${pids[@]}"; do kill "$pid" 2>/dev/null || true; done; rm -rf "$tmp" "$tools"; if [ "$node_link" = 1 ]; then rm /usr/bin/node; fi; if [ "$systemctl_test_created" = 1 ]; then rm /usr/local/bin/systemctl; fi; if [ "$find_test_created" = 1 ]; then rm /usr/local/bin/find; fi' EXIT
 chmod 755 "$tools"
 if [ ! -e /usr/bin/node ] && [ ! -L /usr/bin/node ]; then ln -s "$(command -v node)" /usr/bin/node; node_link=1; fi
 mkdir -p "$tmp/release/apps/chat-api/dist" "$tmp/release/apps/ingest-worker/dist" "$tmp/release/apps/widget" "$tmp/release/apps/portal/dist/portal/server" "$tmp/bin"
@@ -36,12 +37,25 @@ chmod +x "$tmp/bin/systemctl"
 [ ! -e /usr/local/bin/systemctl ] && [ ! -L /usr/local/bin/systemctl ] || { echo 'test requires an unused /usr/local/bin/systemctl' >&2; exit 1; }
 cp "$tmp/bin/systemctl" /usr/local/bin/systemctl
 systemctl_test_created=1
+[ ! -e /usr/local/bin/find ] && [ ! -L /usr/local/bin/find ] || { echo 'test requires an unused /usr/local/bin/find' >&2; exit 1; }
+cat > /usr/local/bin/find <<'EOF'
+#!/bin/bash
+if [ "${TEST_FIND_FAIL:-}" = 1 ]; then echo 'simulated traversal failure' >&2; exit 1; fi
+exec /usr/bin/find "$@"
+EOF
+chmod 755 /usr/local/bin/find
+find_test_created=1
 cp "$(dirname "$0")/check-release-processes.sh" "$tools/check-release-processes.sh"
 cp "$(dirname "$0")/release-manifest.mjs" "$tools/release-manifest.mjs"
 chmod 644 "$tools/check-release-processes.sh"
 digest="$(node "$tools/release-manifest.mjs" create "$tmp/release" "$(printf '%040d' 1)" "$(printf '%040d' 2)")"
 sleep 1
-bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null
+output="$(bash "$tools/check-release-processes.sh" "$tmp/release" "$digest")"
+[[ "$output" == *"Verified release $(printf '%040d' 1)"* ]]
+[[ "$output" == *"All four service process paths match verified release $tmp/release"* ]]
+if TEST_FIND_FAIL=1 bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+if runuser -u nobody -- bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >"$tmp/nonroot.out" 2>&1; then exit 1; fi
+grep -q 'Root execution required' "$tmp/nonroot.out"
 if bash "$tools/check-release-processes.sh" "$tmp/release" "$(printf '%064d' 0)" >/dev/null 2>&1; then exit 1; fi
 printf '%s\n' '// tampered' >> "$tmp/release/apps/widget/server.mjs"
 if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
