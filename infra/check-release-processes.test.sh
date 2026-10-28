@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 source "$(dirname "$0")/test-container-guard.sh"
-tmp="$(mktemp -d)"
+tmp="$(mktemp -d /opt/talkaris-process-release.XXXXXXXX)"
 tools="$(mktemp -d /opt/talkaris-process-test.XXXXXXXX)"
 pids=()
 node_link=0
@@ -10,6 +10,8 @@ trap 'for pid in "${pids[@]}"; do kill "$pid" 2>/dev/null || true; done; rm -rf 
 chmod 755 "$tools"
 if [ ! -e /usr/bin/node ] && [ ! -L /usr/bin/node ]; then ln -s "$(command -v node)" /usr/bin/node; node_link=1; fi
 mkdir -p "$tmp/release/apps/chat-api/dist" "$tmp/release/apps/ingest-worker/dist" "$tmp/release/apps/widget" "$tmp/release/apps/portal/dist/portal/server" "$tmp/bin"
+mkdir -p "$tmp/release/apps/chat-api/migrations"
+printf '%s\n' 'SELECT 1;' > "$tmp/release/apps/chat-api/migrations/001_test.sql"
 for file in apps/chat-api/dist/main.js apps/ingest-worker/dist/main.js apps/widget/server.mjs apps/portal/dist/portal/server/server.mjs; do
   printf 'setInterval(() => {}, 1000);\n' > "$tmp/release/$file"
 done
@@ -35,12 +37,21 @@ chmod +x "$tmp/bin/systemctl"
 cp "$tmp/bin/systemctl" /usr/local/bin/systemctl
 systemctl_test_created=1
 cp "$(dirname "$0")/check-release-processes.sh" "$tools/check-release-processes.sh"
+cp "$(dirname "$0")/release-manifest.mjs" "$tools/release-manifest.mjs"
 chmod 644 "$tools/check-release-processes.sh"
+digest="$(node "$tools/release-manifest.mjs" create "$tmp/release" "$(printf '%040d' 1)" "$(printf '%040d' 2)")"
 sleep 1
-bash "$tools/check-release-processes.sh" "$tmp/release" >/dev/null
+bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null
+if bash "$tools/check-release-processes.sh" "$tmp/release" "$(printf '%064d' 0)" >/dev/null 2>&1; then exit 1; fi
+printf '%s\n' '// tampered' >> "$tmp/release/apps/widget/server.mjs"
+if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+sed -i '$d' "$tmp/release/apps/widget/server.mjs"
+chmod 666 "$tmp/release/apps/widget/server.mjs"
+if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
+chmod 644 "$tmp/release/apps/widget/server.mjs"
 mkdir "$tmp/other"
-if bash "$tools/check-release-processes.sh" "$tmp/other" >/dev/null 2>&1; then exit 1; fi
+if bash "$tools/check-release-processes.sh" "$tmp/other" "$digest" >/dev/null 2>&1; then exit 1; fi
 kill "$ingest"
 wait "$ingest" 2>/dev/null || true
-if bash "$tools/check-release-processes.sh" "$tmp/release" >/dev/null 2>&1; then exit 1; fi
+if bash "$tools/check-release-processes.sh" "$tmp/release" "$digest" >/dev/null 2>&1; then exit 1; fi
 echo 'release process identity tests passed'

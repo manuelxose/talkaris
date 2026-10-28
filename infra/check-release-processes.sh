@@ -14,10 +14,17 @@ trusted() {
     check="$(/usr/bin/dirname "$check")"
   done
 }
-for path in /usr/bin /usr/local/bin "$0"; do trusted "$path"; done
-for command in systemctl realpath readlink; do trusted "$(command -v "$command")"; done
-if [ "$#" -ne 1 ]; then echo 'Usage: check-release-processes.sh <release-directory>' >&2; exit 1; fi
+script_dir="$(/usr/bin/dirname "$(/usr/bin/realpath -e "$0")")"
+for path in /usr/bin /usr/local/bin "$0" "$script_dir/release-manifest.mjs"; do trusted "$path"; done
+for command in systemctl realpath readlink node find; do trusted "$(command -v "$command")"; done
+if [ "$#" -ne 2 ] || [[ ! "$2" =~ ^[0-9a-f]{64}$ ]]; then echo 'Usage: check-release-processes.sh <release-directory> <verified-manifest-sha256>' >&2; exit 1; fi
 release="$(realpath -e "$1")"
+trusted "$release"
+while IFS= read -r -d '' item; do
+  owner="$(/usr/bin/stat -c '%u' "$item")" mode="$(/usr/bin/stat -c '%a' "$item")"
+  [ "$owner" = 0 ] && (( (8#$mode & 0022) == 0 )) || { echo "Untrusted release content: $item" >&2; exit 1; }
+done < <(find "$release" ! -type l -print0)
+node "$script_dir/release-manifest.mjs" verify "$release" "$2"
 check_service() {
   local unit="$1" app="$2" entry="$3" pid cwd exe actual pid_after
   systemctl is-active --quiet "$unit"
@@ -37,4 +44,4 @@ check_service tecnoria-chat-api.service chat-api dist/main.js
 check_service tecnoria-chat-ingest.service ingest-worker dist/main.js
 check_service tecnoria-chat-widget.service widget server.mjs
 check_service tecnoria-chat-portal.service portal dist/portal/server/server.mjs
-echo "All four service processes use $release"
+echo "All four service processes use verified release $release"
