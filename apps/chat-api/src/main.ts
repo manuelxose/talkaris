@@ -374,7 +374,7 @@ app.get("/v1/internal/ingestion/:jobId/asset", asyncHandler(async (req, res) => 
   res.setHeader("Cache-Control", "no-store");
   const secret = process.env["INGEST_SERVICE_SECRET"];
   const token = req.headers.authorization?.match(/^Bearer ([^ ]+)$/)?.[1];
-  if (!secret || secret.length < 32 || !token) { res.status(401).end(); return; }
+  if (!secret || secret.length < 32 || secret === env.JWT_SECRET || !token) { res.status(401).end(); return; }
   let claims: jwt.JwtPayload;
   try {
     const decoded = jwt.verify(token, secret, { algorithms: ["HS256"], audience: "talkaris-ingestion", issuer: "talkaris-worker", maxAge: "60s" });

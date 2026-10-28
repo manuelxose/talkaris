@@ -31,10 +31,10 @@ function start(name, args, overrides = {}) {
   children.push(child);
   return child;
 }
-async function ready(child) {
+async function ready(child, baseUrl = origin) {
   for (let i = 0; i < 100; i++) {
     if (child.exitCode !== null) throw new Error(`API exited: ${child.exitCode}`);
-    try { if ((await fetch(`${origin}/health`)).ok) return; } catch {}
+    try { if ((await fetch(`${baseUrl}/health`)).ok) return; } catch {}
     await delay(200);
   }
   throw new Error('API readiness timeout');
@@ -165,6 +165,10 @@ try {
   assert.ok(redirectStatus.summary.failedUrls.includes(redirectSource.entry_url), 'redirect must fail');
   assert.equal(redirectedRequests, 0, 'service credentials must not follow redirects');
   redirectedWorker.kill(); await new Promise(resolveClose => redirectedWorker.once('close', resolveClose));
+  const misconfigured = start('api-same-secret', ['--import', 'tsx', 'apps/chat-api/src/main.ts'], { PORT: '46208', INGEST_SERVICE_SECRET: sessionSecret });
+  await ready(misconfigured, 'http://127.0.0.1:46208');
+  const sameSecretToken = jwt.sign({ sourceId: redirectSource.id, projectId: redirectSource.project_id }, sessionSecret, { algorithm: 'HS256', subject: redirectJob.id, audience: 'talkaris-ingestion', issuer: 'talkaris-worker', expiresIn: 60 });
+  assert.equal((await fetch(`http://127.0.0.1:46208/v1/internal/ingestion/${redirectJob.id}/asset`, { headers: { authorization: `Bearer ${sameSecretToken}` } })).status, 401, 'service secret must differ from user sessions');
   assert.ok([400, 401, 403, 404].includes((await fetch(`${origin}/v1/assets/documents/%2e%2e%2fprivate.txt`)).status), 'traversal denied');
   assert.ok([400, 403, 404].includes((await fetch(`${origin}/v1/assets/documents/%2e%2e%2fprivate.txt`, { headers: { cookie: cookies.admin } })).status), 'authenticated traversal denied');
   const directory = join(base, 'security-uploads', 'assets', 'documents', a.id, 'm0-native-bot'); await mkdir(directory, { recursive: true });
