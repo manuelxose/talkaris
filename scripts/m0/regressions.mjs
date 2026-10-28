@@ -63,15 +63,16 @@ for (const kind of ['rating','handover']) {
 }
 await defect('F01-viewer-foreign-handover-write', () => request(tenantPath('a',`conversations/${f.conversations.b.id}/handover`),'viewer','PUT',{status:'assigned'}),
   r => [403,404].includes(r.status), r => r.status === 200 && r.data.id === f.handover.b.id && r.data.status === 'assigned', 'Viewer cannot modify any handover, including foreign UUIDs', 'M1');
-await defect('F02-private-original-public', async () => {
-  const response = await fetch(f.privateDocument.url); return {status:response.status,text:await response.text(),cacheControl:response.headers.get('cache-control')};
-}, r => [401,403,404].includes(r.status), r => r.status === 200 && r.text === f.privateDocument.contentSentinel && /public.*max-age=2592000.*immutable/.test(r.cacheControl), 'Private original requires authorized membership', 'M1');
+await control('F02-private-original-public', async () => {
+  const response = await fetch(f.privateDocument.url);
+  assert.ok([401,403,404].includes(response.status)); assert.match(response.headers.get('cache-control') || '', /no-store/);
+});
 await control('F02-own-member-can-read-original',async()=>{
   const response=await fetch(f.privateDocument.url,{headers:{Cookie:cookies.admin}});assert.equal(response.status,200);assert.equal(await response.text(),f.privateDocument.contentSentinel);
 });
-await defect('F02-foreign-member-original',async()=>{
-  const response=await fetch(f.privateDocument.url,{headers:{Cookie:cookies.outsider}});return {status:response.status,text:await response.text(),cacheControl:response.headers.get('cache-control')};
-},r=>[403,404].includes(r.status),r=>r.status===200&&r.text===f.privateDocument.contentSentinel&&/public.*max-age=2592000.*immutable/.test(r.cacheControl),'Foreign member cannot read an existing private original','M1');
+await control('F02-foreign-member-original',async()=>{
+  const response=await fetch(f.privateDocument.url,{headers:{Cookie:cookies.outsider}}); assert.ok([403,404].includes(response.status)); assert.match(response.headers.get('cache-control') || '', /no-store/);
+});
 await control('F02-public-logo-remains-anonymous',async()=>{
   const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64');
   const uploaded=await fetch(api+tenantPath('a','assets/logo'),{method:'POST',headers:{Cookie:cookies.admin,'Content-Type':'image/png','x-upload-filename':'m0-public-logo.png'},body:png});
@@ -152,7 +153,7 @@ await control('webhook-delivered-to-local-receiver',async()=>{
   }
   assert.ok(received,'Local webhook receiver did not receive synthetic event');
 });
-await defect('F02-new-private-upload-public', async () => {
+await control('F02-new-private-upload-public', async () => {
   const sentinel='M0 private original uploaded through actual endpoint';
   const uploaded=await fetch(api+tenantPath('a',`projects/${f.projects.a.projectKey}/assets/document`),{
     method:'POST',headers:{Cookie:cookies.admin,'Content-Type':'text/plain','x-upload-filename':'m0-upload.txt'},body:sentinel});
@@ -162,8 +163,9 @@ await defect('F02-new-private-upload-public', async () => {
   finally {await db.end();}
   const path=new URL(asset.url).pathname.replace(/^\/api/,'');
   const downloaded=await fetch(api+path);
-  return {status:downloaded.status,text:await downloaded.text(),sentinel,cacheControl:downloaded.headers.get('cache-control'),urlHasQuery:!!new URL(asset.url).search};
-},r=>[401,403,404].includes(r.status),r=>r.status===200&&r.text===r.sentinel&&!r.urlHasQuery&&/public.*max-age=2592000.*immutable/.test(r.cacheControl),'New private upload must require authorization on original download','M1');
+  assert.ok([401,403,404].includes(downloaded.status)); assert.match(downloaded.headers.get('cache-control') || '', /no-store/);
+  const authorized=await fetch(api+path,{headers:{Cookie:cookies.admin}}); assert.equal(authorized.status,200); assert.equal(await authorized.text(),sentinel);
+});
 await defect('F03-loopback-website-fetch', async () => {
   const before=await (await fetch('http://127.0.0.1:45124/state')).json();
   const r=await request(tenantPath('a',`projects/${f.projects.a.projectKey}/website-integration`),'admin','POST',{baseUrl:'http://127.0.0.1:45124/ssrf-probe'});

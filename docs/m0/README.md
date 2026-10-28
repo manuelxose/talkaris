@@ -1,5 +1,7 @@
 # M0 local regression environment
 
+F02 private-document exposure is now asserted as a security control for legacy and new uploads. Historical evidence remains unchanged; unrelated known-defect fingerprints remain in the regression suite. Private-ingestion tests additionally require the dedicated API/worker secret and trusted API origin described in the main README.
+
 `npm run m0:test` invokes the protected Docker launcher. It snapshots tracked and nonignored files, excluding evidence and `.env` files, and refuses common secret-shaped filenames and non-regular files. Do not place credentials in the source snapshot. The snapshot manifest and launcher output are stored in a unique `evidence/talkaris-m0-*` directory. Dependency installation runs before source is copied into the image.
 
 The runner uses Docker `--network none`; disposable tmpfs PostgreSQL and Mailpit join its network namespace. Before setting `M0_NAMESPACE_SERVICES`, preflight checks interfaces and routes, proxy variables, external IPv4/IPv6 and DNS, host gateway probes, service ports, a Node child and Chromium. The runner has no Docker socket or host volume. A marker alone is not proof of isolation. Preparation needs network access to download dependencies, images and Chromium; the test flow runs after isolation is checked.

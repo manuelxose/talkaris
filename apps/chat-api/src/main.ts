@@ -328,11 +328,86 @@ const assetsRoot = path.join(uploadsRoot, "assets");
 await fs.mkdir(path.join(assetsRoot, "logos"), { recursive: true });
 await fs.mkdir(path.join(assetsRoot, "documents"), { recursive: true });
 
-app.use("/v1/assets", express.static(assetsRoot, {
-  fallthrough: false,
-  immutable: true,
-  maxAge: "30d",
+app.use("/v1/assets", (_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
+
+async function assetFile(assetPath: string, category: "documents" | "logos"): Promise<string | null> {
+  const prefix = `/v1/assets/${category}/`;
+  if (!assetPath.startsWith(prefix)) return null;
+  const parts = assetPath.slice(prefix.length).split("/");
+  if (!parts.length || parts.some(part => !/^[a-zA-Z0-9_.-]+$/.test(part) || part === "." || part === "..")) return null;
+  try {
+    const root = await fs.realpath(path.join(assetsRoot, category));
+    const file = await fs.realpath(path.join(root, ...parts));
+    const relative = path.relative(root, file);
+    if (!relative || relative.startsWith("..") || path.isAbsolute(relative) || !(await fs.stat(file)).isFile()) return null;
+    return file;
+  } catch { return null; }
+}
+
+function assetPathFromUrl(value: string): string | null {
+  try {
+    const pathname = new URL(value).pathname.replace(/^\/api(?=\/v1\/assets\/)/, "");
+    return pathname.startsWith("/v1/assets/documents/") ? pathname : null;
+  } catch { return null; }
+}
+
+app.use("/v1/assets/documents", asyncHandler(async (req, res) => {
+  if (req.method !== "GET" && req.method !== "HEAD") { res.status(405).end(); return; }
+  const user = await authenticateCookieUser(req as PortalRequest, res);
+  if (!user) return;
+  const assetPath = req.originalUrl.split("?")[0];
+  const owners = await pool.query<{ tenant_id: string; project_key: string }>(
+    `SELECT DISTINCT p.tenant_id,p.project_key FROM projects p JOIN sources s ON s.project_id=p.id
+       WHERE regexp_replace(s.entry_url, '^https?://[^/]+(/api)?', '')=$1
+     UNION SELECT DISTINCT p.tenant_id,p.project_key FROM projects p JOIN documents d ON d.project_id=p.id
+       WHERE regexp_replace(d.canonical_url, '^https?://[^/]+(/api)?', '')=$1`, [assetPath]);
+  if (owners.rows.length !== 1 || (user.platformRole !== "superadmin" && !user.memberships.some(m => m.tenantId === owners.rows[0].tenant_id))) { res.status(404).end(); return; }
+  const parts = assetPath.slice("/v1/assets/documents/".length).split("/");
+  if (parts.length !== 1 && (parts.length !== 3 || parts[0] !== sanitizePathSegment(owners.rows[0].tenant_id) || parts[1] !== sanitizePathSegment(owners.rows[0].project_key))) { res.status(404).end(); return; }
+  const file = await assetFile(assetPath, "documents");
+  if (!file) { res.status(404).end(); return; }
+  res.sendFile(file, { cacheControl: false, lastModified: false, etag: false });
 }));
+
+app.use("/v1/internal/ingestion", (_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
+app.get("/v1/internal/ingestion/:jobId/asset", asyncHandler(async (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  const secret = process.env["INGEST_SERVICE_SECRET"];
+  const token = req.headers.authorization?.match(/^Bearer ([^ ]+)$/)?.[1];
+  if (!secret || secret.length < 32 || secret === env.JWT_SECRET || !token) { res.status(401).end(); return; }
+  let claims: jwt.JwtPayload;
+  try {
+    const decoded = jwt.verify(token, secret, { algorithms: ["HS256"], audience: "talkaris-ingestion", issuer: "talkaris-worker", maxAge: "60s" });
+    if (typeof decoded === "string") throw new Error("Invalid token");
+    claims = decoded;
+  } catch { res.status(401).end(); return; }
+  if (typeof claims.exp !== "number" || claims.sub !== req.params["jobId"] || typeof claims["sourceId"] !== "string" || typeof claims["projectId"] !== "string") { res.status(403).end(); return; }
+  const result = await pool.query<{ entry_url: string; tenant_id: string; project_key: string }>(`SELECT s.entry_url,p.tenant_id,p.project_key FROM ingestion_jobs j
+    JOIN sources s ON s.id=j.source_id AND s.project_id=j.project_id
+    JOIN projects p ON p.id=j.project_id
+    WHERE j.id::text=$1 AND j.source_id::text=$2 AND j.project_id::text=$3 AND j.status='running'
+      AND s.source_config ? 'upload'`, [claims.sub, claims["sourceId"], claims["projectId"]]);
+  const row = result.rows[0];
+  const assetPath = row && assetPathFromUrl(row.entry_url);
+  const ownedPrefix = row && `/v1/assets/documents/${sanitizePathSegment(row.tenant_id)}/${sanitizePathSegment(row.project_key)}/`;
+  if (!assetPath || !ownedPrefix || !assetPath.startsWith(ownedPrefix) || assetPath.slice(ownedPrefix.length).includes("/")) { res.status(404).end(); return; }
+  const file = assetPath && await assetFile(assetPath, "documents");
+  if (!file) { res.status(404).end(); return; }
+  res.sendFile(file, { cacheControl: false, lastModified: false, etag: false });
+}));
+
+app.use("/v1/assets/logos", asyncHandler(async (req, res) => {
+  if (req.method !== "GET" && req.method !== "HEAD") { res.status(405).end(); return; }
+  const file = await assetFile(req.originalUrl.split("?")[0], "logos");
+  if (!file) { res.status(404).end(); return; }
+  res.removeHeader("Cache-Control");
+  res.sendFile(file, { immutable: true, maxAge: "30d" });
+}));
+app.use(["/v1/assets", "/v1/internal/ingestion"], (error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  if (res.headersSent) { _next(error); return; }
+  res.setHeader("Cache-Control", "no-store");
+  res.status(500).json({ code: "INTERNAL_ERROR", message: "Unable to serve asset" });
+});
 
 const uploadParser = express.raw({
   type: "*/*",

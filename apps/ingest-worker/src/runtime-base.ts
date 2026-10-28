@@ -2,6 +2,7 @@
 import { createHash } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import { Pool } from "pg";
+import jwt from "jsonwebtoken";
 import { inferLanguage, normalizeDocumentText, splitIntoSemanticChunks } from "@tecnoria-chat/core";
 import { z } from "zod";
 import { YoutubeTranscript } from "youtube-transcript";
@@ -14,6 +15,8 @@ const envSchema = z.object({
     YOUTUBE_API_KEY: z.string().optional(),
     NOTION_TOKEN: z.string().optional(),
     GOOGLE_AI_API_KEY: z.string().optional(),
+    INGEST_SERVICE_SECRET: z.string().optional(),
+    INGEST_API_ORIGIN: z.string().optional(),
 });
 const env = envSchema.parse(process.env);
 const pool = new Pool({ connectionString: env.DATABASE_URL });
@@ -153,12 +156,23 @@ async function extractPdfDocument(job, url, fetched, headers) {
         await parser.destroy();
     }
 }
-async function fetchText(url) {
+async function fetchText(url, job) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), env.FETCH_TIMEOUT_MS);
     try {
-        const response = await fetch(url, {
-            headers: { "user-agent": env.CRAWLER_USER_AGENT },
+        const upload = job?.source_config?.upload;
+        let target = url;
+        const headers = { "user-agent": env.CRAWLER_USER_AGENT };
+        if (upload) {
+            if (!env.INGEST_SERVICE_SECRET || env.INGEST_SERVICE_SECRET.length < 32 || !env.INGEST_API_ORIGIN) throw new Error("Private ingestion service is not configured");
+            const origin = new URL(env.INGEST_API_ORIGIN);
+            if (!['http:', 'https:'].includes(origin.protocol) || origin.username || origin.password || origin.pathname !== '/' || origin.search || origin.hash) throw new Error("Invalid private ingestion API origin");
+            target = new URL(`/v1/internal/ingestion/${job.id}/asset`, origin).toString();
+            headers.authorization = `Bearer ${jwt.sign({ sourceId: job.source_id, projectId: job.project_id }, env.INGEST_SERVICE_SECRET, { algorithm: 'HS256', subject: job.id, issuer: 'talkaris-worker', audience: 'talkaris-ingestion', expiresIn: 60 })}`;
+        }
+        const response = await fetch(target, {
+            headers,
+            ...(upload ? { redirect: 'error' } : {}),
             signal: controller.signal,
         });
         if (!response.ok) {
@@ -764,7 +778,7 @@ async function processJob(job) {
         try {
             for (const entry of urls) {
                 try {
-                    const fetched = await fetchText(entry.url);
+                    const fetched = await fetchText(entry.url, job);
                     summary.fetched += 1;
                     if (!fetched.contentType?.includes("text/html") && job.kind === "sitemap") {
                         summary.skipped += 1;
